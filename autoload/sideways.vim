@@ -1,3 +1,10 @@
+" vim: foldmethod=marker
+
+" Main {{{1
+
+" function! sideways#Left() {{{2
+"
+" Move the current argument to the left
 function! sideways#Left()
   let items = sideways#Parse()
   if empty(items)
@@ -24,6 +31,9 @@ function! sideways#Left()
   return 1
 endfunction
 
+" function! sideways#Right() {{{2
+"
+" Move the current argument to the right
 function! sideways#Right()
   let items = sideways#Parse()
   if empty(items)
@@ -50,6 +60,21 @@ function! sideways#Right()
   return 1
 endfunction
 
+" function! sideways#Parse() {{{2
+"
+" Extract column positions for "arguments" on the current line. Returns a list
+" of pairs, each pair contains the start and end columns of the item
+"
+" Example:
+"
+" On the following line:
+"
+"   def function(one, two):
+"
+" The result would be:
+"
+"   [ [14, 16], [19, 21] ]
+"
 function! sideways#Parse()
   let start_pattern     = '\k\+\zs('
   let end_pattern       = '^)'
@@ -69,15 +94,15 @@ function! sideways#Parse()
     let items = []
     let current_item = [col('.'), -1]
 
-    while s:RestOfLine() !~ end_pattern && col('.') <= col('$')
+    while s:RemainderOfLine() !~ end_pattern && col('.') <= col('$')
       normal! l
 
-      if s:RestOfLine() =~ delimiter_pattern
+      if s:RemainderOfLine() =~ delimiter_pattern
         let current_item[1] = col('.') - 1
         call add(items, current_item)
 
         normal! l
-        while s:RestOfLine() =~ skip_pattern
+        while s:RemainderOfLine() =~ skip_pattern
           normal! l
         endwhile
         let current_item = [col('.'), -1]
@@ -93,6 +118,16 @@ function! sideways#Parse()
   endtry
 endfunction
 
+" function! s:Swap(first, second, new_cursor_column) {{{2
+"
+" Swaps the a:first and a:second items in the buffer. Both first arguments are
+" expected to be pairs of start and end columns. The last argument is a
+" number, the new column to position the cursor on.
+"
+" In order to avoid having to consider eventual changes in column positions,
+" a:first is expected to be positioned before a:second. Assuming that, the
+" function first places the second item and then the first one, ensuring that
+" the column number remain consistent until it's done.
 function! s:Swap(first, second, new_cursor_column)
   let [first_start, first_end]   = a:first
   let [second_start, second_end] = a:second
@@ -109,6 +144,12 @@ function! s:Swap(first, second, new_cursor_column)
   call setpos('.', position)
 endfunction
 
+" function! s:FindActiveItem(items) {{{2
+"
+" Finds an item in the given list of column pairs, which the cursor is
+" currently positioned in.
+"
+" Returns the index of the found item, or -1 if it's not found.
 function! s:FindActiveItem(items)
   let column = col('.')
 
@@ -126,11 +167,21 @@ function! s:FindActiveItem(items)
   return -1
 endfunction
 
+" function! s:Delta(first, second) {{{2
+"
+" Return the difference in length between the first start-end column pair and
+" the second one.
+"
+" It is assumed that a:first is positioned before a:second. This is used to
+" account for the column positions becoming inconsistent after replacing text
+" in the current line.
 function! s:Delta(first, second)
   return (a:first[1] - a:first[0]) - (a:second[1] - a:second[0])
 endfunction
 
-function! s:RestOfLine()
+" Returns the remainder of the line from the current cursor position to the
+" end.
+function! s:RemainderOfLine()
   return strpart(getline('.'), col('.') - 1)
 endfunction
 
@@ -204,15 +255,6 @@ function! sideways#ReplaceMotion(motion, text)
   call setreg('z', original_reg, original_reg_type)
 endfunction
 
-" function! sideways#ReplaceLines(start, end, text) {{{2
-"
-" Replace the area defined by the 'start' and 'end' lines with 'text'.
-function! sideways#ReplaceLines(start, end, text)
-  let interval = a:end - a:start
-
-  return sideways#ReplaceMotion(a:start.'GV'.interval.'j', a:text)
-endfunction
-
 " function! sideways#ReplaceCols(start, end, text) {{{2
 "
 " Replace the area defined by the 'start' and 'end' columns on the current
@@ -230,20 +272,6 @@ function! sideways#ReplaceCols(start, end, text)
   endif
 
   return sideways#ReplaceMotion(motion, a:text)
-endfunction
-
-" function! sideways#ReplaceByPosition(start, end, text) {{{2
-"
-" Replace the area defined by the 'start' and 'end' positions with 'text'. The
-" positions should be compatible with the results of getpos():
-"
-"   [bufnum, lnum, col, off]
-"
-function! sideways#ReplaceByPosition(start, end, text)
-  call setpos('.', a:start)
-  call setpos("'z", a:end)
-
-  return sideways#ReplaceMotion('v`z', a:text)
 endfunction
 
 " Text retrieval {{{1
@@ -272,32 +300,9 @@ function! sideways#GetMotion(motion)
   return text
 endfunction
 
-" function! sideways#GetLines(start, end) {{{2
-"
-" Retrieve the lines from "start" to "end" and return them as a list. This is
-" simply a wrapper for getbufline for the moment.
-function! sideways#GetLines(start, end)
-  return getbufline('%', a:start, a:end)
-endfunction
-
 " function! sideways#GetCols(start, end) {{{2
 "
 " Retrieve the text from columns "start" to "end" on the current line.
 function! sideways#GetCols(start, end)
   return strpart(getline('.'), a:start - 1, a:end - a:start + 1)
 endfunction
-
-" function! sideways#GetByPosition(start, end) {{{2
-"
-" Fetch the area defined by the 'start' and 'end' positions. The positions
-" should be compatible with the results of getpos():
-"
-"   [bufnum, lnum, col, off]
-"
-function! sideways#GetByPosition(start, end)
-  call setpos('.', a:start)
-  call setpos("'z", a:end)
-
-  return sideways#GetMotion('v`z')
-endfunction
-
