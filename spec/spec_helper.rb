@@ -18,6 +18,18 @@ RSpec.configure do |config|
   config.before(:suite) do
     VIM = Vimrunner.start
     VIM.add_plugin(File.expand_path('.'), 'plugin/sideways.vim')
+
+    def VIM.left
+      command 'SidewaysLeft'
+      write
+      self
+    end
+
+    def VIM.right
+      command 'SidewaysRight'
+      write
+      self
+    end
   end
 
   config.after(:suite) do

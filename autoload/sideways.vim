@@ -1,66 +1,112 @@
 function! sideways#Left()
-  let items        = sideways#Parse()
+  let items = sideways#Parse()
+  if empty(items)
+    return 0
+  end
+
   let last_index   = len(items) - 1
   let active_index = s:FindActiveItem(items)
-
   if active_index < 0
-    return
+    return 0
   endif
 
   if active_index == 0
-    let first      = items[active_index]
-    let second     = items[last_index]
-    let new_active = second
+    let first             = items[active_index]
+    let second            = items[last_index]
+    let new_cursor_column = second[0] + s:Delta(second, first)
   else
-    let first      = items[active_index - 1]
-    let second     = items[active_index]
-    let new_active = first
+    let first             = items[active_index - 1]
+    let second            = items[active_index]
+    let new_cursor_column = first[0]
   endif
 
-  let position = getpos('.')
-  call s:Swap(first, second)
-  let position[2] = new_active[0] + s:Delta(first, second)
-  call setpos('.', position)
+  call s:Swap(first, second, new_cursor_column)
+  return 1
 endfunction
 
 function! sideways#Right()
-  let items        = sideways#Parse()
+  let items = sideways#Parse()
+  if empty(items)
+    return 0
+  end
+
   let last_index   = len(items) - 1
   let active_index = s:FindActiveItem(items)
-
   if active_index < 0
-    return
+    return 0
   endif
 
   if active_index == last_index
-    let first      = items[last_index]
-    let second     = items[0]
-    let new_active = first
+    let first             = items[0]
+    let second            = items[last_index]
+    let new_cursor_column = first[0]
   else
-    let first      = items[active_index]
-    let second     = items[active_index + 1]
-    let new_active = second
+    let first             = items[active_index]
+    let second            = items[active_index + 1]
+    let new_cursor_column = second[0] + s:Delta(second, first)
   endif
 
-  let position = getpos('.')
-  call s:Swap(first, second)
-  let position[2] = new_active[0] + s:Delta(first, second)
-  call setpos('.', position)
+  call s:Swap(first, second, new_cursor_column)
+  return 1
 endfunction
 
 function! sideways#Parse()
-  return [ [14, 16], [19, 21], [24, 28] ]
+  let start_pattern     = '\k\+\zs('
+  let end_pattern       = '^)'
+  let delimiter_pattern = '^,\s*'
+  let skip_pattern      = '^\s'
+
+  try
+    normal! zR
+    call sideways#PushCursor()
+
+    if search(start_pattern, 'bW', line('.')) <= 0
+      return []
+    endif
+
+    normal! l
+
+    let items = []
+    let current_item = [col('.'), -1]
+
+    while s:RestOfLine() !~ end_pattern && col('.') <= col('$')
+      normal! l
+
+      if s:RestOfLine() =~ delimiter_pattern
+        let current_item[1] = col('.') - 1
+        call add(items, current_item)
+
+        normal! l
+        while s:RestOfLine() =~ skip_pattern
+          normal! l
+        endwhile
+        let current_item = [col('.'), -1]
+      endif
+    endwhile
+
+    let current_item[1] = col('.') - 1
+    call add(items, current_item)
+
+    return items
+  finally
+    call sideways#PopCursor()
+  endtry
 endfunction
 
-function! s:Swap(first, second)
+function! s:Swap(first, second, new_cursor_column)
   let [first_start, first_end]   = a:first
   let [second_start, second_end] = a:second
 
   let first_body  = sideways#GetCols(first_start, first_end)
   let second_body = sideways#GetCols(second_start, second_end)
 
+  let position = getpos('.')
+
   call sideways#ReplaceCols(second_start, second_end, first_body)
   call sideways#ReplaceCols(first_start, first_end, second_body)
+
+  let position[2] = a:new_cursor_column
+  call setpos('.', position)
 endfunction
 
 function! s:FindActiveItem(items)
@@ -81,7 +127,11 @@ function! s:FindActiveItem(items)
 endfunction
 
 function! s:Delta(first, second)
-  return abs((a:first[1] - a:first[0]) - (a:second[1] - a:second[0]))
+  return (a:first[1] - a:first[0]) - (a:second[1] - a:second[0])
+endfunction
+
+function! s:RestOfLine()
+  return strpart(getline('.'), col('.') - 1)
 endfunction
 
 " Cursor stack manipulation {{{1
