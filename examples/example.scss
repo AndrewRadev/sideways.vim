@@ -1,0 +1,5 @@
+div {
+  border-radius: 20px 0 0 20px;
+
+  @include gradient(#aaa, #bbb);
+}

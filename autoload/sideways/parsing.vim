@@ -15,7 +15,7 @@ function! sideways#parsing#Parse()
   let definitions =
         \ [
         \   {
-        \     'start':     '\k\+\zs(',
+        \     'start':     '\k\zs(',
         \     'end':       ')',
         \     'delimiter': '^,\s*',
         \     'skip':      '^\s',
@@ -27,6 +27,13 @@ function! sideways#parsing#Parse()
         \     'delimiter': '^,\s*',
         \     'skip':      '^\s',
         \     'brackets':  ['([''"', ')]''"']
+        \   },
+        \   {
+        \     'start':     '\k:\s*\zs\s',
+        \     'end':       ';',
+        \     'delimiter': '^\s',
+        \     'skip':      '^\s',
+        \     'brackets':  ['(''"', ')''"']
         \   },
         \ ]
 
@@ -120,5 +127,6 @@ endfunction
 
 " Simple debugging
 function! s:DebugItems(items)
+  Decho a:items
   Decho map(copy(a:items), 'sideways#util#GetCols(v:val[0], v:val[1])')
 endfunction

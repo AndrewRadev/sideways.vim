@@ -79,13 +79,18 @@ function! sideways#util#ReplaceCols(start, end, text)
   let start    = a:start - 1
   let interval = a:end - a:start
 
-  if start > 0
+  if start > 0 && interval > 0
     let motion = '0'.start.'lv'.interval.'l'
-  else
+  elseif start > 0
+    let motion = '0'.start.'lv'
+  elseif interval > 0
     let motion = '0v'.interval.'l'
+  else
+    return 0
   endif
 
-  return sideways#util#ReplaceMotion(motion, a:text)
+  call sideways#util#ReplaceMotion(motion, a:text)
+  return 1
 endfunction
 
 " Text retrieval {{{1
