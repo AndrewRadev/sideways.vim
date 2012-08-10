@@ -76,25 +76,45 @@ endfunction
 "   [ [14, 16], [19, 21] ]
 "
 function! sideways#Parse()
-  let start_pattern     = '\k\+\zs('
-  let end_pattern       = '^)'
-  let delimiter_pattern = '^,\s*'
-  let skip_pattern      = '^\s'
+  let definitions =
+        \ [
+        \   {
+        \     'start':     '\k\+\zs(',
+        \     'end':       '^)',
+        \     'delimiter': '^,\s*',
+        \     'skip':      '^\s',
+        \   },
+        \   {
+        \     'start':     '[',
+        \     'end':       '^]',
+        \     'delimiter': '^,\s*',
+        \     'skip':      '^\s',
+        \   },
+        \ ]
 
-  try
+  let items = []
+
+  for definition in definitions
+    let start_pattern     = definition.start
+    let end_pattern       = definition.end
+    let delimiter_pattern = definition.delimiter
+    let skip_pattern      = definition.skip
+
     normal! zR
     call sideways#PushCursor()
 
     if search(start_pattern, 'bW', line('.')) <= 0
-      return []
+      call sideways#PopCursor()
+      continue
     endif
 
     normal! l
 
-    let items = []
     let current_item = [col('.'), -1]
 
-    while s:RemainderOfLine() !~ end_pattern && col('.') <= col('$')
+    " TODO (2012-08-10) bail out at EOL
+    " TODO (2012-08-10) s:StackEmpty(stack)
+    while s:RemainderOfLine() !~ end_pattern
       normal! l
 
       if s:RemainderOfLine() =~ delimiter_pattern
@@ -112,10 +132,15 @@ function! sideways#Parse()
     let current_item[1] = col('.') - 1
     call add(items, current_item)
 
-    return items
-  finally
+    if !empty(items)
+      call sideways#PopCursor()
+      break
+    endif
+
     call sideways#PopCursor()
-  endtry
+  endfor
+
+  return items
 endfunction
 
 " function! s:Swap(first, second, new_cursor_column) {{{2
@@ -250,7 +275,6 @@ function! sideways#ReplaceMotion(motion, text)
 
   let @z = a:text
   exec 'normal! '.a:motion.'"zp'
-  normal! gv=
 
   call setreg('z', original_reg, original_reg_type)
 endfunction
