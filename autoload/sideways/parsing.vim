@@ -16,14 +16,14 @@ function! sideways#parsing#Parse()
         \ [
         \   {
         \     'start':     '\k\+\zs(',
-        \     'end':       '^)',
+        \     'end':       ')',
         \     'delimiter': '^,\s*',
         \     'skip':      '^\s',
         \     'brackets':  ['([''"', ')]''"']
         \   },
         \   {
-        \     'start':     '[',
-        \     'end':       '^]',
+        \     'start':     '\[',
+        \     'end':       '\]',
         \     'delimiter': '^,\s*',
         \     'skip':      '^\s',
         \     'brackets':  ['([''"', ')]''"']
@@ -43,7 +43,7 @@ function! sideways#parsing#Parse()
     normal! zR
     call sideways#util#PushCursor()
 
-    if search(start_pattern, 'bW', line('.')) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW', '', line('.')) <= 0
       call sideways#util#PopCursor()
       continue
     endif
@@ -52,9 +52,10 @@ function! sideways#parsing#Parse()
 
     let current_item = [col('.'), -1]
 
+    let remainder_of_line = s:RemainderOfLine()
+
     " TODO (2012-08-10) bail out at EOL
-    " TODO (2012-08-10) s:StackEmpty(stack)
-    while s:RemainderOfLine() !~ end_pattern
+    while s:RemainderOfLine() !~ '^'.end_pattern
       let remainder_of_line = s:RemainderOfLine()
       let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
 
@@ -111,4 +112,9 @@ endfunction
 " end.
 function! s:RemainderOfLine()
   return strpart(getline('.'), col('.') - 1)
+endfunction
+
+" Simple debugging
+function! s:DebugItems(items)
+  Decho map(copy(a:items), 'sideways#util#GetCols(v:val[0], v:val[1])')
 endfunction
