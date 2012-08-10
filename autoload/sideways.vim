@@ -1,5 +1,5 @@
 function! sideways#Left()
-  let items = sideways#Parse()
+  let items = sideways#parsing#Parse()
   if empty(items)
     return 0
   end
@@ -25,7 +25,7 @@ function! sideways#Left()
 endfunction
 
 function! sideways#Right()
-  let items = sideways#Parse()
+  let items = sideways#parsing#Parse()
   if empty(items)
     return 0
   end
@@ -48,87 +48,6 @@ function! sideways#Right()
 
   call s:Swap(first, second, new_cursor_column)
   return 1
-endfunction
-
-" Extract column positions for "arguments" on the current line. Returns a list
-" of pairs, each pair contains the start and end columns of the item
-"
-" Example:
-"
-" On the following line:
-"
-"   def function(one, two):
-"
-" The result would be:
-"
-"   [ [14, 16], [19, 21] ]
-"
-function! sideways#Parse()
-  let definitions =
-        \ [
-        \   {
-        \     'start':     '\k\+\zs(',
-        \     'end':       '^)',
-        \     'delimiter': '^,\s*',
-        \     'skip':      '^\s',
-        \   },
-        \   {
-        \     'start':     '[',
-        \     'end':       '^]',
-        \     'delimiter': '^,\s*',
-        \     'skip':      '^\s',
-        \   },
-        \ ]
-
-  let items = []
-
-  for definition in definitions
-    let start_pattern     = definition.start
-    let end_pattern       = definition.end
-    let delimiter_pattern = definition.delimiter
-    let skip_pattern      = definition.skip
-
-    normal! zR
-    call sideways#util#PushCursor()
-
-    if search(start_pattern, 'bW', line('.')) <= 0
-      call sideways#util#PopCursor()
-      continue
-    endif
-
-    normal! l
-
-    let current_item = [col('.'), -1]
-
-    " TODO (2012-08-10) bail out at EOL
-    " TODO (2012-08-10) s:StackEmpty(stack)
-    while s:RemainderOfLine() !~ end_pattern
-      normal! l
-
-      if s:RemainderOfLine() =~ delimiter_pattern
-        let current_item[1] = col('.') - 1
-        call add(items, current_item)
-
-        normal! l
-        while s:RemainderOfLine() =~ skip_pattern
-          normal! l
-        endwhile
-        let current_item = [col('.'), -1]
-      endif
-    endwhile
-
-    let current_item[1] = col('.') - 1
-    call add(items, current_item)
-
-    if !empty(items)
-      call sideways#util#PopCursor()
-      break
-    endif
-
-    call sideways#util#PopCursor()
-  endfor
-
-  return items
 endfunction
 
 " Swaps the a:first and a:second items in the buffer. Both first arguments are
@@ -184,10 +103,4 @@ endfunction
 " in the current line.
 function! s:Delta(first, second)
   return (a:first[1] - a:first[0]) - (a:second[1] - a:second[0])
-endfunction
-
-" Returns the remainder of the line from the current cursor position to the
-" end.
-function! s:RemainderOfLine()
-  return strpart(getline('.'), col('.') - 1)
 endfunction
