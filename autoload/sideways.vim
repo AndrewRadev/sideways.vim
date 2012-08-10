@@ -1,10 +1,3 @@
-" vim: foldmethod=marker
-
-" Main {{{1
-
-" function! sideways#Left() {{{2
-"
-" Move the current argument to the left
 function! sideways#Left()
   let items = sideways#Parse()
   if empty(items)
@@ -31,9 +24,6 @@ function! sideways#Left()
   return 1
 endfunction
 
-" function! sideways#Right() {{{2
-"
-" Move the current argument to the right
 function! sideways#Right()
   let items = sideways#Parse()
   if empty(items)
@@ -60,8 +50,6 @@ function! sideways#Right()
   return 1
 endfunction
 
-" function! sideways#Parse() {{{2
-"
 " Extract column positions for "arguments" on the current line. Returns a list
 " of pairs, each pair contains the start and end columns of the item
 "
@@ -101,10 +89,10 @@ function! sideways#Parse()
     let skip_pattern      = definition.skip
 
     normal! zR
-    call sideways#PushCursor()
+    call sideways#util#PushCursor()
 
     if search(start_pattern, 'bW', line('.')) <= 0
-      call sideways#PopCursor()
+      call sideways#util#PopCursor()
       continue
     endif
 
@@ -133,18 +121,16 @@ function! sideways#Parse()
     call add(items, current_item)
 
     if !empty(items)
-      call sideways#PopCursor()
+      call sideways#util#PopCursor()
       break
     endif
 
-    call sideways#PopCursor()
+    call sideways#util#PopCursor()
   endfor
 
   return items
 endfunction
 
-" function! s:Swap(first, second, new_cursor_column) {{{2
-"
 " Swaps the a:first and a:second items in the buffer. Both first arguments are
 " expected to be pairs of start and end columns. The last argument is a
 " number, the new column to position the cursor on.
@@ -157,20 +143,18 @@ function! s:Swap(first, second, new_cursor_column)
   let [first_start, first_end]   = a:first
   let [second_start, second_end] = a:second
 
-  let first_body  = sideways#GetCols(first_start, first_end)
-  let second_body = sideways#GetCols(second_start, second_end)
+  let first_body  = sideways#util#GetCols(first_start, first_end)
+  let second_body = sideways#util#GetCols(second_start, second_end)
 
   let position = getpos('.')
 
-  call sideways#ReplaceCols(second_start, second_end, first_body)
-  call sideways#ReplaceCols(first_start, first_end, second_body)
+  call sideways#util#ReplaceCols(second_start, second_end, first_body)
+  call sideways#util#ReplaceCols(first_start, first_end, second_body)
 
   let position[2] = a:new_cursor_column
   call setpos('.', position)
 endfunction
 
-" function! s:FindActiveItem(items) {{{2
-"
 " Finds an item in the given list of column pairs, which the cursor is
 " currently positioned in.
 "
@@ -192,8 +176,6 @@ function! s:FindActiveItem(items)
   return -1
 endfunction
 
-" function! s:Delta(first, second) {{{2
-"
 " Return the difference in length between the first start-end column pair and
 " the second one.
 "
@@ -208,125 +190,4 @@ endfunction
 " end.
 function! s:RemainderOfLine()
   return strpart(getline('.'), col('.') - 1)
-endfunction
-
-" Cursor stack manipulation {{{1
-"
-" In order to make the pattern of saving the cursor and restoring it
-" afterwards easier, these functions implement a simple cursor stack. The
-" basic usage is:
-"
-"   call sideways#PushCursor()
-"   " Do stuff that move the cursor around
-"   call sideways#PopCursor()
-
-" function! sideways#PushCursor() {{{2
-"
-" Adds the current cursor position to the cursor stack.
-function! sideways#PushCursor()
-  if !exists('b:cursor_position_stack')
-    let b:cursor_position_stack = []
-  endif
-
-  call add(b:cursor_position_stack, getpos('.'))
-endfunction
-
-" function! sideways#PopCursor() {{{2
-"
-" Restores the cursor to the latest position in the cursor stack, as added
-" from the sideways#PushCursor function. Removes the position from the stack.
-function! sideways#PopCursor()
-  if !exists('b:cursor_position_stack')
-    let b:cursor_position_stack = []
-  endif
-
-  call setpos('.', remove(b:cursor_position_stack, -1))
-endfunction
-
-" function! sideways#PeekCursor() {{{2
-"
-" Returns the last saved cursor position from the cursor stack.
-" Note that if the cursor hasn't been saved at all, this will raise an error.
-function! sideways#PeekCursor()
-  return b:cursor_position_stack[-1]
-endfunction
-
-" Text replacement {{{1
-"
-" Vim doesn't seem to have a whole lot of functions to aid in text replacement
-" within a buffer. The ":normal!" command usually works just fine, but it
-" could be difficult to maintain sometimes. These functions encapsulate a few
-" common patterns for this.
-
-" function! sideways#ReplaceMotion(motion, text) {{{2
-"
-" Replace the normal mode "motion" with "text". This is mostly just a wrapper
-" for a normal! command with a paste, but doesn't pollute any registers.
-"
-"   Examples:
-"     call sideways#ReplaceMotion('Va{', 'some text')
-"     call sideways#ReplaceMotion('V', 'replacement line')
-"
-" Note that the motion needs to include a visual mode key, like "V", "v" or
-" "gv"
-function! sideways#ReplaceMotion(motion, text)
-  let original_reg      = getreg('z')
-  let original_reg_type = getregtype('z')
-
-  let @z = a:text
-  exec 'normal! '.a:motion.'"zp'
-
-  call setreg('z', original_reg, original_reg_type)
-endfunction
-
-" function! sideways#ReplaceCols(start, end, text) {{{2
-"
-" Replace the area defined by the 'start' and 'end' columns on the current
-" line with 'text'
-"
-" TODO Multibyte characters break it
-function! sideways#ReplaceCols(start, end, text)
-  let start    = a:start - 1
-  let interval = a:end - a:start
-
-  if start > 0
-    let motion = '0'.start.'lv'.interval.'l'
-  else
-    let motion = '0v'.interval.'l'
-  endif
-
-  return sideways#ReplaceMotion(motion, a:text)
-endfunction
-
-" Text retrieval {{{1
-"
-" These functions are similar to the text replacement functions, only retrieve
-" the text instead.
-
-" function! sideways#GetMotion(motion) {{{2
-"
-" Execute the normal mode motion "motion" and return the text it marks.
-"
-" Note that the motion needs to include a visual mode key, like "V", "v" or
-" "gv"
-function! sideways#GetMotion(motion)
-  call sideways#PushCursor()
-
-  let original_reg      = getreg('z')
-  let original_reg_type = getregtype('z')
-
-  exec 'normal! '.a:motion.'"zy'
-  let text = @z
-
-  call setreg('z', original_reg, original_reg_type)
-  call sideways#PopCursor()
-
-  return text
-endfunction
-
-" function! sideways#GetCols(start, end) {{{2
-"
-" Retrieve the text from columns "start" to "end" on the current line.
-function! sideways#GetCols(start, end)
-  return strpart(getline('.'), a:start - 1, a:end - a:start + 1)
 endfunction
