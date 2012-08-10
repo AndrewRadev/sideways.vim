@@ -1,10 +1,10 @@
 def function(three, one, two):
     pass
 
-def function(one, two, [1, 2, 3]):
+def function(one, [1, 2, 3], two):
     pass
 
-def function(one, two, three
+def function(one, three, two
     pass
 
 list = [[two, four, five], three, one]

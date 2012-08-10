@@ -54,7 +54,6 @@ function! sideways#parsing#Parse()
 
     let remainder_of_line = s:RemainderOfLine()
 
-    " TODO (2012-08-10) bail out at EOL
     while s:RemainderOfLine() !~ '^'.end_pattern
       let remainder_of_line = s:RemainderOfLine()
       let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
@@ -76,12 +75,17 @@ function! sideways#parsing#Parse()
           normal! l
         endwhile
         let current_item = [col('.'), -1]
+      elseif col('.') == col('$') - 1
+        let current_item[1] = col('$') - 1
+        break
       else
         normal! l
       endif
     endwhile
 
-    let current_item[1] = col('.') - 1
+    if current_item[1] < 0
+      let current_item[1] = col('.') - 1
+    endif
     call add(items, current_item)
 
     if !empty(items)
