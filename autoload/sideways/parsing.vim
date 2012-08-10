@@ -15,7 +15,7 @@ function! sideways#parsing#Parse()
   let definitions =
         \ [
         \   {
-        \     'start':     '\k\zs(',
+        \     'start':     '\k(',
         \     'end':       ')',
         \     'delimiter': '^,\s*',
         \     'skip':      '^\s',
@@ -29,7 +29,7 @@ function! sideways#parsing#Parse()
         \     'brackets':  ['([''"', ')]''"']
         \   },
         \   {
-        \     'start':     '\k:\s*\zs\s',
+        \     'start':     '\k:\s*',
         \     'end':       ';',
         \     'delimiter': '^\s',
         \     'skip':      '^\s',
@@ -53,6 +53,8 @@ function! sideways#parsing#Parse()
     if searchpair(start_pattern, '', end_pattern, 'bW', '', line('.')) <= 0
       call sideways#util#PopCursor()
       continue
+    else
+      call search(start_pattern, 'Wce', line('.'))
     endif
 
     normal! l
