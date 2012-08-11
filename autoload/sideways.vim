@@ -21,6 +21,7 @@ function! sideways#Left()
   endif
 
   call s:Swap(first, second, new_cursor_column)
+  silent! call repeat#set(":call sideways#Left()\<cr>")
   return 1
 endfunction
 
@@ -47,6 +48,7 @@ function! sideways#Right()
   endif
 
   call s:Swap(first, second, new_cursor_column)
+  silent! call repeat#set(":call sideways#Right()\<cr>")
   return 1
 endfunction
 
