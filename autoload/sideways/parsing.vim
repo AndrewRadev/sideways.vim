@@ -35,6 +35,13 @@ function! sideways#parsing#Parse()
         \     'skip':      '^\s',
         \     'brackets':  ['(''"', ')''"']
         \   },
+        \   {
+        \     'start':     '^\s*|',
+        \     'end':       '|$',
+        \     'delimiter': '^|',
+        \     'skip':      '^$',
+        \     'brackets':  ['(''"', ')''"']
+        \   },
         \ ]
 
   let items = []
