@@ -23,7 +23,7 @@ The command is (provided you're in ~/.vim):
 <
 
 Another way is to simply copy all the essential directories inside the ~/.vim
-directory: plugin, ftplugin, autoload, doc.
+directory: plugin, autoload, doc.
 
 ==============================================================================
 USAGE                                *sideways-usage* *SidewaysLeft* *SidewaysRight*
