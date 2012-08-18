@@ -65,4 +65,18 @@ describe "python functions" do
           pass
     EOF
   end
+
+  specify "extra whitespace" do
+    set_file_contents <<-EOF
+      def function( one, two, three ):
+          pass
+    EOF
+
+    VIM.search('one')
+    VIM.right
+    assert_file_contents <<-EOF
+      def function( two, one, three ):
+          pass
+    EOF
+  end
 end

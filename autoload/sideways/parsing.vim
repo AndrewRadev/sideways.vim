@@ -15,15 +15,15 @@ function! sideways#parsing#Parse()
   let definitions =
         \ [
         \   {
-        \     'start':     '\k(',
-        \     'end':       ')',
+        \     'start':     '(\s*',
+        \     'end':       '\s*)',
         \     'delimiter': '^,\s*',
         \     'skip':      '^\s',
         \     'brackets':  ['([''"', ')]''"']
         \   },
         \   {
-        \     'start':     '\[',
-        \     'end':       '\]',
+        \     'start':     '\[\s*',
+        \     'end':       '\s*\]',
         \     'delimiter': '^,\s*',
         \     'skip':      '^\s',
         \     'brackets':  ['([''"', ')]''"']
