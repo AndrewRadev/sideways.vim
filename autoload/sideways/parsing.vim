@@ -36,6 +36,13 @@ function! sideways#parsing#Parse()
         \     'brackets':  ['(''"', ')''"']
         \   },
         \   {
+        \     'start':     '{\s*',
+        \     'end':       ';\=\s*}',
+        \     'delimiter': '^;\s*',
+        \     'skip':      '^\s',
+        \     'brackets':  ['(''"', ')''"']
+        \   },
+        \   {
         \     'start':     '^\s*|',
         \     'end':       '|$',
         \     'delimiter': '^|',
