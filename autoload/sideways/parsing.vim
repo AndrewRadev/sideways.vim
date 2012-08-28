@@ -54,7 +54,7 @@ function! sideways#parsing#Parse()
 
     let [opening_brackets, closing_brackets] = definition.brackets
 
-    normal! zR
+    normal! zO
     call sideways#util#PushCursor()
 
     if searchpair(start_pattern, '', end_pattern, 'bW', '', line('.')) <= 0
