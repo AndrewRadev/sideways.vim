@@ -11,47 +11,9 @@
 "
 "   [ [14, 16], [19, 21] ]
 "
-function! sideways#parsing#Parse()
-  let definitions =
-        \ [
-        \   {
-        \     'start':     '(\s*',
-        \     'end':       '\s*)',
-        \     'delimiter': '^,\s*',
-        \     'skip':      '^\s',
-        \     'brackets':  ['([''"', ')]''"']
-        \   },
-        \   {
-        \     'start':     '\[\s*',
-        \     'end':       '\s*\]',
-        \     'delimiter': '^,\s*',
-        \     'skip':      '^\s',
-        \     'brackets':  ['([''"', ')]''"']
-        \   },
-        \   {
-        \     'start':     '\k:\s*',
-        \     'end':       ';',
-        \     'delimiter': '^\s',
-        \     'skip':      '^\s',
-        \     'brackets':  ['(''"', ')''"']
-        \   },
-        \   {
-        \     'start':     '{\s*',
-        \     'end':       ';\=\s*}',
-        \     'delimiter': '^;\s*',
-        \     'skip':      '^\s',
-        \     'brackets':  ['(''"', ')''"']
-        \   },
-        \   {
-        \     'start':     '^\s*|',
-        \     'end':       '|$',
-        \     'delimiter': '^|',
-        \     'skip':      '^$',
-        \     'brackets':  ['(''"', ')''"']
-        \   },
-        \ ]
-
-  let items = []
+function! sideways#parsing#Parse(definitions)
+  let definitions = a:definitions
+  let items       = []
 
   for definition in definitions
     let start_pattern     = definition.start
