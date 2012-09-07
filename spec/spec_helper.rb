@@ -7,32 +7,32 @@ RSpec.configure do |config|
 
   # cd into a temporary directory for every example.
   config.around do |example|
-    Dir.mktmpdir do |dir|
-      Dir.chdir(dir) do
-        VIM.command("cd #{dir}")
-        example.call
-      end
-    end
-  end
+    @vim = Vimrunner.start
+    @vim.add_plugin(File.expand_path('.'), 'plugin/sideways.vim')
 
-  config.before(:suite) do
-    VIM = Vimrunner.start
-    VIM.add_plugin(File.expand_path('.'), 'plugin/sideways.vim')
-
-    def VIM.left
+    def @vim.left
       command 'SidewaysLeft'
       write
       self
     end
 
-    def VIM.right
+    def @vim.right
       command 'SidewaysRight'
       write
       self
     end
-  end
 
-  config.after(:suite) do
-    VIM.kill
+    def vim
+      @vim
+    end
+
+    Dir.mktmpdir do |dir|
+      Dir.chdir(dir) do
+        @vim.command("cd #{dir}")
+        example.call
+      end
+    end
+
+    @vim.kill
   end
 end

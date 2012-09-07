@@ -9,23 +9,23 @@ describe "python functions" do
           pass
     EOF
 
-    VIM.search('one')
+    vim.search('one')
   end
 
   specify "to the left" do
-    VIM.left
+    vim.left
     assert_file_contents <<-EOF
       def function(three, two, one):
           pass
     EOF
 
-    VIM.left
+    vim.left
     assert_file_contents <<-EOF
       def function(three, one, two):
           pass
     EOF
 
-    VIM.left
+    vim.left
     assert_file_contents <<-EOF
       def function(one, three, two):
           pass
@@ -33,19 +33,19 @@ describe "python functions" do
   end
 
   specify "to the right" do
-    VIM.right
+    vim.right
     assert_file_contents <<-EOF
       def function(two, one, three):
           pass
     EOF
 
-    VIM.right
+    vim.right
     assert_file_contents <<-EOF
       def function(two, three, one):
           pass
     EOF
 
-    VIM.right
+    vim.right
     assert_file_contents <<-EOF
       def function(one, three, two):
           pass
@@ -58,8 +58,8 @@ describe "python functions" do
           pass
     EOF
 
-    VIM.search('one')
-    VIM.right
+    vim.search('one')
+    vim.right
     assert_file_contents <<-EOF
       def function(two, one, three
           pass
@@ -72,8 +72,8 @@ describe "python functions" do
           pass
     EOF
 
-    VIM.search('one')
-    VIM.right
+    vim.search('one')
+    vim.right
     assert_file_contents <<-EOF
       def function( two, one, three ):
           pass
