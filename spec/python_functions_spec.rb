@@ -79,4 +79,17 @@ describe "python functions" do
           pass
     EOF
   end
+
+  specify "complicated function call" do
+    set_file_contents <<-EOF
+      foo(bar, baz(foobar(), foobaz))
+    EOF
+
+    vim.search('bar')
+    vim.right
+
+    assert_file_contents <<-EOF
+      foo(baz(foobar(), foobaz), bar)
+    EOF
+  end
 end

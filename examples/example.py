@@ -8,3 +8,5 @@ def function(one, three, two
     pass
 
 list = [[two, four, five], three, one]
+
+foo(bar, baz(foobar(), foobaz))

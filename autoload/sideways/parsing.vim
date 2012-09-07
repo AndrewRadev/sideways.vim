@@ -36,17 +36,18 @@ function! sideways#parsing#Parse(definitions)
     normal! l
 
     let current_item = [col('.'), -1]
-
     let remainder_of_line = s:RemainderOfLine()
 
+    " TODO (2012-09-07) Figure out how to work with RemainderOfLine
     while s:RemainderOfLine() !~ '^'.end_pattern
       let remainder_of_line = s:RemainderOfLine()
       let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
 
       if bracket_match >= 0
+        let opening_bracket = opening_brackets[bracket_match]
         let closing_bracket = closing_brackets[bracket_match]
 
-        if search('\V'.closing_bracket, 'W', line('.')) <= 0
+        if searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.')) <= 0
           continue
         else
           normal! l
