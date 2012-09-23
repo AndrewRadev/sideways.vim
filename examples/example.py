@@ -7,6 +7,8 @@ def function(one, [1, 2, 3], two):
 def function(one, three, two
     pass
 
-list = [[two, four, five], three, one]
+list = [[four, two, five], three, one]
+
+list = ['foo', 'baz', 'bar']
 
 foo(bar, baz(foobar(), foobaz))

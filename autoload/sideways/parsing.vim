@@ -44,27 +44,33 @@ function! sideways#parsing#Parse(definitions)
       let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
 
       if bracket_match >= 0
+        " then try to jump to the closing bracket
         let opening_bracket = opening_brackets[bracket_match]
         let closing_bracket = closing_brackets[bracket_match]
 
-        if searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.')) <= 0
-          continue
-        else
-          normal! l
-        endif
+        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
+        " move rightwards regardless of the result
+        normal! l
       elseif remainder_of_line =~ delimiter_pattern
+        " then store the current item
         let current_item[1] = col('.') - 1
         call add(items, current_item)
 
         normal! l
+
+        " skip some whitespace TODO consider removing
         while s:RemainderOfLine() =~ skip_pattern
           normal! l
         endwhile
+
+        " initialize a new "current item"
         let current_item = [col('.'), -1]
       elseif col('.') == col('$') - 1
+        " then we're at the end of the line, finish up
         let current_item[1] = col('$') - 1
         break
       else
+        " move rightwards
         normal! l
       endif
     endwhile
