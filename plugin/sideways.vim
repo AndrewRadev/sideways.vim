@@ -43,6 +43,13 @@ let g:sideways_definitions =
       \     'skip':      '^$',
       \     'brackets':  ['(''"', ')''"']
       \   },
+      \   {
+      \     'start':     '\<if\s*',
+      \     'end':       '^$',
+      \     'delimiter': '^\s*\(and\|or\|||\|&&\)\s*',
+      \     'skip':      '^\s',
+      \     'brackets':  ['([''"', ')]''"']
+      \   },
       \ ]
 
 command! SidewaysLeft  call sideways#Left(g:sideways_definitions)

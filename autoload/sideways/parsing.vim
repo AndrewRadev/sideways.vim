@@ -56,7 +56,8 @@ function! sideways#parsing#Parse(definitions)
         let current_item[1] = col('.') - 1
         call add(items, current_item)
 
-        normal! l
+        let match = matchstr(remainder_of_line, delimiter_pattern)
+        exe 'normal! '.len(match).'l'
 
         " skip some whitespace TODO consider removing
         while s:RemainderOfLine() =~ skip_pattern
