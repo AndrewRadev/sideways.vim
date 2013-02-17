@@ -33,6 +33,17 @@ function! sideways#util#PopCursor()
   call setpos('.', remove(b:cursor_position_stack, -1))
 endfunction
 
+" function! sideways#util#DropCursor() {{{2
+"
+" Drops the last cursor location from the stack.
+function! sideways#util#DropCursor()
+  if !exists('b:cursor_position_stack')
+    let b:cursor_position_stack = []
+  endif
+
+  call remove(b:cursor_position_stack, -1)
+endfunction
+
 " function! sideways#util#PeekCursor() {{{2
 "
 " Returns the last saved cursor position from the cursor stack.
@@ -124,4 +135,16 @@ endfunction
 " Retrieve the text from columns "start" to "end" on the current line.
 function! sideways#util#GetCols(start, end)
   return strpart(getline('.'), a:start - 1, a:end - a:start + 1)
+endfunction
+
+" Positioning the cursor {{{1
+"
+
+" function! sideways#util#SetCol(col) {{{2
+"
+" Positions the cursor at the given column.
+function! sideways#util#SetCol(col)
+  let position = getpos('.')
+  let position[2] = a:col
+  call setpos('.', position)
 endfunction

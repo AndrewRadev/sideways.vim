@@ -12,3 +12,5 @@ list = [[four, two, five], three, one]
 list = ['foo', 'baz', 'bar']
 
 foo(bar, baz(foobar(), foobaz))
+
+foo([ 'baz', 'quux', 'bar' ])

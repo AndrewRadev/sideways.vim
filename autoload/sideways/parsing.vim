@@ -12,18 +12,85 @@
 "   [ [14, 16], [19, 21] ]
 "
 function! sideways#parsing#Parse(definitions)
+  call sideways#util#PushCursor()
+
   let definitions = a:definitions
   let items       = []
 
-  for definition in definitions
-    let start_pattern     = definition.start
-    let end_pattern       = definition.end
-    let delimiter_pattern = definition.delimiter
-    let skip_pattern      = definition.skip
+  let definition = s:LocateBestDefinition(definitions)
 
-    let [opening_brackets, closing_brackets] = definition.brackets
+  if empty(definition)
+    call sideways#util#PopCursor()
+    return []
+  endif
 
-    silent! normal! zO
+  let start_pattern     = definition.start
+  let end_pattern       = definition.end
+  let delimiter_pattern = definition.delimiter
+  let skip_pattern      = definition.skip
+
+  let [opening_brackets, closing_brackets] = definition.brackets
+
+  let current_item = [col('.'), -1]
+  let remainder_of_line = s:RemainderOfLine()
+
+  " TODO (2012-09-07) Figure out how to work with RemainderOfLine
+  while s:RemainderOfLine() !~ '^'.end_pattern
+    let remainder_of_line = s:RemainderOfLine()
+    let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
+
+    if bracket_match >= 0
+      " then try to jump to the closing bracket
+      let opening_bracket = opening_brackets[bracket_match]
+      let closing_bracket = closing_brackets[bracket_match]
+
+      call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
+      " move rightwards regardless of the result
+      normal! l
+    elseif remainder_of_line =~ delimiter_pattern
+      " then store the current item
+      let current_item[1] = col('.') - 1
+      call add(items, current_item)
+
+      let match = matchstr(remainder_of_line, delimiter_pattern)
+      exe 'normal! '.len(match).'l'
+
+      " skip some whitespace TODO consider removing
+      while s:RemainderOfLine() =~ skip_pattern
+        normal! l
+      endwhile
+
+      " initialize a new "current item"
+      let current_item = [col('.'), -1]
+    elseif col('.') == col('$') - 1
+      " then we're at the end of the line, finish up
+      let current_item[1] = col('$') - 1
+      break
+    else
+      " move rightwards
+      normal! l
+    endif
+  endwhile
+
+  if current_item[1] < 0
+    let current_item[1] = col('.') - 1
+  endif
+  call add(items, current_item)
+
+  call sideways#util#PopCursor()
+  return items
+endfunction
+
+function! s:LocateBestDefinition(definitions)
+  silent! normal! zO
+
+  let best_definition     = {}
+  let best_definition_col = 0
+
+  for definition in a:definitions
+    let start_pattern = definition.start
+    let end_pattern   = definition.end
+
     call sideways#util#PushCursor()
 
     if searchpair(start_pattern, '', end_pattern, 'bW', '', line('.')) <= 0
@@ -31,65 +98,23 @@ function! sideways#parsing#Parse(definitions)
       continue
     else
       call search(start_pattern, 'Wce', line('.'))
-    endif
+      normal! l
 
-    normal! l
-
-    let current_item = [col('.'), -1]
-    let remainder_of_line = s:RemainderOfLine()
-
-    " TODO (2012-09-07) Figure out how to work with RemainderOfLine
-    while s:RemainderOfLine() !~ '^'.end_pattern
-      let remainder_of_line = s:RemainderOfLine()
-      let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
-
-      if bracket_match >= 0
-        " then try to jump to the closing bracket
-        let opening_bracket = opening_brackets[bracket_match]
-        let closing_bracket = closing_brackets[bracket_match]
-
-        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
-        " move rightwards regardless of the result
-        normal! l
-      elseif remainder_of_line =~ delimiter_pattern
-        " then store the current item
-        let current_item[1] = col('.') - 1
-        call add(items, current_item)
-
-        let match = matchstr(remainder_of_line, delimiter_pattern)
-        exe 'normal! '.len(match).'l'
-
-        " skip some whitespace TODO consider removing
-        while s:RemainderOfLine() =~ skip_pattern
-          normal! l
-        endwhile
-
-        " initialize a new "current item"
-        let current_item = [col('.'), -1]
-      elseif col('.') == col('$') - 1
-        " then we're at the end of the line, finish up
-        let current_item[1] = col('$') - 1
-        break
-      else
-        " move rightwards
-        normal! l
+      if best_definition_col < col('.')
+        let best_definition_col = col('.')
+        let best_definition = definition
       endif
-    endwhile
-
-    if current_item[1] < 0
-      let current_item[1] = col('.') - 1
-    endif
-    call add(items, current_item)
-
-    if !empty(items)
-      call sideways#util#PopCursor()
-      break
     endif
 
     call sideways#util#PopCursor()
   endfor
 
-  return items
+  if best_definition_col > 0
+    call sideways#util#SetCol(best_definition_col)
+    return best_definition
+  else
+    return {}
+  endif
 endfunction
 
 function! s:BracketMatch(text, brackets)
