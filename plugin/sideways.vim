@@ -52,8 +52,8 @@ let g:sideways_definitions =
       \   },
       \ ]
 
-command! SidewaysLeft  call sideways#Left(g:sideways_definitions)
-command! SidewaysRight call sideways#Right(g:sideways_definitions)
+command! SidewaysLeft  call sideways#Left(g:sideways_definitions)  | silent! call repeat#set(":SidewaysLeft\<cr>")
+command! SidewaysRight call sideways#Right(g:sideways_definitions) | silent! call repeat#set(":SidewaysRight\<cr>")
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
