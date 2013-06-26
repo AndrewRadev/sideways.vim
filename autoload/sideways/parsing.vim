@@ -39,7 +39,11 @@ function! sideways#parsing#Parse(definitions)
     let remainder_of_line = s:RemainderOfLine()
     let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
 
-    if bracket_match >= 0
+    if col('.') == col('$') - 1
+      " then we're at the end of the line, finish up
+      let current_item[1] = col('$') - 1
+      break
+    elseif bracket_match >= 0
       " then try to jump to the closing bracket
       let opening_bracket = opening_brackets[bracket_match]
       let closing_bracket = closing_brackets[bracket_match]
@@ -62,10 +66,6 @@ function! sideways#parsing#Parse(definitions)
 
       " initialize a new "current item"
       let current_item = [col('.'), -1]
-    elseif col('.') == col('$') - 1
-      " then we're at the end of the line, finish up
-      let current_item[1] = col('$') - 1
-      break
     else
       " move rightwards
       normal! l

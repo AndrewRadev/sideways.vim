@@ -50,6 +50,13 @@ let g:sideways_definitions =
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"']
       \   },
+      \   {
+      \     'start':     '\k\{1,} ',
+      \     'end':       '^$',
+      \     'delimiter': '^,\s*',
+      \     'skip':      '^\s',
+      \     'brackets':  ['([''"', ')]''"']
+      \   },
       \ ]
 
 command! SidewaysLeft  call sideways#Left(g:sideways_definitions)  | silent! call repeat#set(":SidewaysLeft\<cr>")
