@@ -1,36 +1,34 @@
 require 'vimrunner'
-require 'vimrunner/testing'
+require 'vimrunner/rspec'
 require_relative './support/vim'
 
-RSpec.configure do |config|
-  config.include Vimrunner::Testing
-  config.include Support::Vim
+Vimrunner::RSpec.configure do |config|
+  config.reuse_server = true
 
-  # cd into a temporary directory for every example.
-  config.around do |example|
-    @vim = Vimrunner.start
-    @vim.add_plugin(File.expand_path('.'), 'plugin/sideways.vim')
+  plugin_path = File.expand_path('.')
 
-    def @vim.left
+  config.start_vim do
+    vim = Vimrunner.start
+    plugin_path = File.expand_path('../..', __FILE__)
+    vim.add_plugin(plugin_path, 'plugin/sideways.vim')
+
+    def vim.left
       command 'SidewaysLeft'
       write
       self
     end
 
-    def @vim.right
+    def vim.right
       command 'SidewaysRight'
       write
       self
     end
 
-    def vim
-      @vim
-    end
-
-    tmpdir(vim) do
-      example.call
-    end
-
-    @vim.kill
+    vim
   end
 end
+
+RSpec.configure do |config|
+  config.include Support::Vim
+end
+
