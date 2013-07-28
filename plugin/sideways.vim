@@ -23,24 +23,10 @@ let g:sideways_definitions =
       \     'brackets':  ['([''"', ')]''"']
       \   },
       \   {
-      \     'start':     '\k:\s*',
-      \     'end':       ';',
-      \     'delimiter': '^\s',
-      \     'skip':      '^\s',
-      \     'brackets':  ['(''"', ')''"']
-      \   },
-      \   {
       \     'start':     '{\s*',
       \     'end':       ';\=\s*}',
       \     'delimiter': '^;\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['(''"', ')''"']
-      \   },
-      \   {
-      \     'start':     '^\s*|',
-      \     'end':       '|$',
-      \     'delimiter': '^|',
-      \     'skip':      '^$',
       \     'brackets':  ['(''"', ')''"']
       \   },
       \   {
@@ -50,6 +36,9 @@ let g:sideways_definitions =
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"']
       \   },
+      \ ]
+
+autocmd FileType ruby,eruby let b:sideways_definitions = [
       \   {
       \     'start':     '\k\{1,} ',
       \     'end':       '^$',
@@ -59,8 +48,36 @@ let g:sideways_definitions =
       \   },
       \ ]
 
-command! SidewaysLeft  call sideways#Left(g:sideways_definitions)  | silent! call repeat#set(":SidewaysLeft\<cr>")
-command! SidewaysRight call sideways#Right(g:sideways_definitions) | silent! call repeat#set(":SidewaysRight\<cr>")
+autocmd FileType css,scss,less let b:sideways_definitions = [
+      \   {
+      \     'start':     '\k:\s*',
+      \     'end':       ';',
+      \     'delimiter': '^\s',
+      \     'skip':      '^\s',
+      \     'brackets':  ['(''"', ')''"']
+      \   },
+      \ ]
+
+autocmd FileType cucumber let b:sideways_definitions = [
+      \   {
+      \     'start':     '^\s*|',
+      \     'end':       '|$',
+      \     'delimiter': '^|',
+      \     'skip':      '^$',
+      \     'brackets':  ['(''"', ')''"']
+      \   },
+      \ ]
+
+command! SidewaysLeft  call sideways#Left(s:SidewaysDefinitions())  | silent! call repeat#set(":SidewaysLeft\<cr>")
+command! SidewaysRight call sideways#Right(s:SidewaysDefinitions()) | silent! call repeat#set(":SidewaysRight\<cr>")
+
+function! s:SidewaysDefinitions()
+  if exists('b:sideways_definitions')
+    return extend(copy(g:sideways_definitions), b:sideways_definitions)
+  else
+    return g:sideways_definitions
+  endif
+endfunction
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
