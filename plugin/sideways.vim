@@ -38,10 +38,20 @@ let g:sideways_definitions =
       \   },
       \ ]
 
-autocmd FileType ruby,eruby let b:sideways_definitions = [
+autocmd FileType ruby let b:sideways_definitions = [
       \   {
       \     'start':     '\k\{1,} ',
-      \     'end':       '^$',
+      \     'end':       '$',
+      \     'delimiter': '^,\s*',
+      \     'skip':      '^\s',
+      \     'brackets':  ['([''"', ')]''"']
+      \   },
+      \ ]
+
+autocmd FileType eruby let b:sideways_definitions = [
+      \   {
+      \     'start':     '\k\{1,} ',
+      \     'end':       '\s*%>',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"']
