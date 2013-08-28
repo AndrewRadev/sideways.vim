@@ -24,6 +24,13 @@ various other cases and it's intended to make the process configurable. While
 this particular example is in python, this should work for arguments in many
 different languages that use round braces to denote function calls.
 
+For ruby and eruby, it detects method calls without braces as well:
+``` ruby
+link_to user_registration_path, 'Something'
+# changes to:
+link_to 'Something', user_registration_path
+```
+
 Apart from functions, it works for square-bracket lists in dynamic languages:
 
 ``` python
@@ -58,6 +65,7 @@ nnoremap <c-h> :SidewaysLeft<cr>
 nnoremap <c-l> :SidewaysRight<cr>
 ```
 
-The plugin is intended to be highly customizable. In the future, it should be
-able to work with ruby function arguments and it may also contain an "argument"
-text object (since the machinery to detect arguments is already there).
+The plugin is intended to be customizable, though at this point you'd need to
+look at the source to do this. In the future, it may also contain an
+"argument" text object (since the machinery to detect arguments is already
+there).
