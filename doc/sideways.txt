@@ -1,3 +1,5 @@
+*sideways.txt*	Move an item in a delimiter-separated list left or right
+
 ==============================================================================
 CONTENTS                                           *sideways* *sideways-contents*
 
