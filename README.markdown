@@ -70,7 +70,7 @@ look at the source to do this. In the future, it may also contain an
 "argument" text object (since the machinery to detect arguments is already
 there).
 
-Bonus functionality:
+## Bonus functionality
 
 The plugin's machinery makes it easy to implement an "argument" text object.
 There are two mappings provided:
