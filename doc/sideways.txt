@@ -109,6 +109,7 @@ need to create mappings in your configuration files. Something like this:
 <
 This will map the "a" text object to operate on an "argument". So, you can
 perform `daa` to delete an argument, `cia` to change an argument, and so on.
+See |text-objects| for more information.
 
 ==============================================================================
 ISSUES                                                        *sideways-issues*

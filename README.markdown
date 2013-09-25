@@ -90,3 +90,4 @@ xmap ia <Plug>SidewaysArgumentTextobjI
 
 This will map the "a" text object to operate on an "argument". So, you can
 perform `daa` to delete an argument, `cia` to change an argument, and so on.
+See `:help text-objects` for more information.
