@@ -12,6 +12,11 @@ Vimrunner::RSpec.configure do |config|
     plugin_path = File.expand_path('../..', __FILE__)
     vim.add_plugin(plugin_path, 'plugin/sideways.vim')
 
+    vim.command('omap aa <Plug>SidewaysArgumentTextobjA')
+    vim.command('xmap aa <Plug>SidewaysArgumentTextobjA')
+    vim.command('omap ia <Plug>SidewaysArgumentTextobjI')
+    vim.command('xmap ia <Plug>SidewaysArgumentTextobjI')
+
     def vim.left
       command 'SidewaysLeft'
       write

@@ -50,6 +50,38 @@ function! sideways#Right(definitions)
   return 1
 endfunction
 
+function! sideways#AroundCursor(definitions)
+  let items = sideways#parsing#Parse(a:definitions)
+  if empty(items)
+    return []
+  end
+
+  let current_index = s:FindActiveItem(items)
+  let current       = items[current_index]
+
+  if current_index == 0
+    let previous = []
+  else
+    let previous = items[current_index - 1]
+  endif
+
+  if current_index == len(items) - 1
+    let next = []
+  else
+    let next = items[current_index + 1]
+  endif
+
+  return [previous, current, next]
+endfunction
+
+function! sideways#Definitions()
+  if exists('b:sideways_definitions')
+    return extend(copy(g:sideways_definitions), b:sideways_definitions)
+  else
+    return g:sideways_definitions
+  endif
+endfunction
+
 " Swaps the a:first and a:second items in the buffer. Both first arguments are
 " expected to be pairs of start and end columns. The last argument is a
 " number, the new column to position the cursor on.

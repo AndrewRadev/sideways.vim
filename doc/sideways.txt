@@ -91,6 +91,25 @@ look at the source to do this. In the future, it may also contain an
 "argument" text object (since the machinery to detect arguments is already
 there).
 
+Bonus functionality:
+
+The plugin's machinery makes it easy to implement an "argument" text object.
+There are two mappings provided:
+>
+    <Plug>SidewaysArgumentTextobjA
+    <Plug>SidewaysArgumentTextobjI
+<
+These are the outer and inner text objects, respectively. To use them, you
+need to create mappings in your configuration files. Something like this:
+>
+    omap aa <Plug>SidewaysArgumentTextobjA
+    xmap aa <Plug>SidewaysArgumentTextobjA
+    omap ia <Plug>SidewaysArgumentTextobjI
+    xmap ia <Plug>SidewaysArgumentTextobjI
+<
+This will map the "a" text object to operate on an "argument". So, you can
+perform `daa` to delete an argument, `cia` to change an argument, and so on.
+
 ==============================================================================
 ISSUES                                                        *sideways-issues*
 

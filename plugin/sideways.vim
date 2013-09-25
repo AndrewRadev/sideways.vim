@@ -78,16 +78,13 @@ autocmd FileType cucumber let b:sideways_definitions = [
       \   },
       \ ]
 
-command! SidewaysLeft  call sideways#Left(s:SidewaysDefinitions())  | silent! call repeat#set(":SidewaysLeft\<cr>")
-command! SidewaysRight call sideways#Right(s:SidewaysDefinitions()) | silent! call repeat#set(":SidewaysRight\<cr>")
+command! SidewaysLeft  call sideways#Left(sideways#Definitions())  | silent! call repeat#set(":SidewaysLeft\<cr>")
+command! SidewaysRight call sideways#Right(sideways#Definitions()) | silent! call repeat#set(":SidewaysRight\<cr>")
 
-function! s:SidewaysDefinitions()
-  if exists('b:sideways_definitions')
-    return extend(copy(g:sideways_definitions), b:sideways_definitions)
-  else
-    return g:sideways_definitions
-  endif
-endfunction
+onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
+xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
+onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
+xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
