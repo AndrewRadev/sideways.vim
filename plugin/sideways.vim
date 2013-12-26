@@ -13,7 +13,7 @@ let g:sideways_definitions =
       \     'end':       '\s*)',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"']
+      \     'brackets':  ['([{''"', ')]}''"']
       \   },
       \   {
       \     'start':     '\[\s*',
@@ -21,13 +21,6 @@ let g:sideways_definitions =
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"']
-      \   },
-      \   {
-      \     'start':     '{\s*',
-      \     'end':       ';\=\s*}',
-      \     'delimiter': '^;\s*',
-      \     'skip':      '^\s',
-      \     'brackets':  ['(''"', ')''"']
       \   },
       \   {
       \     'start':     '\<if\s*',
@@ -58,11 +51,28 @@ autocmd FileType eruby let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType go let b:sideways_definitions = [
+      \   {
+      \     'start':     '{\s*',
+      \     'end':       '\s*}',
+      \     'delimiter': '^,\s*',
+      \     'skip':      '^\s',
+      \     'brackets':  ['([''"', ')]''"']
+      \   },
+      \ ]
+
 autocmd FileType css,scss,less let b:sideways_definitions = [
       \   {
       \     'start':     '\k:\s*',
       \     'end':       ';',
       \     'delimiter': '^\s',
+      \     'skip':      '^\s',
+      \     'brackets':  ['(''"', ')''"']
+      \   },
+      \   {
+      \     'start':     '{\s*',
+      \     'end':       ';\=\s*}',
+      \     'delimiter': '^;\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['(''"', ')''"']
       \   },
