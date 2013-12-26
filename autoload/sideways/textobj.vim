@@ -18,14 +18,10 @@ function! sideways#textobj#Argument(mode)
 endfunction
 
 function! s:MarkCols(start_col, end_col)
-  let start = a:start_col - 1
-  let end   = a:end_col - 1
+  let line_offset = line2byte('.')
+  let start_byte  = line_offset + a:start_col - 1
+  let end_byte    = line_offset + a:end_col - 1
 
-  let interval = end - start
-
-  if start == 0
-    exe 'normal! 0v'.interval.'l'
-  else
-    exe 'normal! 0'.start.'lv'.interval.'l'
-  endif
+  exe 'normal! '.start_byte.'gov'.end_byte.'go'
+  return 1
 endfunction

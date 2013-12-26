@@ -84,23 +84,12 @@ endfunction
 "
 " Replace the area defined by the 'start' and 'end' columns on the current
 " line with 'text'
-"
-" TODO Multibyte characters break it
 function! sideways#util#ReplaceCols(start, end, text)
-  let start    = a:start - 1
-  let interval = a:end - a:start
+  let line_offset = line2byte('.')
+  let start_byte  = line_offset + a:start - 1
+  let end_byte    = line_offset + a:end - 1
 
-  if start > 0 && interval > 0
-    let motion = '0'.start.'lv'.interval.'l'
-  elseif start > 0
-    let motion = '0'.start.'lv'
-  elseif interval > 0
-    let motion = '0v'.interval.'l'
-  else
-    return 0
-  endif
-
-  call sideways#util#ReplaceMotion(motion, a:text)
+  call sideways#util#ReplaceMotion(start_byte.'gov'.end_byte.'go', a:text)
   return 1
 endfunction
 
