@@ -28,7 +28,9 @@ Another way is to simply copy all the essential directories inside the ~/.vim
 directory: plugin, autoload, doc.
 
 ==============================================================================
-USAGE                                *sideways-usage* *SidewaysLeft* *SidewaysRight*
+USAGE                                                           *sideways-usage*
+                                                                *SidewaysLeft*
+                                                                *SidewaysRight*
 
 The plugin defines two commands, |:SidewaysLeft| and |:SidewaysRight|, which
 move the item under the cursor left or right, where an "item" is defined by a
@@ -62,15 +64,23 @@ If you experiment with this example, you'll find that you can move the entire
 second list around, as long as the cursor is on one of the inner brackets. The
 plugin takes into consideration nested structures.
 
-It works for lists in CSS declarations:
+It's highly recommended to map the two main commands to convenient keys. For
+example, mapping them to <c-h> and <c-l> would look like this:
+>
+    nnoremap <c-h> :SidewaysLeft<cr>
+    nnoremap <c-l> :SidewaysRight<cr>
+<
+Other things that sideways works for:
+
+Lists in CSS declarations:
 >
     border-radius: 20px 0 0 20px;
 <
-Also for single-line CSS declarations:
+Single-line CSS declarations:
 >
     a { color: #fff; background: blue; text-decoration: underline; }
 <
-And, it also works for cucumber tables:
+Cucumber tables:
 >
     Examples:
       | input_1 | input_2 | button | output |
@@ -78,16 +88,16 @@ And, it also works for cucumber tables:
       | 2       | 5       | add    | 7      |
       | 0       | 40      | add    | 40     |
 <
-
-It's highly recommended to map the two commands to convenient keys. For
-example, mapping them to <c-h> and <c-l> would look like this:
+Go lists:
 >
-    nnoremap <c-h> :SidewaysLeft<cr>
-    nnoremap <c-l> :SidewaysRight<cr>
+    []string{"One", "Two", "Three"}
 <
 
-The plugin is intended to be customizable, though at this point you'd need to
-look at the source to do this.
+The plugin is customizable, though at this point you'd need to look at the
+source to do this.
+
+                                                            *SidewaysJumpLeft*
+                                                            *SidewaysJumpRight*
 
 Bonus functionality: ~
 
@@ -108,6 +118,13 @@ need to create mappings in your configuration files. Something like this:
 This will map the "a" text object to operate on an "argument". So, you can
 perform `daa` to delete an argument, `cia` to change an argument, and so on.
 See |text-objects| for more information.
+
+The plugin also provides the commands |:SidewaysJumpLeft| and
+|:SidewaysJumpRight|, which move the cursor left and right by items.
+
+Also, a useful plugin to use alongside sideways is `fieldtrip`
+(https://github.com/tek/vim-fieldtrip). This defines a submode
+(https://github.com/kana/vim-submode) for sideways.vim.
 
 ==============================================================================
 ISSUES                                                        *sideways-issues*

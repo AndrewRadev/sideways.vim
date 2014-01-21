@@ -41,14 +41,29 @@ If you experiment with this example, you'll find that you can move the entire
 second list around, as long as the cursor is on one of the inner brackets. The
 plugin takes into consideration nested structures.
 
-It works for lists in CSS declarations:
+It's highly recommended to map the two main commands to convenient keys. For
+example, mapping them to <c-h> and <c-l> would look like this:
+``` vim
+nnoremap <c-h> :SidewaysLeft<cr>
+nnoremap <c-l> :SidewaysRight<cr>
+```
 
+The plugin also provides the commands `:SidewaysJumpLeft` and
+`:SidewaysJumpRight`, which move the cursor left and right by items.
+
+Other things that sideways works for:
+
+Lists in CSS declarations:
 ``` css
 border-radius: 20px 0 0 20px;
 ```
 
-And, it also works for cucumber tables:
+Single-line CSS declarations:
+``` css
+a { color: #fff; background: blue; text-decoration: underline; }
+```
 
+Cucumber tables:
 ``` cucumber
 Examples:
   | input_1 | input_2 | button | output |
@@ -56,13 +71,9 @@ Examples:
   | 2       | 5       | add    | 7      |
   | 0       | 40      | add    | 40     |
 ```
-
-It's highly recommended to map the two commands to convenient keys. For
-example, mapping them to `<c-h>` and `<c-l>` would look like this:
-
-``` vim
-nnoremap <c-h> :SidewaysLeft<cr>
-nnoremap <c-l> :SidewaysRight<cr>
+Go lists:
+``` go
+[]string{"One", "Two", "Three"}
 ```
 
 The plugin is intended to be customizable, though at this point you'd need to
@@ -89,3 +100,7 @@ xmap ia <Plug>SidewaysArgumentTextobjI
 This will map the "a" text object to operate on an "argument". So, you can
 perform `daa` to delete an argument, `cia` to change an argument, and so on.
 See `:help text-objects` for more information.
+
+Also, a useful plugin to use alongside sideways is
+[fieldtrip](https://github.com/tek/vim-fieldtrip). This defines a
+[submode](https://github.com/kana/vim-submode) for sideways.vim.
