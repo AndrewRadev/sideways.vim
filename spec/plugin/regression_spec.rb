@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "regression tests" do
   let(:filename) { 'test.py' }
 

@@ -1,5 +1,7 @@
-function! sideways#Left(definitions)
-  let items = sideways#parsing#Parse(a:definitions)
+function! sideways#Left()
+  let definitions = sideways#Definitions()
+  let items       = sideways#parsing#Parse(definitions)
+
   if empty(items)
     return 0
   end
@@ -24,8 +26,10 @@ function! sideways#Left(definitions)
   return 1
 endfunction
 
-function! sideways#Right(definitions)
-  let items = sideways#parsing#Parse(a:definitions)
+function! sideways#Right()
+  let definitions = sideways#Definitions()
+  let items       = sideways#parsing#Parse(definitions)
+
   if empty(items)
     return 0
   end
