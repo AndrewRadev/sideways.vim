@@ -29,6 +29,16 @@ Vimrunner::RSpec.configure do |config|
       self
     end
 
+    def vim.jump_left
+      command 'SidewaysJumpLeft'
+      self
+    end
+
+    def vim.jump_right
+      command 'SidewaysJumpRight'
+      self
+    end
+
     vim
   end
 end

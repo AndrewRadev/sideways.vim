@@ -54,6 +54,68 @@ function! sideways#Right()
   return 1
 endfunction
 
+function! sideways#JumpLeft()
+  let definitions = sideways#Definitions()
+  let items       = sideways#parsing#Parse(definitions)
+
+  if empty(items)
+    return 0
+  end
+
+  let last_index   = len(items) - 1
+  let active_index = s:FindActiveItem(items)
+  if active_index < 0
+    return 0
+  endif
+
+  if active_index == 0
+    let first             = items[active_index]
+    let second            = items[last_index]
+    let new_cursor_column = second[0]
+  else
+    let first             = items[active_index - 1]
+    let second            = items[active_index]
+    let new_cursor_column = first[0]
+  endif
+
+  let position = getpos('.')
+  let position[2] = new_cursor_column
+  call setpos('.', position)
+
+  return 1
+endfunction
+
+function! sideways#JumpRight()
+  let definitions = sideways#Definitions()
+  let items       = sideways#parsing#Parse(definitions)
+
+  if empty(items)
+    return 0
+  end
+
+  let last_index   = len(items) - 1
+  let active_index = s:FindActiveItem(items)
+  if active_index < 0
+    return 0
+  endif
+
+  if active_index == last_index
+    let first             = items[0]
+    let second            = items[last_index]
+    let new_cursor_column = first[0]
+  else
+    let first             = items[active_index]
+    let second            = items[active_index + 1]
+    let new_cursor_column = second[0]
+  endif
+
+  let position = getpos('.')
+  let position[2] = new_cursor_column
+  call setpos('.', position)
+
+  return 1
+endfunction
+
 function! sideways#AroundCursor(definitions)
   let items = sideways#parsing#Parse(a:definitions)
   if empty(items)
