@@ -1,5 +1,5 @@
 function! sideways#textobj#Argument(mode)
-  let coordinates = sideways#AroundCursor(sideways#Definitions())
+  let coordinates = sideways#AroundCursor()
   if empty(coordinates)
     return
   endif

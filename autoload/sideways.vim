@@ -1,7 +1,15 @@
-function! sideways#MoveLeft()
-  let definitions = sideways#Definitions()
-  let items       = sideways#parsing#Parse(definitions)
+function! sideways#Parse()
+  if exists('b:sideways_definitions')
+    let definitions = extend(copy(g:sideways_definitions), b:sideways_definitions)
+  else
+    let definitions = g:sideways_definitions
+  endif
 
+  return sideways#parsing#Parse(definitions)
+endfunction
+
+function! sideways#MoveLeft()
+  let items = sideways#Parse()
   if empty(items)
     return 0
   end
@@ -27,9 +35,7 @@ function! sideways#MoveLeft()
 endfunction
 
 function! sideways#MoveRight()
-  let definitions = sideways#Definitions()
-  let items       = sideways#parsing#Parse(definitions)
-
+  let items = sideways#Parse()
   if empty(items)
     return 0
   end
@@ -55,9 +61,7 @@ function! sideways#MoveRight()
 endfunction
 
 function! sideways#JumpLeft()
-  let definitions = sideways#Definitions()
-  let items       = sideways#parsing#Parse(definitions)
-
+  let items = sideways#Parse()
   if empty(items)
     return 0
   end
@@ -86,8 +90,7 @@ function! sideways#JumpLeft()
 endfunction
 
 function! sideways#JumpRight()
-  let definitions = sideways#Definitions()
-  let items       = sideways#parsing#Parse(definitions)
+  let items = sideways#Parse()
 
   if empty(items)
     return 0
@@ -116,8 +119,8 @@ function! sideways#JumpRight()
   return 1
 endfunction
 
-function! sideways#AroundCursor(definitions)
-  let items = sideways#parsing#Parse(a:definitions)
+function! sideways#AroundCursor()
+  let items = sideways#Parse()
   if empty(items)
     return []
   end
@@ -138,14 +141,6 @@ function! sideways#AroundCursor(definitions)
   endif
 
   return [previous, current, next]
-endfunction
-
-function! sideways#Definitions()
-  if exists('b:sideways_definitions')
-    return extend(copy(g:sideways_definitions), b:sideways_definitions)
-  else
-    return g:sideways_definitions
-  endif
 endfunction
 
 " Swaps the a:first and a:second items in the buffer. Both first arguments are
