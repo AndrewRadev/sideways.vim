@@ -88,8 +88,8 @@ autocmd FileType cucumber let b:sideways_definitions = [
       \   },
       \ ]
 
-command! SidewaysLeft  call sideways#Left()  | silent! call repeat#set(":SidewaysLeft\<cr>")
-command! SidewaysRight call sideways#Right() | silent! call repeat#set(":SidewaysRight\<cr>")
+command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set(":SidewaysLeft\<cr>")
+command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set(":SidewaysRight\<cr>")
 
 command! SidewaysJumpLeft  call sideways#JumpLeft()
 command! SidewaysJumpRight call sideways#JumpRight()

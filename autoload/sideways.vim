@@ -1,4 +1,4 @@
-function! sideways#Left()
+function! sideways#MoveLeft()
   let definitions = sideways#Definitions()
   let items       = sideways#parsing#Parse(definitions)
 
@@ -26,7 +26,7 @@ function! sideways#Left()
   return 1
 endfunction
 
-function! sideways#Right()
+function! sideways#MoveRight()
   let definitions = sideways#Definitions()
   let items       = sideways#parsing#Parse(definitions)
 
