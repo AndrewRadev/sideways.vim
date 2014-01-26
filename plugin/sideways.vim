@@ -122,10 +122,10 @@ command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set(":Sid
 command! SidewaysJumpLeft  call sideways#JumpLeft()
 command! SidewaysJumpRight call sideways#JumpRight()
 
-onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
-xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
-onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
-xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
+onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>
+xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>
+onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count)<cr>
+xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count)<cr>
 
 let &cpo = s:keepcpo
 unlet s:keepcpo

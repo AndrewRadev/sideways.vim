@@ -119,28 +119,60 @@ function! sideways#JumpRight()
   return 1
 endfunction
 
-function! sideways#AroundCursor()
+" This function locates a set of items around the cursor. The result looks
+" like this:
+"
+"   [previous_item, [cursor_item, ...], next_item]
+"
+" When given a {count: N}, it returns the item under the cursor and the next
+" N - 1 items. The previous_item and next_item are the one that are before and
+" after the set of "cursor" ones.
+"
+" The list of items doesn't loop. If N is larger than the number of items
+" available going forward, it doesn't take them from the beginning.
+"
+function! sideways#AroundCursor(...)
+  let options = get(a:000, 0, {})
+  let n       = get(options, 'count', 1)
+
   let items = sideways#Parse()
   if empty(items)
     return []
   end
 
-  let current_index = s:FindActiveItem(items)
-  let current       = items[current_index]
+  let first_index = s:FindActiveItem(items)
+  if first_index < 0
+    return 0
+  endif
 
-  if current_index == 0
+  let last_index  = first_index
+  let cursor_item = items[first_index]
+  let selected    = [cursor_item]
+
+  while n > 1
+    let n -= 1
+    let last_index += 1
+
+    if last_index == len(items)
+      break
+    endif
+
+    call add(selected, items[last_index])
+  endwhile
+
+  if first_index == 0
     let previous = []
   else
-    let previous = items[current_index - 1]
+    let previous = items[first_index - 1]
   endif
 
-  if current_index == len(items) - 1
+  if last_index >= len(items) - 1
     let next = []
   else
-    let next = items[current_index + 1]
+    let next = items[last_index + 1]
   endif
 
-  return [previous, current, next]
+  return [previous, selected, next]
 endfunction
 
 " Swaps the a:first and a:second items in the buffer. Both first arguments are
@@ -174,11 +206,20 @@ endfunction
 function! s:FindActiveItem(items)
   let column = col('.')
 
+  if empty(a:items)
+    return -1
+  endif
+
+  if column < a:items[0][0]
+    " column is before the first item
+    return - 1
+  endif
+
   let index = 0
   for item in a:items
     let [start, end] = item
 
-    if start <= column && column <= end
+    if column <= end
       return index
     endif
 

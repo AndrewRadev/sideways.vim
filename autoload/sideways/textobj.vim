@@ -1,20 +1,27 @@
-function! sideways#textobj#Argument(mode)
-  let coordinates = sideways#AroundCursor()
+function! sideways#textobj#Argument(mode, count)
+  let coordinates = sideways#AroundCursor({'count': a:count})
+
   if empty(coordinates)
     return
   endif
 
-  let [previous, current, next] = coordinates
+  let [previous, selected, next] = coordinates
+  let first_selected = selected[0]
+  let last_selected  = selected[-1]
 
   if a:mode == 'i'
-    call s:MarkCols(current[0], current[1])
+    let [from, to] = [ first_selected[0], last_selected[1] ]
   elseif a:mode == 'a'
-    if empty(next)
-      call s:MarkCols(previous[1] + 1, current[1])
-    else
-      call s:MarkCols(current[0], next[0] - 1)
+    if empty(next) && empty(previous)
+      let [from, to] = [ first_selected[0], last_selected[1] ]
+    elseif empty(next)
+      let [from, to] = [ previous[1] + 1, last_selected[1] ]
+    else " !empty(next)
+      let [from, to] = [ first_selected[0], next[0] - 1 ]
     endif
   endif
+
+  call s:MarkCols(from, to)
 endfunction
 
 function! s:MarkCols(start_col, end_col)
