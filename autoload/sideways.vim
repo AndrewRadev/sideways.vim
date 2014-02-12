@@ -8,52 +8,84 @@ function! sideways#Parse()
   return sideways#parsing#Parse(definitions)
 endfunction
 
-function! sideways#MoveLeft()
+function! sideways#Left()
   let items = sideways#Parse()
   if empty(items)
-    return 0
+    return []
   end
 
   let last_index   = len(items) - 1
   let active_index = s:FindActiveItem(items)
   if active_index < 0
-    return 0
+    return []
   endif
 
   if active_index == 0
     let first             = items[active_index]
     let second            = items[last_index]
-    let new_cursor_column = second[0] + s:Delta(second, first)
+    let new_cursor_column = second[0]
+    let wrap              = 1
   else
     let first             = items[active_index - 1]
     let second            = items[active_index]
     let new_cursor_column = first[0]
+    let wrap              = 0
   endif
 
-  call s:Swap(first, second, new_cursor_column)
-  return 1
+  return [first, second, new_cursor_column, wrap]
 endfunction
 
-function! sideways#MoveRight()
+function! sideways#Right()
   let items = sideways#Parse()
   if empty(items)
-    return 0
+    return []
   end
 
   let last_index   = len(items) - 1
   let active_index = s:FindActiveItem(items)
   if active_index < 0
-    return 0
+    return []
   endif
 
   if active_index == last_index
     let first             = items[0]
     let second            = items[last_index]
     let new_cursor_column = first[0]
+    let wrap              = 1
   else
     let first             = items[active_index]
     let second            = items[active_index + 1]
-    let new_cursor_column = second[0] + s:Delta(second, first)
+    let new_cursor_column = second[0]
+    let wrap              = 0
+  endif
+
+  return [first, second, new_cursor_column, wrap]
+endfunction
+
+function! sideways#MoveRight()
+  let movement = sideways#Right()
+  if empty(movement)
+    return 0
+  endif
+  let [first, second, new_cursor_column, wrap] = movement
+
+  if !wrap
+    let new_cursor_column += s:Delta(second, first)
+  endif
+
+  call s:Swap(first, second, new_cursor_column)
+  return 1
+endfunction
+
+function! sideways#MoveLeft()
+  let movement = sideways#Left()
+  if empty(movement)
+    return 0
+  endif
+  let [first, second, new_cursor_column, wrap] = movement
+
+  if !wrap
+    let new_cursor_column += s:Delta(second, first)
   endif
 
   call s:Swap(first, second, new_cursor_column)
@@ -61,57 +93,24 @@ function! sideways#MoveRight()
 endfunction
 
 function! sideways#JumpLeft()
-  let items = sideways#Parse()
-  if empty(items)
+  let movement = sideways#Left()
+  if empty(movement)
     return 0
   endif
-
-  let last_index   = len(items) - 1
-  let active_index = s:FindActiveItem(items)
-  if active_index < 0
-    return 0
-  endif
-
-  if active_index == 0
-    let first             = items[active_index]
-    let second            = items[last_index]
-    let new_cursor_column = second[0]
-  else
-    let first             = items[active_index - 1]
-    let second            = items[active_index]
-    let new_cursor_column = first[0]
-  endif
+  let [_f, _s, new_cursor_column, _w] = movement
 
   call sideways#util#SetCol(new_cursor_column)
-
   return 1
 endfunction
 
 function! sideways#JumpRight()
-  let items = sideways#Parse()
-
-  if empty(items)
-    return 0
-  end
-
-  let last_index   = len(items) - 1
-  let active_index = s:FindActiveItem(items)
-  if active_index < 0
+  let movement = sideways#Right()
+  if empty(movement)
     return 0
   endif
-
-  if active_index == last_index
-    let first             = items[0]
-    let second            = items[last_index]
-    let new_cursor_column = first[0]
-  else
-    let first             = items[active_index]
-    let second            = items[active_index + 1]
-    let new_cursor_column = second[0]
-  endif
+  let [_f, _s, new_cursor_column, _w] = movement
 
   call sideways#util#SetCol(new_cursor_column)
-
   return 1
 endfunction
 
@@ -228,6 +227,9 @@ endfunction
 " It is assumed that a:first is positioned before a:second. This is used to
 " account for the column positions becoming inconsistent after replacing text
 " in the current line.
+"
+" TODO (2014-02-12) Seems like faulty documentation, called as s:Delta(second,first)
+"
 function! s:Delta(first, second)
   return (a:first[1] - a:first[0]) - (a:second[1] - a:second[0])
 endfunction
