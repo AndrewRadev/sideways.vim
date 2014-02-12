@@ -64,7 +64,7 @@ function! sideways#JumpLeft()
   let items = sideways#Parse()
   if empty(items)
     return 0
-  end
+  endif
 
   let last_index   = len(items) - 1
   let active_index = s:FindActiveItem(items)
@@ -82,9 +82,7 @@ function! sideways#JumpLeft()
     let new_cursor_column = first[0]
   endif
 
-  let position = getpos('.')
-  let position[2] = new_cursor_column
-  call setpos('.', position)
+  call sideways#util#SetCol(new_cursor_column)
 
   return 1
 endfunction
@@ -112,9 +110,7 @@ function! sideways#JumpRight()
     let new_cursor_column = second[0]
   endif
 
-  let position = getpos('.')
-  let position[2] = new_cursor_column
-  call setpos('.', position)
+  call sideways#util#SetCol(new_cursor_column)
 
   return 1
 endfunction
@@ -190,13 +186,10 @@ function! s:Swap(first, second, new_cursor_column)
   let first_body  = sideways#util#GetCols(first_start, first_end)
   let second_body = sideways#util#GetCols(second_start, second_end)
 
-  let position = getpos('.')
-
   call sideways#util#ReplaceCols(second_start, second_end, first_body)
   call sideways#util#ReplaceCols(first_start, first_end, second_body)
 
-  let position[2] = a:new_cursor_column
-  call setpos('.', position)
+  call sideways#util#SetCol(a:new_cursor_column)
 endfunction
 
 " Finds an item in the given list of column pairs, which the cursor is
