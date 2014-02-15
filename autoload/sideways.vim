@@ -8,109 +8,43 @@ function! sideways#Parse()
   return sideways#parsing#Parse(definitions)
 endfunction
 
-function! sideways#Left()
-  let items = sideways#Parse()
-  if empty(items)
-    return []
-  end
-
-  let last_index   = len(items) - 1
-  let active_index = s:FindActiveItem(items)
-  if active_index < 0
-    return []
-  endif
-
-  if active_index == 0
-    let first             = items[active_index]
-    let second            = items[last_index]
-    let new_cursor_column = second[0]
-    let wrap              = 1
-  else
-    let first             = items[active_index - 1]
-    let second            = items[active_index]
-    let new_cursor_column = first[0]
-    let wrap              = 0
-  endif
-
-  return [first, second, new_cursor_column, wrap]
-endfunction
-
-function! sideways#Right()
-  let items = sideways#Parse()
-  if empty(items)
-    return []
-  end
-
-  let last_index   = len(items) - 1
-  let active_index = s:FindActiveItem(items)
-  if active_index < 0
-    return []
-  endif
-
-  if active_index == last_index
-    let first             = items[0]
-    let second            = items[last_index]
-    let new_cursor_column = first[0]
-    let wrap              = 1
-  else
-    let first             = items[active_index]
-    let second            = items[active_index + 1]
-    let new_cursor_column = second[0]
-    let wrap              = 0
-  endif
-
-  return [first, second, new_cursor_column, wrap]
-endfunction
-
-function! sideways#MoveRight()
-  let movement = sideways#Right()
-  if empty(movement)
+function! sideways#MoveLeft()
+  let movement = sideways#movement#New('left', sideways#Parse())
+  if movement.IsBlank()
     return 0
   endif
-  let [first, second, new_cursor_column, wrap] = movement
 
-  if !wrap
-    let new_cursor_column += s:Delta(second, first)
-  endif
-
-  call s:Swap(first, second, new_cursor_column)
+  call movement.Swap()
   return 1
 endfunction
 
-function! sideways#MoveLeft()
-  let movement = sideways#Left()
-  if empty(movement)
+function! sideways#MoveRight()
+  let movement = sideways#movement#New('right', sideways#Parse())
+  if movement.IsBlank()
     return 0
   endif
-  let [first, second, new_cursor_column, wrap] = movement
 
-  if !wrap
-    let new_cursor_column += s:Delta(second, first)
-  endif
-
-  call s:Swap(first, second, new_cursor_column)
+  call movement.Swap()
   return 1
 endfunction
 
 function! sideways#JumpLeft()
-  let movement = sideways#Left()
-  if empty(movement)
+  let movement = sideways#movement#New('left', sideways#Parse())
+  if movement.IsBlank()
     return 0
   endif
-  let [_f, _s, new_cursor_column, _w] = movement
 
-  call sideways#util#SetCol(new_cursor_column)
+  call movement.Jump()
   return 1
 endfunction
 
 function! sideways#JumpRight()
-  let movement = sideways#Right()
-  if empty(movement)
+  let movement = sideways#movement#New('right', sideways#Parse())
+  if movement.IsBlank()
     return 0
   endif
-  let [_f, _s, new_cursor_column, _w] = movement
 
-  call sideways#util#SetCol(new_cursor_column)
+  call movement.Jump()
   return 1
 endfunction
 
@@ -135,7 +69,7 @@ function! sideways#AroundCursor(...)
     return []
   end
 
-  let first_index = s:FindActiveItem(items)
+  let first_index = sideways#FindActiveItem(items)
   if first_index < 0
     return 0
   endif
@@ -170,32 +104,12 @@ function! sideways#AroundCursor(...)
   return [previous, selected, next]
 endfunction
 
-" Swaps the a:first and a:second items in the buffer. Both first arguments are
-" expected to be pairs of start and end columns. The last argument is a
-" number, the new column to position the cursor on.
-"
-" In order to avoid having to consider eventual changes in column positions,
-" a:first is expected to be positioned before a:second. Assuming that, the
-" function first places the second item and then the first one, ensuring that
-" the column number remain consistent until it's done.
-function! s:Swap(first, second, new_cursor_column)
-  let [first_start, first_end]   = a:first
-  let [second_start, second_end] = a:second
-
-  let first_body  = sideways#util#GetCols(first_start, first_end)
-  let second_body = sideways#util#GetCols(second_start, second_end)
-
-  call sideways#util#ReplaceCols(second_start, second_end, first_body)
-  call sideways#util#ReplaceCols(first_start, first_end, second_body)
-
-  call sideways#util#SetCol(a:new_cursor_column)
-endfunction
-
-" Finds an item in the given list of column pairs, which the cursor is
-" currently positioned in.
+" Finds the item in the internal list of items where the cursor is currently
+" positioned.
 "
 " Returns the index of the found item, or -1 if it's not found.
-function! s:FindActiveItem(items)
+"
+function! sideways#FindActiveItem(items)
   let column = col('.')
 
   if empty(a:items)
@@ -219,17 +133,4 @@ function! s:FindActiveItem(items)
   endfor
 
   return -1
-endfunction
-
-" Return the difference in length between the first start-end column pair and
-" the second one.
-"
-" It is assumed that a:first is positioned before a:second. This is used to
-" account for the column positions becoming inconsistent after replacing text
-" in the current line.
-"
-" TODO (2014-02-12) Seems like faulty documentation, called as s:Delta(second,first)
-"
-function! s:Delta(first, second)
-  return (a:first[1] - a:first[0]) - (a:second[1] - a:second[0])
 endfunction
