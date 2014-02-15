@@ -31,7 +31,7 @@ let g:sideways_definitions =
       \   },
       \ ]
 
-autocmd FileType ruby,coffee let b:sideways_definitions = [
+autocmd FileType ruby,coffee,haml let b:sideways_definitions = [
       \   {
       \     'start':     '\k\{1,} ',
       \     'end':       '$',
