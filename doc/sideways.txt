@@ -117,7 +117,9 @@ need to create mappings in your configuration files. Something like this:
 <
 This will map the "a" text object to operate on an "argument". So, you can
 perform `daa` to delete an argument, `cia` to change an argument, and so on.
-See |text-objects| for more information.
+When you're inside nested lists, you can use counts to operate on the outer
+ones (`2daa`, or `d2aa` for one level higher). See |text-objects| for more
+information.
 
 The plugin also provides the commands |:SidewaysJumpLeft| and
 |:SidewaysJumpRight|, which move the cursor left and right by items.

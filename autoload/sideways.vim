@@ -51,57 +51,39 @@ endfunction
 " This function locates a set of items around the cursor. The result looks
 " like this:
 "
-"   [previous_item, [cursor_item, ...], next_item]
+"   [previous_item, current_item, next_item]
 "
-" When given a {count: N}, it returns the item under the cursor and the next
-" N - 1 items. The previous_item and next_item are the one that are before and
-" after the set of "cursor" ones.
+" The list of items doesn't loop:
 "
-" The list of items doesn't loop. If N is larger than the number of items
-" available going forward, it doesn't take them from the beginning.
+"   - If the current item is first then the previous one is an empty list.
+"   - If the current item is last then the next one is an empty list.
 "
-function! sideways#AroundCursor(...)
-  let options = get(a:000, 0, {})
-  let n       = get(options, 'count', 1)
-
-  let items = sideways#Parse()
+function! sideways#AroundCursor(items)
+  let items = a:items
   if empty(items)
     return []
   end
 
-  let first_index = sideways#FindActiveItem(items)
-  if first_index < 0
+  let active_index = sideways#FindActiveItem(items)
+  if active_index < 0
     return 0
   endif
 
-  let last_index  = first_index
-  let cursor_item = items[first_index]
-  let selected    = [cursor_item]
+  let current = items[active_index]
 
-  while n > 1
-    let n -= 1
-    let last_index += 1
-
-    if last_index == len(items)
-      break
-    endif
-
-    call add(selected, items[last_index])
-  endwhile
-
-  if first_index == 0
+  if active_index == 0
     let previous = []
   else
-    let previous = items[first_index - 1]
+    let previous = items[active_index - 1]
   endif
 
-  if last_index >= len(items) - 1
+  if active_index >= len(items) - 1
     let next = []
   else
-    let next = items[last_index + 1]
+    let next = items[active_index + 1]
   endif
 
-  return [previous, selected, next]
+  return [previous, current, next]
 endfunction
 
 " Finds the item in the internal list of items where the cursor is currently

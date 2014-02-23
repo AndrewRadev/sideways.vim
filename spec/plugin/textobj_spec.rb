@@ -72,21 +72,17 @@ describe "textobj mapping" do
   end
 
   specify "with a count" do
-    vim.search('two')
+    set_file_contents <<-EOF
+      def func(one, [1, 2, 3], three):
+        pass
+    EOF
+
+    vim.search('2,')
     vim.feedkeys '2daa'
     vim.write
 
     assert_file_contents <<-EOF
-      def func(one):
-        pass
-    EOF
-
-    vim.search('one')
-    vim.feedkeys '7daa'
-    vim.write
-
-    assert_file_contents <<-EOF
-      def func():
+      def func(one, three):
         pass
     EOF
   end
