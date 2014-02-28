@@ -33,7 +33,7 @@ let g:sideways_definitions =
 
 autocmd FileType ruby,coffee,haml let b:sideways_definitions = [
       \   {
-      \     'start':     '\k\{1,} ',
+      \     'start':     '\k\{1,}[?!]\= ',
       \     'end':       '$',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
