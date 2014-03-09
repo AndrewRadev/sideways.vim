@@ -119,8 +119,22 @@ autocmd FileType cucumber let b:sideways_definitions = [
 command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set(":SidewaysLeft\<cr>")
 command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set(":SidewaysRight\<cr>")
 
-command! SidewaysJumpLeft  call sideways#JumpLeft()
-command! SidewaysJumpRight call sideways#JumpRight()
+command! SidewaysJumpLeft  call sideways#JumpLeft(1)
+command! SidewaysJumpRight call sideways#JumpRight(1)
+
+nnoremap <Plug>SidewaysJumpLeft  :<c-u>call sideways#JumpLeft('.', v:count1)<cr>
+nnoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight('.', v:count1)<cr>
+xnoremap <Plug>SidewaysJumpLeft  :<c-u>call sideways#JumpLeft("'>", v:count1)<cr>v`<o
+xnoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight("'>", v:count1)<cr>v`<o
+onoremap <Plug>SidewaysJumpLeft  :<c-u>call sideways#JumpLeft("'>", v:count1)<cr>v`<o
+onoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight("'>", v:count1)<cr>v`<o
+
+" nmap _h <Plug>SidewaysJumpLeft
+" nmap _l <Plug>SidewaysJumpRight
+" xmap _h <Plug>SidewaysJumpLeft
+" xmap _l <Plug>SidewaysJumpRight
+" omap _h <Plug>SidewaysJumpLeft
+" omap _l <Plug>SidewaysJumpRight
 
 onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>
 xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>

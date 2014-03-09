@@ -96,9 +96,6 @@ Go lists:
 The plugin is customizable, though at this point you'd need to look at the
 source to do this.
 
-                                                            *SidewaysJumpLeft*
-                                                            *SidewaysJumpRight*
-
 Bonus functionality: ~
 
 The plugin's machinery makes it easy to implement an "argument" text object.
@@ -121,8 +118,15 @@ When you're inside nested lists, you can use counts to operate on the outer
 ones (`2daa`, or `d2aa` for one level higher). See |text-objects| for more
 information.
 
+                                                            *SidewaysJumpLeft*
+                                                            *SidewaysJumpRight*
+                                                            *<Plug>SidewaysJumpLeft*
+                                                            *<Plug>SidewaysJumpRight*
+
 The plugin also provides the commands |:SidewaysJumpLeft| and
-|:SidewaysJumpRight|, which move the cursor left and right by items.
+|:SidewaysJumpRight|, which move the cursor left and right by items, and the
+related mappings |<Plug>SidewaysJumpLeft| and |<Plug>SidewaysJumpRight| which
+also accept a count.
 
 Also, a useful plugin to use alongside sideways is `fieldtrip`
 (https://github.com/tek/vim-fieldtrip). This defines a submode

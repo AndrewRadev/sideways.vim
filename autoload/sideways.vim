@@ -28,23 +28,41 @@ function! sideways#MoveRight()
   return 1
 endfunction
 
-function! sideways#JumpLeft()
-  let movement = sideways#movement#New('left', sideways#Parse())
-  if movement.IsBlank()
-    return 0
-  endif
+function! sideways#JumpLeft(initial_position, count)
+  let n     = a:count
+  let items = sideways#Parse()
 
-  call movement.Jump()
+  call setpos('.', getpos(a:initial_position))
+
+  for _ in range(n)
+    let movement = sideways#movement#New('left', items)
+    if movement.IsBlank()
+      return 0
+    endif
+
+    call movement.Jump()
+  endfor
+
   return 1
 endfunction
 
-function! sideways#JumpRight()
-  let movement = sideways#movement#New('right', sideways#Parse())
-  if movement.IsBlank()
-    return 0
-  endif
+function! sideways#JumpRight(initial_position, count)
+  let n     = a:count
+  let items = sideways#Parse()
 
-  call movement.Jump()
+  Decho [n, a:initial_position]
+
+  call setpos('.', getpos(a:initial_position))
+
+  for _ in range(n)
+    let movement = sideways#movement#New('right', items)
+    if movement.IsBlank()
+      return 0
+    endif
+
+    call movement.Jump()
+  endfor
+
   return 1
 endfunction
 
