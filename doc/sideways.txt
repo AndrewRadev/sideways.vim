@@ -126,7 +126,21 @@ information.
 The plugin also provides the commands |:SidewaysJumpLeft| and
 |:SidewaysJumpRight|, which move the cursor left and right by items, and the
 related mappings |<Plug>SidewaysJumpLeft| and |<Plug>SidewaysJumpRight| which
-also accept a count.
+also accept a count, though you should practice using them with motions to get
+a handle of how they work.
+
+An example mapping for them would be:
+>
+    nmap _h <Plug>SidewaysJumpLeft
+    omap _h <Plug>SidewaysJumpLeft
+    xmap _h <Plug>SidewaysJumpLeft
+
+    nmap _l <Plug>SidewaysJumpRight
+    omap _l <Plug>SidewaysJumpRight
+    xmap _l <Plug>SidewaysJumpRight
+<
+This will let you use `_h` to jump leftwards in normal mode, operator-pending
+mode and visual mode. Same thing for `_l`.
 
 Also, a useful plugin to use alongside sideways is `fieldtrip`
 (https://github.com/tek/vim-fieldtrip). This defines a submode

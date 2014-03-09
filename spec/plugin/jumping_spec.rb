@@ -51,4 +51,15 @@ describe "jumping" do
           pass
     EOF
   end
+
+  specify "with a count" do
+    vim.jump_right(2).normal('~').write
+    assert_file_contents <<-EOF
+      def function(one, two, Three):
+          pass
+    EOF
+
+    # TODO (2014-03-09) Operators? Would make more sense when there are
+    # default mappings to avoid leaking knowledge of temporary maps in here
+  end
 end

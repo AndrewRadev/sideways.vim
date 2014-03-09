@@ -12,6 +12,13 @@ Vimrunner::RSpec.configure do |config|
     plugin_path = File.expand_path('../..', __FILE__)
     vim.add_plugin(plugin_path, 'plugin/sideways.vim')
 
+    vim.command('nmap _h <Plug>SidewaysJumpLeft')
+    vim.command('omap _h <Plug>SidewaysJumpLeft')
+    vim.command('xmap _h <Plug>SidewaysJumpLeft')
+    vim.command('nmap _l <Plug>SidewaysJumpRight')
+    vim.command('omap _l <Plug>SidewaysJumpRight')
+    vim.command('xmap _l <Plug>SidewaysJumpRight')
+
     vim.command('omap aa <Plug>SidewaysArgumentTextobjA')
     vim.command('xmap aa <Plug>SidewaysArgumentTextobjA')
     vim.command('omap ia <Plug>SidewaysArgumentTextobjI')
@@ -29,13 +36,17 @@ Vimrunner::RSpec.configure do |config|
       self
     end
 
-    def vim.jump_left
-      command 'SidewaysJumpLeft'
+    def vim.jump_left(count = nil)
+      mapping = '_h'
+      mapping = count.to_s + mapping if count
+      feedkeys(mapping)
       self
     end
 
-    def vim.jump_right
-      command 'SidewaysJumpRight'
+    def vim.jump_right(count = nil)
+      mapping = '_l'
+      mapping = count.to_s + mapping if count
+      feedkeys(mapping)
       self
     end
 

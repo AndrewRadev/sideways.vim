@@ -50,8 +50,6 @@ function! sideways#JumpRight(initial_position, count)
   let n     = a:count
   let items = sideways#Parse()
 
-  Decho [n, a:initial_position]
-
   call setpos('.', getpos(a:initial_position))
 
   for _ in range(n)
