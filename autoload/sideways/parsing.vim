@@ -34,14 +34,12 @@ function! sideways#parsing#Parse(definitions)
   let current_item = [col('.'), -1]
   let remainder_of_line = s:RemainderOfLine()
 
-  " TODO (2012-09-07) Figure out how to work with RemainderOfLine
-  while s:RemainderOfLine() !~ '^'.end_pattern
-    let remainder_of_line     = s:RemainderOfLine()
+  while remainder_of_line !~ '^'.end_pattern
     let opening_bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
     let closing_bracket_match = s:BracketMatch(remainder_of_line, closing_brackets)
 
     if opening_bracket_match < 0 && closing_bracket_match >= 0
-      " there's an extra closing bracket, probably from the outside, bail out
+      " there's an extra closing bracket from outside the list, bail out
       break
     elseif col('.') == col('$') - 1
       " then we're at the end of the line, finish up
@@ -74,6 +72,8 @@ function! sideways#parsing#Parse(definitions)
       " move rightwards
       normal! l
     endif
+
+    let remainder_of_line = s:RemainderOfLine()
   endwhile
 
   if current_item[1] < 0
