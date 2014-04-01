@@ -53,4 +53,17 @@ describe "ruby methods" do
       end
     EOF
   end
+
+  specify "with an extra closing bracket" do
+    set_file_contents <<-EOF
+      foo = (link_to 'Something', user_registration_path)
+    EOF
+
+    vim.search('Something')
+
+    vim.right
+    assert_file_contents <<-EOF
+      foo = (link_to user_registration_path, 'Something')
+    EOF
+  end
 end

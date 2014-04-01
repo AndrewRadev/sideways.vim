@@ -36,17 +36,21 @@ function! sideways#parsing#Parse(definitions)
 
   " TODO (2012-09-07) Figure out how to work with RemainderOfLine
   while s:RemainderOfLine() !~ '^'.end_pattern
-    let remainder_of_line = s:RemainderOfLine()
-    let bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
+    let remainder_of_line     = s:RemainderOfLine()
+    let opening_bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
+    let closing_bracket_match = s:BracketMatch(remainder_of_line, closing_brackets)
 
-    if col('.') == col('$') - 1
+    if opening_bracket_match < 0 && closing_bracket_match >= 0
+      " there's an extra closing bracket, probably from the outside, bail out
+      break
+    elseif col('.') == col('$') - 1
       " then we're at the end of the line, finish up
       let current_item[1] = col('$') - 1
       break
-    elseif bracket_match >= 0
+    elseif opening_bracket_match >= 0
       " then try to jump to the closing bracket
-      let opening_bracket = opening_brackets[bracket_match]
-      let closing_bracket = closing_brackets[bracket_match]
+      let opening_bracket = opening_brackets[opening_bracket_match]
+      let closing_bracket = closing_brackets[opening_bracket_match]
 
       call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
       " move rightwards regardless of the result
