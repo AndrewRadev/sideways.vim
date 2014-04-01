@@ -31,9 +31,19 @@ let g:sideways_definitions =
       \   },
       \ ]
 
-autocmd FileType ruby,coffee,haml let b:sideways_definitions = [
+autocmd FileType ruby let b:sideways_definitions = [
       \   {
       \     'start':     '\k\{1,}[?!]\= ',
+      \     'end':       '\%(\s\=\<do\>\|$\)',
+      \     'delimiter': '^,\s*',
+      \     'skip':      '^\s',
+      \     'brackets':  ['([''"', ')]''"']
+      \   },
+      \ ]
+
+autocmd FileType coffee,haml let b:sideways_definitions = [
+      \   {
+      \     'start':     '\k\{1,} ',
       \     'end':       '$',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
