@@ -66,4 +66,17 @@ describe "ruby methods" do
       foo = (link_to user_registration_path, 'Something')
     EOF
   end
+
+  specify "ending in a comment" do
+    set_file_contents <<-EOF
+      link_to '#Something', user_registration_path # comment
+    EOF
+
+    vim.search('Something')
+
+    vim.right
+    assert_file_contents <<-EOF
+      link_to user_registration_path, '#Something' # comment
+    EOF
+  end
 end

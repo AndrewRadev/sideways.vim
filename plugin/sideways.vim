@@ -34,7 +34,7 @@ let g:sideways_definitions =
 autocmd FileType ruby let b:sideways_definitions = [
       \   {
       \     'start':     '\k\{1,}[?!]\= ',
-      \     'end':       '\%(\s\=\<do\>\|$\)',
+      \     'end':       '\s*\%(\<do\>\|#\|$\)',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"']

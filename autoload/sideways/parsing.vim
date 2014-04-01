@@ -50,7 +50,14 @@ function! sideways#parsing#Parse(definitions)
       let opening_bracket = opening_brackets[opening_bracket_match]
       let closing_bracket = closing_brackets[opening_bracket_match]
 
-      call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
+      if opening_bracket == closing_bracket
+        " same bracket, search for it
+        call search('\V'.closing_bracket, 'W', '', line('.'))
+      else
+        " different closing, use searchpair
+        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
+      endif
+
       " move rightwards regardless of the result
       normal! l
     elseif remainder_of_line =~ delimiter_pattern
