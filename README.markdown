@@ -42,7 +42,7 @@ second list around, as long as the cursor is on one of the inner brackets. The
 plugin takes into consideration nested structures.
 
 It's highly recommended to map the two main commands to convenient keys. For
-example, mapping them to <c-h> and <c-l> would look like this:
+example, mapping them to `<c-h>` and `<c-l>` would look like this:
 ``` vim
 nnoremap <c-h> :SidewaysLeft<cr>
 nnoremap <c-l> :SidewaysRight<cr>
