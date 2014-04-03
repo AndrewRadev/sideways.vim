@@ -24,14 +24,14 @@ various other cases and it's intended to make the process configurable. While
 this particular example is in python, this should work for arguments in many
 different languages that use round braces to denote function calls.
 
-For ruby and eruby, it detects method calls without braces as well:
+For ruby and eruby, it detects **method calls without braces** as well:
 ``` ruby
 link_to user_registration_path, 'Something'
 # changes to:
 link_to 'Something', user_registration_path
 ```
 
-Apart from functions, it works for square-bracket lists in dynamic languages:
+Apart from functions, it works for **square-bracket lists** in dynamic languages:
 
 ``` python
 list = [one, [two, four, five], three]
@@ -53,17 +53,17 @@ The plugin also provides the commands `:SidewaysJumpLeft` and
 
 Other things that sideways works for:
 
-Lists in CSS declarations:
+**Lists in CSS declarations**:
 ``` css
 border-radius: 20px 0 0 20px;
 ```
 
-Single-line CSS declarations:
+**Single-line CSS declarations**:
 ``` css
 a { color: #fff; background: blue; text-decoration: underline; }
 ```
 
-Cucumber tables:
+**Cucumber tables**:
 ``` cucumber
 Examples:
   | input_1 | input_2 | button | output |
@@ -71,7 +71,7 @@ Examples:
   | 2       | 5       | add    | 7      |
   | 0       | 40      | add    | 40     |
 ```
-Go lists:
+**Go lists**:
 ``` go
 []string{"One", "Two", "Three"}
 ```
