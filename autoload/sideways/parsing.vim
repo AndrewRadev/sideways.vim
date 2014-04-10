@@ -69,9 +69,11 @@ function! sideways#parsing#Parse(definitions)
       exe 'normal! '.len(match).'l'
 
       " skip some whitespace TODO consider removing
-      while s:RemainderOfLine() =~ skip_pattern
-        normal! l
-      endwhile
+      if skip_pattern != ''
+        while s:RemainderOfLine() =~ skip_pattern
+          normal! l
+        endwhile
+      endif
 
       " initialize a new "current item"
       let current_item = [col('.'), -1]

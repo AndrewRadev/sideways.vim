@@ -13,21 +13,21 @@ let g:sideways_definitions =
       \     'end':       '\s*)',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([{''"', ')]}''"']
+      \     'brackets':  ['([{''"', ')]}''"'],
       \   },
       \   {
       \     'start':     '\[\s*',
       \     'end':       '\s*\]',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"']
+      \     'brackets':  ['([''"', ')]''"'],
       \   },
       \   {
       \     'start':     '\<if\s*',
       \     'end':       '^$',
       \     'delimiter': '^\s*\(and\|or\|||\|&&\)\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"']
+      \     'brackets':  ['([''"', ')]''"'],
       \   },
       \ ]
 
@@ -37,17 +37,34 @@ autocmd FileType ruby let b:sideways_definitions = [
       \     'end':       '\s*\%(\<do\>\|#\|$\)',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"']
+      \     'brackets':  ['([''"', ')]''"'],
       \   },
       \ ]
 
-autocmd FileType coffee,haml let b:sideways_definitions = [
+autocmd FileType coffee let b:sideways_definitions = [
       \   {
       \     'start':     '\k\{1,} ',
       \     'end':       '$',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"']
+      \     'brackets':  ['([''"', ')]''"'],
+      \   },
+      \ ]
+
+autocmd FileType haml let b:sideways_definitions = [
+      \   {
+      \     'start':     '\k\{1,} ',
+      \     'end':       '$',
+      \     'delimiter': '^,\s*',
+      \     'skip':      '^\s',
+      \     'brackets':  ['([''"', ')]''"'],
+      \   },
+      \   {
+      \     'start':     '^[^.]*\.',
+      \     'end':       '\%(\k\|\.\)\@!',
+      \     'delimiter': '^\.',
+      \     'skip':      '',
+      \     'brackets':  ['', ''],
       \   },
       \ ]
 
@@ -57,7 +74,7 @@ autocmd FileType eruby let b:sideways_definitions = [
       \     'end':       '\s*%>',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"']
+      \     'brackets':  ['([''"', ')]''"'],
       \   },
       \ ]
 
@@ -67,7 +84,7 @@ autocmd FileType go let b:sideways_definitions = [
       \     'end':       '\s*}',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"']
+      \     'brackets':  ['([''"', ')]''"'],
       \   },
       \ ]
 
@@ -77,14 +94,14 @@ autocmd FileType css,scss,less let b:sideways_definitions = [
       \     'end':       ';',
       \     'delimiter': '^\s',
       \     'skip':      '^\s',
-      \     'brackets':  ['(''"', ')''"']
+      \     'brackets':  ['(''"', ')''"'],
       \   },
       \   {
       \     'start':     '{\s*',
       \     'end':       ';\=\s*}',
       \     'delimiter': '^;\s*',
       \     'skip':      '^\s',
-      \     'brackets':  ['(''"', ')''"']
+      \     'brackets':  ['(''"', ')''"'],
       \   },
       \ ]
 
@@ -94,7 +111,7 @@ autocmd FileType cucumber let b:sideways_definitions = [
       \     'end':       '|$',
       \     'delimiter': '^|',
       \     'skip':      '^$',
-      \     'brackets':  ['(''"', ')''"']
+      \     'brackets':  ['(''"', ')''"'],
       \   },
       \ ]
 
