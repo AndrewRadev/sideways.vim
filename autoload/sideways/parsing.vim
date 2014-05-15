@@ -104,9 +104,15 @@ function! s:LocateBestDefinition(definitions)
     let start_pattern = definition.start
     let end_pattern   = definition.end
 
+    if has_key(definition, 'skip_syntax')
+      let skip = s:SkipSyntax(definition.skip_syntax)
+    else
+      let skip = ''
+    endif
+
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW', '', line('.')) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW', skip, line('.')) <= 0
       call sideways#util#PopCursor()
       continue
     else
@@ -147,6 +153,13 @@ endfunction
 " end.
 function! s:RemainderOfLine()
   return strpart(getline('.'), col('.') - 1)
+endfunction
+
+function! s:SkipSyntax(groups)
+  let syntax_groups = a:groups
+  let skip_pattern  = '\%('.join(syntax_groups, '\|').'\)'
+
+  return "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".skip_pattern."'"
 endfunction
 
 " Simple debugging

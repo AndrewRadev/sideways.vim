@@ -79,4 +79,17 @@ describe "ruby methods" do
       link_to user_registration_path, '#Something' # comment
     EOF
   end
+
+  specify "with a multi-word string" do
+    set_file_contents <<-EOF
+      link_to 'Something Else', user_registration_path
+    EOF
+
+    vim.search('Else')
+
+    vim.right
+    assert_file_contents <<-EOF
+      link_to user_registration_path, 'Something Else'
+    EOF
+  end
 end
