@@ -14,3 +14,5 @@ list = ['foo', 'baz', 'bar']
 foo(bar, baz(foobar(), foobaz))
 
 foo([ 'baz', 'quux', 'bar' ])
+
+dict = {one: 1, two: 2, three: 3}

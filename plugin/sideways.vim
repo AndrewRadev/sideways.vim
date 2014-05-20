@@ -23,6 +23,13 @@ let g:sideways_definitions =
       \     'brackets':  ['([''"', ')]''"'],
       \   },
       \   {
+      \     'start':     '{\s*',
+      \     'end':       '\s*}',
+      \     'delimiter': '^,\s*',
+      \     'skip':      '^\s',
+      \     'brackets':  ['([{''"', ')]}''"'],
+      \   },
+      \   {
       \     'start':     '\<if\s*',
       \     'end':       '^$',
       \     'delimiter': '^\s*\(and\|or\|||\|&&\)\s*',

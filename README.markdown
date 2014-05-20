@@ -75,6 +75,10 @@ Examples:
 ``` go
 []string{"One", "Two", "Three"}
 ```
+**JSON-like dictionaries**:
+``` python
+dict = {one: 1, two: 2, three: 3}
+```
 
 The plugin is intended to be customizable, though at this point you'd need to
 look at the source to do this.
