@@ -92,7 +92,7 @@ Go lists:
 >
     []string{"One", "Two", "Three"}
 <
-JSON-like dictionaries:
+Javascript-like objects:
 >
     dict = {one: 1, two: 2, three: 3}
 <
