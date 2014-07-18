@@ -61,11 +61,12 @@ autocmd FileType coffee let b:sideways_definitions = [
 
 autocmd FileType haml let b:sideways_definitions = [
       \   {
-      \     'start':     '\k\{1,} ',
-      \     'end':       '$',
-      \     'delimiter': '^,\s*',
-      \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"'],
+      \     'skip_syntax': ['rubyString'],
+      \     'start':       '\k\{1,} ',
+      \     'end':         '$',
+      \     'delimiter':   '^,\s*',
+      \     'skip':        '^\s',
+      \     'brackets':    ['([''"', ')]''"'],
       \   },
       \   {
       \     'start':     '^[^.]*\.',
