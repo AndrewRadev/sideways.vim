@@ -52,7 +52,7 @@ autocmd FileType ruby let b:sideways_definitions = [
 autocmd FileType coffee let b:sideways_definitions = [
       \   {
       \     'start':     '\k\{1,} ',
-      \     'end':       '$',
+      \     'end':       '\%(,\s*[-=]>\|$\)',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"'],
