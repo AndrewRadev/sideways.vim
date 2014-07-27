@@ -137,10 +137,13 @@ function! s:LocateBestDefinition(definitions)
 endfunction
 
 function! s:BracketMatch(text, brackets)
-  let index = 0
+  let index            = 0
+  let whitespace_index = match(a:text, '^\s*\zs')
+  let text             = strpart(a:text, whitespace_index)
+
   for char in split(a:brackets, '\zs')
-    if a:text[0] ==# char
-      return index
+    if text[0] ==# char
+      return whitespace_index + index
     else
       let index += 1
     endif
