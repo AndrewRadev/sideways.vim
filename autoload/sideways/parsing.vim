@@ -35,8 +35,8 @@ function! sideways#parsing#Parse(definitions)
   let remainder_of_line = s:RemainderOfLine()
 
   while remainder_of_line !~ '^'.end_pattern
-    let opening_bracket_match = s:BracketMatch(remainder_of_line, opening_brackets)
-    let closing_bracket_match = s:BracketMatch(remainder_of_line, closing_brackets)
+    let [opening_bracket_match, offset] = s:BracketMatch(remainder_of_line, opening_brackets)
+    let [closing_bracket_match, offset] = s:BracketMatch(remainder_of_line, closing_brackets)
 
     if opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
@@ -49,6 +49,11 @@ function! sideways#parsing#Parse(definitions)
       " then try to jump to the closing bracket
       let opening_bracket = opening_brackets[opening_bracket_match]
       let closing_bracket = closing_brackets[opening_bracket_match]
+
+      " first, go to the opening bracket
+      if offset > 0
+        exe "normal! ".offset."l"
+      end
 
       if opening_bracket == closing_bracket
         " same bracket, search for it
@@ -137,19 +142,19 @@ function! s:LocateBestDefinition(definitions)
 endfunction
 
 function! s:BracketMatch(text, brackets)
-  let index            = 0
-  let whitespace_index = match(a:text, '^\s*\zs')
-  let text             = strpart(a:text, whitespace_index)
+  let index  = 0
+  let offset = match(a:text, '^\s*\zs')
+  let text   = strpart(a:text, offset)
 
   for char in split(a:brackets, '\zs')
     if text[0] ==# char
-      return whitespace_index + index
+      return [index, offset]
     else
       let index += 1
     endif
   endfor
 
-  return -1
+  return [-1, 0]
 endfunction
 
 " Returns the remainder of the line from the current cursor position to the
