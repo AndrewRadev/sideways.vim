@@ -52,7 +52,7 @@ function! sideways#parsing#Parse(definitions)
 
       if opening_bracket == closing_bracket
         " same bracket, search for it
-        call search('\V'.closing_bracket, 'W', '', line('.'))
+        call search('\V'.closing_bracket, 'W', line('.'))
       else
         " different closing, use searchpair
         call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
