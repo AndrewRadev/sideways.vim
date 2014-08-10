@@ -63,8 +63,15 @@ function! sideways#parsing#Parse(definitions)
         call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
       endif
 
-      " move rightwards regardless of the result
-      normal! l
+      if col('.') == col('$') - 1
+        " then we're at the end of the line, finish up to avoid an extra
+        " bracket check
+        let current_item[1] = col('$') - 1
+        break
+      else
+        " there's still room, move rightwards
+        normal! l
+      endif
     elseif remainder_of_line =~ delimiter_pattern
       " then store the current item
       let current_item[1] = col('.') - 1
