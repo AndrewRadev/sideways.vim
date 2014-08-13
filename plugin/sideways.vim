@@ -87,6 +87,16 @@ autocmd FileType eruby let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType html let b:sideways_definitions = [
+      \   {
+      \     'start':     '<\k\+\s\+',
+      \     'end':       '\s*/\?>',
+      \     'delimiter': '^\s\+',
+      \     'skip':      '^\s',
+      \     'brackets':  ['"', '"'],
+      \   },
+      \ ]
+
 autocmd FileType go let b:sideways_definitions = [
       \   {
       \     'start':     '{\s*',
