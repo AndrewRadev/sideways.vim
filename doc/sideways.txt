@@ -80,6 +80,10 @@ Single-line CSS declarations:
 >
     a { color: #fff; background: blue; text-decoration: underline; }
 <
+HTML attributes:
+>
+    <input name="one" id="two" class="three" />
+<
 Cucumber tables:
 >
     Examples:
