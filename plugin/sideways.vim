@@ -51,11 +51,12 @@ autocmd FileType ruby let b:sideways_definitions = [
 
 autocmd FileType coffee let b:sideways_definitions = [
       \   {
-      \     'start':     '\k\{1,} ',
-      \     'end':       '\%(,\s*[-=]>\|\s*#\|$\)',
-      \     'delimiter': '^,\s*',
-      \     'skip':      '^\s',
-      \     'brackets':  ['([''"', ')]''"'],
+      \     'skip_syntax': ['coffeeString', 'coffeeComment'],
+      \     'start':       '\k\{1,} ',
+      \     'end':         '\%(,\s*[-=]>\|\s*#\|$\)',
+      \     'delimiter':   '^,\s*',
+      \     'skip':        '^\s',
+      \     'brackets':    ['([''"', ')]''"'],
       \   },
       \ ]
 
