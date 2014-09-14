@@ -9,10 +9,12 @@ function! sideways#textobj#Argument(mode)
   if a:mode == 'i'
     call s:MarkCols(current[0], current[1])
   elseif a:mode == 'a'
-    if empty(next)
+    if empty(next) && !empty(previous)
       call s:MarkCols(previous[1] + 1, current[1])
-    else
+    elseif empty(previous) && !empty(next)
       call s:MarkCols(current[0], next[0] - 1)
+    else
+      call s:MarkCols(current[0], current[1])
     endif
   endif
 endfunction
