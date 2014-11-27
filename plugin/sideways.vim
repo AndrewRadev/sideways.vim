@@ -64,7 +64,7 @@ autocmd FileType haml let b:sideways_definitions = [
       \   {
       \     'skip_syntax': ['rubyString'],
       \     'start':       '\k\{1,} ',
-      \     'end':         '$',
+      \     'end':         '\s*\%(\<do\>\|#\|$\)',
       \     'delimiter':   '^,\s*',
       \     'skip':        '^\s',
       \     'brackets':    ['([''"', ')]''"'],
