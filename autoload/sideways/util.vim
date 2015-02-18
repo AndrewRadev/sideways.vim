@@ -71,6 +71,9 @@ endfunction
 " Note that the motion needs to include a visual mode key, like "V", "v" or
 " "gv"
 function! sideways#util#ReplaceMotion(motion, text)
+  let original_selection = &selection
+  let &selection = "inclusive"
+
   let original_reg      = getreg('z')
   let original_reg_type = getregtype('z')
 
@@ -78,6 +81,7 @@ function! sideways#util#ReplaceMotion(motion, text)
   exec 'normal! '.a:motion.'"zp'
 
   call setreg('z', original_reg, original_reg_type)
+  let &selection = original_selection
 endfunction
 
 " function! sideways#util#ReplaceCols(start, end, text) {{{2
@@ -107,6 +111,9 @@ endfunction
 function! sideways#util#GetMotion(motion)
   call sideways#util#PushCursor()
 
+  let original_selection = &selection
+  let &selection = "inclusive"
+
   let original_reg      = getreg('z')
   let original_reg_type = getregtype('z')
 
@@ -114,6 +121,8 @@ function! sideways#util#GetMotion(motion)
   let text = @z
 
   call setreg('z', original_reg, original_reg_type)
+  let &selection = original_selection
+
   call sideways#util#PopCursor()
 
   return text

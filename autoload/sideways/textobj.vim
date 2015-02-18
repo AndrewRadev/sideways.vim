@@ -24,6 +24,11 @@ function! s:MarkCols(start_col, end_col)
   let start_byte  = line_offset + a:start_col - 1
   let end_byte    = line_offset + a:end_col - 1
 
-  exe 'normal! '.start_byte.'gov'.end_byte.'go'
+  if &selection == "exclusive"
+    exe 'normal! '.start_byte.'gov'.(end_byte + 1).'go'
+  else
+    exe 'normal! '.start_byte.'gov'.end_byte.'go'
+  endif
+
   return 1
 endfunction
