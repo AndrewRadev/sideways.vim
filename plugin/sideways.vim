@@ -135,11 +135,14 @@ autocmd FileType cucumber let b:sideways_definitions = [
       \   },
       \ ]
 
-command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set(":SidewaysLeft\<cr>")
-command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set(":SidewaysRight\<cr>")
+command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set("\<Plug>SidewaysLeft")
+command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Plug>SidewaysRight")
 
 command! SidewaysJumpLeft  call sideways#JumpLeft()
 command! SidewaysJumpRight call sideways#JumpRight()
+
+nnoremap <silent> <Plug>SidewaysLeft :<c-u>SidewaysLeft<cr>
+nnoremap <silent> <Plug>SidewaysRight :<c-u>SidewaysRight<cr>
 
 onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
 xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
