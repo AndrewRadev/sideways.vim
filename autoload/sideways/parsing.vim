@@ -14,6 +14,9 @@
 function! sideways#parsing#Parse(definitions)
   call sideways#util#PushCursor()
 
+  " TODO (2015-11-18) Save and restore
+  set whichwrap+=l
+
   let definitions = a:definitions
   let items       = []
 
@@ -31,7 +34,7 @@ function! sideways#parsing#Parse(definitions)
 
   let [opening_brackets, closing_brackets] = definition.brackets
 
-  let current_item = [col('.'), -1]
+  let current_item = [line('.'), col('.'), -1]
   let remainder_of_line = s:RemainderOfLine()
 
   while remainder_of_line !~ '^'.end_pattern
@@ -40,10 +43,6 @@ function! sideways#parsing#Parse(definitions)
 
     if opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
-      break
-    elseif col('.') == col('$') - 1
-      " then we're at the end of the line, finish up
-      let current_item[1] = col('$') - 1
       break
     elseif opening_bracket_match >= 0
       " then try to jump to the closing bracket
@@ -57,16 +56,17 @@ function! sideways#parsing#Parse(definitions)
 
       if opening_bracket == closing_bracket
         " same bracket, search for it
-        call search('\V'.closing_bracket, 'W', line('.'))
+        call search('\V'.closing_bracket, 'W')
       else
         " different closing, use searchpair
-        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '', line('.'))
+        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '')
       endif
 
       if col('.') == col('$') - 1
         " then we're at the end of the line, finish up to avoid an extra
         " bracket check
-        let current_item[1] = col('$') - 1
+        let current_item[0] = line('.')
+        let current_item[2] = col('$') - 1
         break
       else
         " there's still room, move rightwards
@@ -74,7 +74,8 @@ function! sideways#parsing#Parse(definitions)
       endif
     elseif remainder_of_line =~ delimiter_pattern
       " then store the current item
-      let current_item[1] = col('.') - 1
+      let current_item[0] = line('.')
+      let current_item[2] = col('.') - 1
       call add(items, current_item)
 
       let match = matchstr(remainder_of_line, delimiter_pattern)
@@ -88,7 +89,7 @@ function! sideways#parsing#Parse(definitions)
       endif
 
       " initialize a new "current item"
-      let current_item = [col('.'), -1]
+      let current_item = [line('.'), col('.'), -1]
     else
       " move rightwards
       normal! l
@@ -97,10 +98,12 @@ function! sideways#parsing#Parse(definitions)
     let remainder_of_line = s:RemainderOfLine()
   endwhile
 
-  if current_item[1] < 0
-    let current_item[1] = col('.') - 1
+  if current_item[2] < 0
+    let current_item[2] = col('.') - 1
   endif
   call add(items, current_item)
+
+  call s:DebugItems(items)
 
   call sideways#util#PopCursor()
   return items
@@ -109,8 +112,9 @@ endfunction
 function! s:LocateBestDefinition(definitions)
   silent! normal! zO
 
-  let best_definition     = {}
-  let best_definition_col = 0
+  let best_definition      = {}
+  let best_definition_col  = 0
+  let best_definition_line = line('$') + 1
 
   for definition in a:definitions
     let start_pattern = definition.start
@@ -124,16 +128,18 @@ function! s:LocateBestDefinition(definitions)
 
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW', skip, line('.')) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW', skip) <= 0
       call sideways#util#PopCursor()
       continue
     else
       call search(start_pattern, 'Wce', line('.'))
       normal! l
 
-      if best_definition_col < col('.')
-        let best_definition_col = col('.')
-        let best_definition = definition
+      if best_definition_line < line('.') ||
+            \ (best_definition_line >= line('.') && best_definition_col < col('.'))
+        let best_definition_line = line('.')
+        let best_definition_col  = col('.')
+        let best_definition      = definition
       endif
     endif
 
@@ -141,7 +147,7 @@ function! s:LocateBestDefinition(definitions)
   endfor
 
   if best_definition_col > 0
-    call sideways#util#SetCol(best_definition_col)
+    call sideways#util#SetPos(best_definition_line, best_definition_col)
     return best_definition
   else
     return {}
@@ -180,5 +186,5 @@ endfunction
 " Simple debugging
 function! s:DebugItems(items)
   Decho a:items
-  Decho map(copy(a:items), 'sideways#util#GetCols(v:val[0], v:val[1])')
+  Decho map(copy(a:items), 'sideways#util#GetCols(v:val[0], v:val[1], v:val[2])')
 endfunction

@@ -23,14 +23,16 @@ function! sideways#MoveLeft()
   if active_index == 0
     let first             = items[active_index]
     let second            = items[last_index]
-    let new_cursor_column = second[0] + s:Delta(second, first)
+    let new_cursor_line   = second[0]
+    let new_cursor_column = second[1] + s:Delta(second, first)
   else
     let first             = items[active_index - 1]
     let second            = items[active_index]
-    let new_cursor_column = first[0]
+    let new_cursor_line   = first[0]
+    let new_cursor_column = first[1]
   endif
 
-  call s:Swap(first, second, new_cursor_column)
+  call s:Swap(first, second, new_cursor_line, new_cursor_column)
   return 1
 endfunction
 
@@ -49,14 +51,16 @@ function! sideways#MoveRight()
   if active_index == last_index
     let first             = items[0]
     let second            = items[last_index]
-    let new_cursor_column = first[0]
+    let new_cursor_line   = first[0]
+    let new_cursor_column = first[1]
   else
     let first             = items[active_index]
     let second            = items[active_index + 1]
-    let new_cursor_column = second[0] + s:Delta(second, first)
+    let new_cursor_line   = second[0]
+    let new_cursor_column = second[1] + s:Delta(second, first)
   endif
 
-  call s:Swap(first, second, new_cursor_column)
+  call s:Swap(first, second, new_cursor_line, new_cursor_column)
   return 1
 endfunction
 
@@ -151,18 +155,19 @@ endfunction
 " a:first is expected to be positioned before a:second. Assuming that, the
 " function first places the second item and then the first one, ensuring that
 " the column number remain consistent until it's done.
-function! s:Swap(first, second, new_cursor_column)
-  let [first_start, first_end]   = a:first
-  let [second_start, second_end] = a:second
+function! s:Swap(first, second, new_cursor_line, new_cursor_column)
+  let [first_line, first_start, first_end]   = a:first
+  let [second_line, second_start, second_end] = a:second
 
-  let first_body  = sideways#util#GetCols(first_start, first_end)
-  let second_body = sideways#util#GetCols(second_start, second_end)
+  let first_body  = sideways#util#GetCols(first_line, first_start, first_end)
+  let second_body = sideways#util#GetCols(second_line, second_start, second_end)
 
   let position = getpos('.')
 
-  call sideways#util#ReplaceCols(second_start, second_end, first_body)
-  call sideways#util#ReplaceCols(first_start, first_end, second_body)
+  call sideways#util#ReplaceCols(second_line, second_start, second_end, first_body)
+  call sideways#util#ReplaceCols(first_line, first_start, first_end, second_body)
 
+  let position[1] = a:new_cursor_line
   let position[2] = a:new_cursor_column
   call setpos('.', position)
 endfunction
@@ -176,9 +181,9 @@ function! s:FindActiveItem(items)
 
   let index = 0
   for item in a:items
-    let [start, end] = item
+    let [line, start, end] = item
 
-    if start <= column && column <= end
+    if line == line('.') && start <= column && column <= end
       return index
     endif
 
@@ -195,5 +200,5 @@ endfunction
 " account for the column positions becoming inconsistent after replacing text
 " in the current line.
 function! s:Delta(first, second)
-  return (a:first[1] - a:first[0]) - (a:second[1] - a:second[0])
+  return (a:first[2] - a:first[1]) - (a:second[2] - a:second[1])
 endfunction

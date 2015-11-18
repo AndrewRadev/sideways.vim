@@ -84,12 +84,12 @@ function! sideways#util#ReplaceMotion(motion, text)
   let &selection = original_selection
 endfunction
 
-" function! sideways#util#ReplaceCols(start, end, text) {{{2
+" function! sideways#util#ReplaceCols(line, start, end, text) {{{2
 "
-" Replace the area defined by the 'start' and 'end' columns on the current
+" Replace the area defined by the 'start' and 'end' columns on the given
 " line with 'text'
-function! sideways#util#ReplaceCols(start, end, text)
-  let line_offset = line2byte('.')
+function! sideways#util#ReplaceCols(line, start, end, text)
+  let line_offset = line2byte(a:line)
   let start_byte  = line_offset + a:start - 1
   let end_byte    = line_offset + a:end - 1
 
@@ -128,21 +128,22 @@ function! sideways#util#GetMotion(motion)
   return text
 endfunction
 
-" function! sideways#util#GetCols(start, end) {{{2
+" function! sideways#util#GetCols(line, start, end) {{{2
 "
-" Retrieve the text from columns "start" to "end" on the current line.
-function! sideways#util#GetCols(start, end)
-  return strpart(getline('.'), a:start - 1, a:end - a:start + 1)
+" Retrieve the text from columns "start" to "end" on the given line.
+function! sideways#util#GetCols(line, start, end)
+  return strpart(getline(a:line), a:start - 1, a:end - a:start + 1)
 endfunction
 
 " Positioning the cursor {{{1
 "
 
-" function! sideways#util#SetCol(col) {{{2
+" function! sideways#util#SetPos(line, col) {{{2
 "
 " Positions the cursor at the given column.
-function! sideways#util#SetCol(col)
+function! sideways#util#SetPos(line, col)
   let position = getpos('.')
+  let position[1] = a:line
   let position[2] = a:col
   call setpos('.', position)
 endfunction
