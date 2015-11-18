@@ -60,7 +60,7 @@ autocmd FileType coffee let b:sideways_definitions = [
       \   },
       \ ]
 
-autocmd FileType haml let b:sideways_definitions = [
+autocmd FileType haml,slim let b:sideways_definitions = [
       \   {
       \     'skip_syntax': ['rubyString'],
       \     'start':       '\k\{1,} ',
