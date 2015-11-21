@@ -21,10 +21,16 @@ function! sideways#MoveLeft()
   endif
 
   if active_index == 0
-    let first             = items[active_index]
-    let second            = items[last_index]
-    let new_cursor_line   = second[0]
-    let new_cursor_column = second[1] + s:Delta(second, first)
+    let first           = items[active_index]
+    let second          = items[last_index]
+    let new_cursor_line = second[0]
+
+    if first[0] == second[0]
+      " same line, adjust for size
+      let new_cursor_column = second[1] + s:Delta(second, first)
+    else
+      let new_cursor_column = second[1]
+    endif
   else
     let first             = items[active_index - 1]
     let second            = items[active_index]
@@ -57,7 +63,13 @@ function! sideways#MoveRight()
     let first             = items[active_index]
     let second            = items[active_index + 1]
     let new_cursor_line   = second[0]
-    let new_cursor_column = second[1] + s:Delta(second, first)
+
+    if first[0] == second[0]
+      " same line, adjust for size
+      let new_cursor_column = second[1] + s:Delta(second, first)
+    else
+      let new_cursor_column = second[1]
+    endif
   endif
 
   call s:Swap(first, second, new_cursor_line, new_cursor_column)
