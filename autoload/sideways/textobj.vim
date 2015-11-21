@@ -7,14 +7,14 @@ function! sideways#textobj#Argument(mode)
   let [previous, current, next] = coordinates
 
   if a:mode == 'i'
-    call s:MarkCols(current[0], current[1])
+    call s:MarkCols(current[1], current[2])
   elseif a:mode == 'a'
     if !empty(previous)
-      call s:MarkCols(previous[1] + 1, current[1])
+      call s:MarkCols(previous[2] + 1, current[2])
     elseif !empty(next)
-      call s:MarkCols(current[0], next[0] - 1)
+      call s:MarkCols(current[1], next[1] - 1)
     else
-      call s:MarkCols(current[0], current[1])
+      call s:MarkCols(current[1], current[1])
     endif
   endif
 endfunction
