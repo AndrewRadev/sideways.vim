@@ -41,11 +41,6 @@ function! sideways#parsing#Parse(definitions)
     let [opening_bracket_match, offset] = s:BracketMatch(remainder_of_line, opening_brackets)
     let [closing_bracket_match, offset] = s:BracketMatch(remainder_of_line, closing_brackets)
 
-    if line('.') == line('$') && col('.') == col('$') - 1
-      " we're at the end of the file, no use continuing
-      break
-    endif
-
     if opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
       break
@@ -96,8 +91,8 @@ function! sideways#parsing#Parse(definitions)
       " initialize a new "current item"
       let current_item = [line('.'), col('.'), -1]
     elseif col('.') == col('$') - 1
-      " then we're at the end of the line, but not due to a delmiter -- finish
-      " up this item and stop here
+      " then we're at the end of the line, but not due to a delimiter --
+      " finish up this item and stop here
       let current_item[2] = col('$') - 1
       break
     else
