@@ -14,9 +14,6 @@
 function! sideways#parsing#Parse(definitions)
   call sideways#util#PushCursor()
 
-  " TODO (2015-11-18) Save and restore
-  set whichwrap+=l
-
   let definitions = a:definitions
   let items       = []
 
@@ -37,9 +34,17 @@ function! sideways#parsing#Parse(definitions)
   let current_item = [line('.'), col('.'), -1]
   let remainder_of_line = s:RemainderOfLine()
 
+  let original_whichwrap = &whichwrap
+  set whichwrap+=l
+
   while remainder_of_line !~ '^'.end_pattern
     let [opening_bracket_match, offset] = s:BracketMatch(remainder_of_line, opening_brackets)
     let [closing_bracket_match, offset] = s:BracketMatch(remainder_of_line, closing_brackets)
+
+    if line('.') == line('$') && col('.') == col('$') - 1
+      " we're at the end of the file, no use continuing
+      break
+    endif
 
     if opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
@@ -90,6 +95,11 @@ function! sideways#parsing#Parse(definitions)
 
       " initialize a new "current item"
       let current_item = [line('.'), col('.'), -1]
+    elseif col('.') == col('$') - 1
+      " then we're at the end of the line, but not due to a delmiter -- finish
+      " up this item and stop here
+      let current_item[2] = col('$') - 1
+      break
     else
       " move rightwards
       normal! l
@@ -98,12 +108,14 @@ function! sideways#parsing#Parse(definitions)
     let remainder_of_line = s:RemainderOfLine()
   endwhile
 
+  let &whichwrap = original_whichwrap
+
   if current_item[2] < 0
     let current_item[2] = col('.') - 1
   endif
   call add(items, current_item)
 
-  call s:DebugItems(items)
+  " call s:DebugItems(items)
 
   call sideways#util#PopCursor()
   return items
