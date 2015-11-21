@@ -88,18 +88,20 @@ function! sideways#JumpLeft()
     return 0
   endif
 
+  let position = getpos('.')
+
   if active_index == 0
-    let first             = items[active_index]
-    let second            = items[last_index]
-    let new_cursor_column = second[0]
+    let first       = items[active_index]
+    let second      = items[last_index]
+    let position[1] = second[0]
+    let position[2] = second[1]
   else
-    let first             = items[active_index - 1]
-    let second            = items[active_index]
-    let new_cursor_column = first[0]
+    let first       = items[active_index - 1]
+    let second      = items[active_index]
+    let position[1] = first[0]
+    let position[2] = first[1]
   endif
 
-  let position = getpos('.')
-  let position[2] = new_cursor_column
   call setpos('.', position)
 
   return 1
@@ -118,18 +120,20 @@ function! sideways#JumpRight()
     return 0
   endif
 
+  let position = getpos('.')
+
   if active_index == last_index
-    let first             = items[0]
-    let second            = items[last_index]
-    let new_cursor_column = first[0]
+    let first       = items[0]
+    let second      = items[last_index]
+    let position[1] = first[0]
+    let position[2] = first[1]
   else
-    let first             = items[active_index]
-    let second            = items[active_index + 1]
-    let new_cursor_column = second[0]
+    let first       = items[active_index]
+    let second      = items[active_index + 1]
+    let position[1] = second[0]
+    let position[2] = second[1]
   endif
 
-  let position = getpos('.')
-  let position[2] = new_cursor_column
   call setpos('.', position)
 
   return 1
