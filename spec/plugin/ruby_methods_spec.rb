@@ -92,4 +92,19 @@ describe "ruby methods" do
       link_to user_registration_path, 'Something Else'
     EOF
   end
+
+  specify "multiline" do
+    set_file_contents <<-EOF
+      function_call(one, two,
+                    three, four)
+    EOF
+
+    vim.search('three')
+
+    vim.left
+    assert_file_contents <<-EOF
+      function_call(one, three,
+                    two, four)
+    EOF
+  end
 end

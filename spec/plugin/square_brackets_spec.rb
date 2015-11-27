@@ -36,4 +36,22 @@ describe "square-bracketed lists" do
       foo = ['one', 'two', 'three']
     EOF
   end
+
+  specify "multiline" do
+    set_file_contents <<-EOF
+      foo = [
+        one, two,
+        three, four
+      ]
+    EOF
+
+    vim.search('four')
+    vim.right
+    assert_file_contents <<-EOF
+      foo = [
+        four, two,
+        three, one
+      ]
+    EOF
+  end
 end
