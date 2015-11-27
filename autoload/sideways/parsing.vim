@@ -72,18 +72,18 @@ function! sideways#parsing#Parse(definitions)
         " there's still room, move rightwards
         normal! l
       endif
-    elseif remainder_of_line =~ delimiter_pattern
+    elseif remainder_of_line =~ '^'.delimiter_pattern
       " then store the current item
       let current_item[0] = line('.')
       let current_item[2] = col('.') - 1
       call add(items, current_item)
 
-      let match = matchstr(remainder_of_line, delimiter_pattern)
+      let match = matchstr(remainder_of_line, '^'.delimiter_pattern)
       exe 'normal! '.len(match).'l'
 
       " skip some whitespace TODO consider removing
       if skip_pattern != ''
-        while s:RemainderOfLine() =~ skip_pattern
+        while s:RemainderOfLine() =~ '^'.skip_pattern
           normal! l
         endwhile
       endif
