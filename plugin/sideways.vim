@@ -9,22 +9,22 @@ set cpo&vim
 let g:sideways_definitions =
       \ [
       \   {
-      \     'start':     '(\s*',
-      \     'end':       '\s*)',
+      \     'start':     '(\_s*',
+      \     'end':       '\_s*)',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([{''"', ')]}''"'],
       \   },
       \   {
-      \     'start':     '\[\s*',
-      \     'end':       '\s*\]',
+      \     'start':     '\[\_s*',
+      \     'end':       '\_s*\]',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"'],
       \   },
       \   {
-      \     'start':     '{\s*',
-      \     'end':       '\s*}',
+      \     'start':     '{\_s*',
+      \     'end':       '\_s*}',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([{''"', ')]}''"'],
@@ -100,8 +100,8 @@ autocmd FileType html let b:sideways_definitions = [
 
 autocmd FileType go let b:sideways_definitions = [
       \   {
-      \     'start':     '{\s*',
-      \     'end':       '\s*}',
+      \     'start':     '{\_s*',
+      \     'end':       '\_s*}',
       \     'delimiter': '^,\s*',
       \     'skip':      '^\s',
       \     'brackets':  ['([''"', ')]''"'],
