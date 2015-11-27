@@ -90,7 +90,7 @@ autocmd FileType eruby let b:sideways_definitions = [
 
 autocmd FileType html let b:sideways_definitions = [
       \   {
-      \     'start':     '<\k\+\s\+',
+      \     'start':     '<\k\+\_s\+',
       \     'end':       '\s*/\?>',
       \     'delimiter': '^\s\+',
       \     'skip':      '^\s',
