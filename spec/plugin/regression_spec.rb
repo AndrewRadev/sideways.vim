@@ -19,6 +19,23 @@ describe "regression tests" do
     end
   end
 
+  describe "coffee" do
+    let(:filename) { 'test.coffee' }
+
+    specify "nested curly brackets" do
+      set_file_contents <<-EOF
+        foo = { one: two, three: { four: five } }
+      EOF
+
+      vim.search('three')
+      vim.left
+
+      assert_file_contents <<-EOF
+        foo = { three: { four: five }, one: two }
+      EOF
+    end
+  end
+
   describe "ruby" do
     let(:filename) { 'test.rb' }
 

@@ -39,7 +39,7 @@ function! sideways#parsing#Parse(definitions)
 
   while remainder_of_line !~ '^'.end_pattern
     let [opening_bracket_match, offset] = s:BracketMatch(remainder_of_line, opening_brackets)
-    let [closing_bracket_match, offset] = s:BracketMatch(remainder_of_line, closing_brackets)
+    let [closing_bracket_match, _]      = s:BracketMatch(remainder_of_line, closing_brackets)
 
     if opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
