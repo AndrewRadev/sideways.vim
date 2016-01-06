@@ -121,7 +121,7 @@ function! s:LocateBestDefinition(definitions)
 
   let best_definition      = {}
   let best_definition_col  = 0
-  let best_definition_line = line('$') + 1
+  let best_definition_line = -1
 
   for definition in a:definitions
     let start_pattern = definition.start
@@ -142,10 +142,13 @@ function! s:LocateBestDefinition(definitions)
       call search(start_pattern, 'Wce', line('.'))
       normal! l
 
-      if best_definition_line < line('.') ||
-            \ (best_definition_line >= line('.') && best_definition_col < col('.'))
-        let best_definition_line = line('.')
-        let best_definition_col  = col('.')
+      let match_line = line('.')
+      let match_col = col('.')
+
+      if match_line > best_definition_line ||
+            \ (match_line == best_definition_line && match_col > best_definition_col)
+        let best_definition_line = match_line
+        let best_definition_col  = match_col
         let best_definition      = definition
       endif
     endif
