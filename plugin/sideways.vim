@@ -40,6 +40,13 @@ let g:sideways_definitions =
 
 autocmd FileType ruby let b:sideways_definitions = [
       \   {
+      \     'start':     '|\s*',
+      \     'end':       '\s*|',
+      \     'delimiter': ',\s*',
+      \     'skip':      '\s',
+      \     'brackets':  ['([{''"', ')]}''"'],
+      \   },
+      \   {
       \     'skip_syntax': ['rubyString', 'rubySymbol', 'rubyComment'],
       \     'start':       '\k\{1,}[?!]\= \ze\s*[^=]',
       \     'end':         '\s*\%(\<do\>\|#\)',
