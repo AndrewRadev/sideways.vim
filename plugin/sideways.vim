@@ -40,7 +40,7 @@ let g:sideways_definitions =
 
 autocmd FileType ruby let b:sideways_definitions = [
       \   {
-      \     'skip_syntax': ['rubyString', 'rubyComment'],
+      \     'skip_syntax': ['rubyString', 'rubySymbol', 'rubyComment'],
       \     'start':       '\k\{1,}[?!]\= \ze\s*[^=]',
       \     'end':         '\s*\%(\<do\>\|#\|$\)',
       \     'delimiter':   '^,\s*',
