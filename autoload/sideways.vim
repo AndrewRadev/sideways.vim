@@ -148,13 +148,13 @@ function! sideways#AroundCursor()
   let current_index = s:FindActiveItem(items)
   let current       = items[current_index]
 
-  if current_index == 0
+  if current_index <= 0
     let previous = []
   else
     let previous = items[current_index - 1]
   endif
 
-  if current_index == len(items) - 1
+  if current_index >= len(items) - 1
     let next = []
   else
     let next = items[current_index + 1]
