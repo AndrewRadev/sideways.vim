@@ -47,7 +47,7 @@ autocmd FileType ruby let b:sideways_definitions = [
       \     'brackets':  ['([{''"', ')]}''"'],
       \   },
       \   {
-      \     'skip_syntax': ['rubyString', 'rubySymbol', 'rubyComment'],
+      \     'skip_syntax': ['rubyString', 'rubySymbol', 'rubyComment', 'rubyInterpolation'],
       \     'start':       '\k\{1,}[?!]\= \ze\s*[^=]',
       \     'end':         '\s*\%(\<do\>\|#\)',
       \     'delimiter':   ',\s*',
