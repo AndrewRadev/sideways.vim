@@ -1,15 +1,17 @@
 " Extract column positions for "arguments" on the current line. Returns a list
-" of pairs, each pair contains the start and end columns of the item
+" of triplets, each triplet contains the line and start and end columns of the
+" item.
 "
 " Example:
 "
 " On the following line:
 "
-"   def function(one, two):
+"   def function(one, two,
+"     three):
 "
 " The result would be:
 "
-"   [ [14, 16], [19, 21] ]
+"   [ [1, 14, 16], [1, 19, 21], [2, 3, 7] ]
 "
 function! sideways#parsing#Parse(definitions)
   call sideways#util#PushCursor()
