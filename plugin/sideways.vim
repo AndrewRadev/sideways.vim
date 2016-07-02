@@ -105,6 +105,16 @@ autocmd FileType html let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
+      \   {
+      \     'start':     '{{\%(\k\|-\|/\)\+\s*',
+      \     'end':       '\s*}}',
+      \     'delimiter': '\s\+',
+      \     'skip':      '\s',
+      \     'brackets':  ['(''"', ')''"'],
+      \   },
+      \ ]
+
 autocmd FileType go let b:sideways_definitions = [
       \   {
       \     'start':     '{\_s*',
