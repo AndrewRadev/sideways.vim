@@ -63,6 +63,16 @@ border-radius: 20px 0 0 20px;
 a { color: #fff; background: blue; text-decoration: underline; }
 ```
 
+**HTML attributes**:
+``` html
+<input name="one" id="two" class="three" />
+```
+
+**Handlebars components**:
+``` handlebars
+{{parent/some-component one=two three="four" five=(action 'six')}}
+```
+
 **Cucumber tables**:
 ``` cucumber
 Examples:
@@ -71,10 +81,12 @@ Examples:
   | 2       | 5       | add    | 7      |
   | 0       | 40      | add    | 40     |
 ```
+
 **Go lists**:
 ``` go
 []string{"One", "Two", "Three"}
 ```
+
 **Javascript-like objects**:
 ``` python
 dict = {one: 1, two: 2, three: 3}

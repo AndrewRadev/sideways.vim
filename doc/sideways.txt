@@ -84,6 +84,10 @@ HTML attributes:
 >
     <input name="one" id="two" class="three" />
 <
+Handlebars components:
+>
+    {{parent/some-component one=two three="four" five=(action 'six')}}
+<
 Cucumber tables:
 >
     Examples:
