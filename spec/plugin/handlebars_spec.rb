@@ -5,7 +5,8 @@ describe "handlebars components" do
 
   before :each do
     set_file_contents <<-EOF
-      {{parent/some-component one=two three="four" five=(action 'six')}}
+      {{parent/some-component one=two three="four"
+        five=(action 'six') seven='eight'}}
     EOF
 
     vim.set 'filetype', 'html.handlebars'
@@ -15,24 +16,28 @@ describe "handlebars components" do
   specify "to the left" do
     vim.left
     assert_file_contents <<-EOF
-      {{parent/some-component five=(action 'six') three="four" one=two}}
+      {{parent/some-component seven='eight' three="four"
+        five=(action 'six') one=two}}
     EOF
 
     vim.left
     assert_file_contents <<-EOF
-      {{parent/some-component five=(action 'six') one=two three="four"}}
+      {{parent/some-component seven='eight' three="four"
+        one=two five=(action 'six')}}
     EOF
   end
 
   specify "to the right" do
     vim.right
     assert_file_contents <<-EOF
-      {{parent/some-component three="four" one=two five=(action 'six')}}
+      {{parent/some-component three="four" one=two
+        five=(action 'six') seven='eight'}}
     EOF
 
     vim.right
     assert_file_contents <<-EOF
-      {{parent/some-component three="four" five=(action 'six') one=two}}
+      {{parent/some-component three="four" five=(action 'six')
+        one=two seven='eight'}}
     EOF
   end
 end

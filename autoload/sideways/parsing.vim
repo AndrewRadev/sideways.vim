@@ -26,10 +26,11 @@ function! sideways#parsing#Parse(definitions)
     return []
   endif
 
-  let start_pattern     = definition.start
-  let end_pattern       = definition.end
-  let delimiter_pattern = definition.delimiter
-  let skip_pattern      = definition.skip
+  let start_pattern           = definition.start
+  let end_pattern             = definition.end
+  let delimiter_pattern       = definition.delimiter
+  let skip_pattern            = get(definition, 'skip', '')
+  let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
 
   let [opening_brackets, closing_brackets] = definition.brackets
 
@@ -69,7 +70,25 @@ function! sideways#parsing#Parse(definitions)
         " bracket check
         let current_item[0] = line('.')
         let current_item[2] = col('$') - 1
-        break
+        call add(items, current_item)
+
+        if !delimited_by_whitespace
+          " no need to try to continue
+          let current_item = [line('.'), col('.'), -1]
+          break
+        endif
+
+        " delimited by whitespace, so keep going
+        normal! l
+
+        " skip some whitespace
+        if skip_pattern != ''
+          while s:RemainderOfLine() =~ '^'.skip_pattern
+            normal! l
+          endwhile
+        endif
+
+        let current_item = [line('.'), col('.'), -1]
       else
         " there's still room, move rightwards
         normal! l
@@ -94,9 +113,26 @@ function! sideways#parsing#Parse(definitions)
       let current_item = [line('.'), col('.'), -1]
     elseif col('.') == col('$') - 1
       " then we're at the end of the line, but not due to a delimiter --
-      " finish up this item and stop here
+      " finish up with this item
       let current_item[2] = col('$') - 1
-      break
+      call add(items, current_item)
+      let current_item = [line('.'), col('.'), -1]
+
+      if delimited_by_whitespace
+        " try to continue
+        normal! l
+
+        " skip some whitespace
+        if skip_pattern != ''
+          while s:RemainderOfLine() =~ '^'.skip_pattern
+            normal! l
+          endwhile
+        endif
+
+        let current_item = [line('.'), col('.'), -1]
+      else
+        break
+      endif
     else
       " move rightwards
       normal! l
@@ -108,9 +144,15 @@ function! sideways#parsing#Parse(definitions)
   let &whichwrap = original_whichwrap
 
   if current_item[2] < 0
+    " parsing ended before current item was finalized
     let current_item[2] = col('.') - 1
   endif
-  call add(items, current_item)
+
+  if current_item[1] < current_item[2]
+    call add(items, current_item)
+  else
+    " it's an invalid item, ignore it
+  endif
 
   " call s:DebugItems(items)
 

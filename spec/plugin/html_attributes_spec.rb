@@ -124,13 +124,13 @@ describe "html attributes" do
     end
   end
 
-  describe "beginning tag on a different line" do
+  describe "multiline" do
     let(:filename) { 'test.html' }
 
     before :each do
       set_file_contents <<-EOF
-        <div
-          one="two" three="four">
+        <div one="two" three="four"
+          five="six">
         </div>
       EOF
 
@@ -141,8 +141,8 @@ describe "html attributes" do
     specify "to the left" do
       vim.left
       assert_file_contents <<-EOF
-        <div
-          three="four" one="two">
+        <div five="six" three="four"
+          one="two">
         </div>
       EOF
     end
@@ -150,8 +150,8 @@ describe "html attributes" do
     specify "to the right" do
       vim.right
       assert_file_contents <<-EOF
-        <div
-          three="four" one="two">
+        <div three="four" one="two"
+          five="six">
         </div>
       EOF
     end
