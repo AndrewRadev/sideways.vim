@@ -1,6 +1,6 @@
 function! sideways#Parse()
   if exists('b:sideways_definitions')
-    let definitions = extend(copy(g:sideways_definitions), b:sideways_definitions)
+    let definitions = extend(b:sideways_definitions, copy(g:sideways_definitions))
   else
     let definitions = g:sideways_definitions
   endif

@@ -120,9 +120,9 @@ autocmd FileType css,scss,less let b:sideways_definitions = [
       \     'brackets':  ['(''"', ')''"'],
       \   },
       \   {
-      \     'start':     '{\s*',
-      \     'end':       ';\=\s*}',
-      \     'delimiter': ';\s*',
+      \     'start':     '{\_s*',
+      \     'end':       ';\=\_s*}',
+      \     'delimiter': ';\_s*',
       \     'brackets':  ['(''"', ')''"'],
       \   },
       \ ]
