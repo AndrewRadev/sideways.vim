@@ -41,6 +41,14 @@ If you experiment with this example, you'll find that you can move the entire
 second list around, as long as the cursor is on one of the inner brackets. The
 plugin takes into consideration nested structures.
 
+It also works for multiline lists. Try experimenting with this example:
+
+``` handlebars
+{{some-component one=two
+  three="four"
+  five=(action 'six')}}
+```
+
 It's highly recommended to map the two main commands to convenient keys. For
 example, mapping them to `<c-h>` and `<c-l>` would look like this:
 ``` vim
