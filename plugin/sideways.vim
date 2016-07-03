@@ -99,7 +99,6 @@ autocmd FileType html let b:sideways_definitions = [
       \   {
       \     'start':                   '<\k\+\_s\+',
       \     'end':                     '\s*/\?>',
-      \     'delimiter':               '\s\+',
       \     'delimited_by_whitespace': 1,
       \     'skip':                    '\s',
       \     'brackets':                ['"', '"'],
@@ -110,7 +109,6 @@ autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \   {
       \     'start':                   '{{\%(\k\|-\|/\)\+\s*',
       \     'end':                     '\_s*}}',
-      \     'delimiter':               '\s\+',
       \     'delimited_by_whitespace': 1,
       \     'skip':                    '\s',
       \     'brackets':                ['(''"', ')''"'],

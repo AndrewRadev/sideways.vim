@@ -28,13 +28,18 @@ function! sideways#parsing#Parse(definitions)
 
   let start_pattern           = definition.start
   let end_pattern             = definition.end
-  let delimiter_pattern       = definition.delimiter
   let skip_pattern            = get(definition, 'skip', '')
   let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
 
+  if delimited_by_whitespace
+    let delimiter_pattern = '\s\+'
+  else
+    let delimiter_pattern = definition.delimiter
+  endif
+
   let [opening_brackets, closing_brackets] = definition.brackets
 
-  let current_item = [line('.'), col('.'), -1]
+  let current_item = s:NewItem()
   let remainder_of_line = s:RemainderOfLine()
 
   let original_whichwrap = &whichwrap
@@ -68,68 +73,40 @@ function! sideways#parsing#Parse(definitions)
       if col('.') == col('$') - 1
         " then we're at the end of the line, finish up to avoid an extra
         " bracket check
-        let current_item[0] = line('.')
-        let current_item[2] = col('$') - 1
-        call add(items, current_item)
+        call s:PushItem(items, current_item, col('$') - 1)
 
-        if !delimited_by_whitespace
-          " no need to try to continue
-          let current_item = [line('.'), col('.'), -1]
+        if delimited_by_whitespace
+          " there should be something on the next line, keep going
+          normal! l
+          call s:Skip(skip_pattern)
+          let current_item = s:NewItem()
+        else
+          " no need to try to continue, reset current item and bail out
+          let current_item = s:NewItem()
           break
         endif
-
-        " delimited by whitespace, so keep going
-        normal! l
-
-        " skip some whitespace
-        if skip_pattern != ''
-          while s:RemainderOfLine() =~ '^'.skip_pattern
-            normal! l
-          endwhile
-        endif
-
-        let current_item = [line('.'), col('.'), -1]
       else
-        " there's still room, move rightwards
+        " not at the end of the line, keep going
         normal! l
       endif
     elseif remainder_of_line =~ '^'.delimiter_pattern
-      " then store the current item
-      let current_item[0] = line('.')
-      let current_item[2] = col('.') - 1
-      call add(items, current_item)
-
+      " then store the current item, and find the next one
+      call s:PushItem(items, current_item, col('.') - 1)
       let match = matchstr(remainder_of_line, '^'.delimiter_pattern)
       exe 'normal! '.len(match).'l'
-
-      " skip some whitespace
-      if skip_pattern != ''
-        while s:RemainderOfLine() =~ '^'.skip_pattern
-          normal! l
-        endwhile
-      endif
-
-      " initialize a new "current item"
-      let current_item = [line('.'), col('.'), -1]
+      call s:Skip(skip_pattern)
+      let current_item = s:NewItem()
     elseif col('.') == col('$') - 1
       " then we're at the end of the line, but not due to a delimiter --
       " finish up with this item
-      let current_item[2] = col('$') - 1
-      call add(items, current_item)
-      let current_item = [line('.'), col('.'), -1]
+      call s:PushItem(items, current_item, col('$') - 1)
+      let current_item = s:NewItem()
 
       if delimited_by_whitespace
-        " try to continue
+        " try to continue after the end of this line
         normal! l
-
-        " skip some whitespace
-        if skip_pattern != ''
-          while s:RemainderOfLine() =~ '^'.skip_pattern
-            normal! l
-          endwhile
-        endif
-
-        let current_item = [line('.'), col('.'), -1]
+        call s:Skip(skip_pattern)
+        let current_item = s:NewItem()
       else
         break
       endif
@@ -172,14 +149,14 @@ function! s:LocateBestDefinition(definitions)
     let end_pattern   = definition.end
 
     if has_key(definition, 'skip_syntax')
-      let skip = s:SkipSyntax(definition.skip_syntax)
+      let skip_expression = s:SkipSyntaxExpression(definition.skip_syntax)
     else
-      let skip = ''
+      let skip_expression = ''
     endif
 
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW', skip) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression) <= 0
       call sideways#util#PopCursor()
       continue
     else
@@ -230,7 +207,29 @@ function! s:RemainderOfLine()
   return strpart(getline('.'), col('.') - 1)
 endfunction
 
-function! s:SkipSyntax(groups)
+" Skip whatever is in the pattern (usually whitespace)
+function! s:Skip(pattern)
+  if a:pattern != ''
+    while s:RemainderOfLine() =~ '^'.a:pattern
+      normal! l
+    endwhile
+  endif
+endfunction
+
+" Finalize the current item and push it to the store
+function! s:PushItem(items, current_item, final_col)
+  let a:current_item[0] = line('.')
+  let a:current_item[2] = a:final_col
+
+  call add(a:items, a:current_item)
+endfunction
+
+" Initialize a brand new item, starting at the current position
+function! s:NewItem()
+  return [line('.'), col('.'), -1]
+endfunction
+
+function! s:SkipSyntaxExpression(groups)
   let syntax_groups = a:groups
   let skip_pattern  = '\%('.join(syntax_groups, '\|').'\)'
 
