@@ -129,9 +129,9 @@ autocmd FileType css,scss,less let b:sideways_definitions = [
 
 autocmd FileType cucumber let b:sideways_definitions = [
       \   {
-      \     'start':     '^\s*|',
-      \     'end':       '|$',
-      \     'delimiter': '|',
+      \     'start':     '^\s*|\s*',
+      \     'end':       '\s*|$',
+      \     'delimiter': '\s*|\s*',
       \     'brackets':  ['(''"', ')''"'],
       \   },
       \ ]
