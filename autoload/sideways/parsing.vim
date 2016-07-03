@@ -28,7 +28,6 @@ function! sideways#parsing#Parse(definitions)
 
   let start_pattern           = definition.start
   let end_pattern             = definition.end
-  let skip_pattern            = get(definition, 'skip', '')
   let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
 
   if delimited_by_whitespace
@@ -78,7 +77,7 @@ function! sideways#parsing#Parse(definitions)
         if delimited_by_whitespace
           " there should be something on the next line, keep going
           normal! l
-          call s:Skip(skip_pattern)
+          call s:SkipWhitespace()
           let current_item = s:NewItem()
         else
           " no need to try to continue, reset current item and bail out
@@ -94,7 +93,7 @@ function! sideways#parsing#Parse(definitions)
       call s:PushItem(items, current_item, col('.') - 1)
       let match = matchstr(remainder_of_line, '^'.delimiter_pattern)
       exe 'normal! '.len(match).'l'
-      call s:Skip(skip_pattern)
+      call s:SkipWhitespace()
       let current_item = s:NewItem()
     elseif col('.') == col('$') - 1
       " then we're at the end of the line, but not due to a delimiter --
@@ -105,7 +104,7 @@ function! sideways#parsing#Parse(definitions)
       if delimited_by_whitespace
         " try to continue after the end of this line
         normal! l
-        call s:Skip(skip_pattern)
+        call s:SkipWhitespace()
         let current_item = s:NewItem()
       else
         break
@@ -207,12 +206,10 @@ function! s:RemainderOfLine()
   return strpart(getline('.'), col('.') - 1)
 endfunction
 
-" Skip whatever is in the pattern (usually whitespace)
-function! s:Skip(pattern)
-  if a:pattern != ''
-    while s:RemainderOfLine() =~ '^'.a:pattern
-      normal! l
-    endwhile
+function! s:SkipWhitespace()
+  let whitespace = matchstr(s:RemainderOfLine(), '^\s\+')
+  if len(whitespace) > 0
+    exe 'normal! '.len(whitespace).'l'
   endif
 endfunction
 
