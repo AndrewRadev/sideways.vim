@@ -43,10 +43,12 @@ plugin takes into consideration nested structures.
 
 It also works for multiline lists. Try experimenting with this example:
 
-``` handlebars
-{{some-component one=two
-  three="four"
-  five=(action 'six')}}
+``` html
+<div class="example"
+     style="color: red;"
+     something="other">
+  Example
+</div>
 ```
 
 It's highly recommended to map the two main commands to convenient keys. For
