@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe "css declarations" do
+describe "css" do
   let(:filename) { 'test.css' }
 
-  describe "basic" do
+  describe "declarations (single-line)" do
     before :each do
       set_file_contents <<-EOF
         a { color: #fff; background: blue; text-decoration: underline; }
@@ -37,7 +37,7 @@ describe "css declarations" do
     end
   end
 
-  describe "multiline" do
+  describe "declarations (multiline)" do
     before :each do
       set_file_contents <<-EOF
         a {
@@ -66,6 +66,31 @@ describe "css declarations" do
           background: blue;
           color: #fff;
         }
+      EOF
+    end
+  end
+
+  describe "lists within declarations" do
+    before :each do
+      set_file_contents <<-EOF
+        border-radius: 20px 0 0 20px;
+      EOF
+
+      vim.search('20px')
+    end
+
+    specify "to the left" do
+      vim.left
+      vim.left
+      assert_file_contents <<-EOF
+        border-radius: 20px 0 20px 0;
+      EOF
+    end
+
+    specify "to the right" do
+      vim.right
+      assert_file_contents <<-EOF
+        border-radius: 0 20px 0 20px;
       EOF
     end
   end

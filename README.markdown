@@ -61,14 +61,14 @@ The plugin also provides the commands `:SidewaysJumpLeft` and
 
 Other things that sideways works for:
 
-**Lists in CSS declarations**:
-``` css
-border-radius: 20px 0 0 20px;
-```
-
-**Single-line CSS declarations**:
+**CSS declarations**:
 ``` css
 a { color: #fff; background: blue; text-decoration: underline; }
+```
+
+**Lists within CSS declarations**:
+``` css
+border-radius: 20px 0 0 20px;
 ```
 
 **HTML attributes**:
