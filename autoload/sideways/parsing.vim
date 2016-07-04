@@ -14,6 +14,7 @@
 "   [ [1, 14, 16], [1, 19, 21], [2, 3, 7] ]
 "
 function! sideways#parsing#Parse(definitions)
+  let viewpos = winsaveview()
   call sideways#util#PushCursor()
 
   let definitions = a:definitions
@@ -132,6 +133,7 @@ function! sideways#parsing#Parse(definitions)
 
   " call s:DebugItems(items)
 
+  call winrestview(viewpos)
   call sideways#util#PopCursor()
   return items
 endfunction
