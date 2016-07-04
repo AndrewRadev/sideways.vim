@@ -15,7 +15,6 @@
 "
 function! sideways#parsing#Parse(definitions)
   let viewpos = winsaveview()
-  call sideways#util#PushCursor()
 
   let definitions = a:definitions
   let items       = []
@@ -23,7 +22,7 @@ function! sideways#parsing#Parse(definitions)
   let definition = s:LocateBestDefinition(definitions)
 
   if empty(definition)
-    call sideways#util#PopCursor()
+    call winrestview(viewpos)
     return []
   endif
 
@@ -134,7 +133,6 @@ function! sideways#parsing#Parse(definitions)
   " call s:DebugItems(items)
 
   call winrestview(viewpos)
-  call sideways#util#PopCursor()
   return items
 endfunction
 
