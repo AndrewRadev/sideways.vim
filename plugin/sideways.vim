@@ -10,20 +10,20 @@ let g:sideways_definitions =
       \ [
       \   {
       \     'start':     '(\_s*',
-      \     'end':       '\_s*)',
-      \     'delimiter': ',\s*',
+      \     'end':       ')',
+      \     'delimiter': ',\_s*',
       \     'brackets':  ['([{''"', ')]}''"'],
       \   },
       \   {
       \     'start':     '\[\_s*',
-      \     'end':       '\_s*\]',
-      \     'delimiter': ',\s*',
+      \     'end':       '\]',
+      \     'delimiter': ',\_s*',
       \     'brackets':  ['([''"', ')]''"'],
       \   },
       \   {
       \     'start':     '{\_s*',
-      \     'end':       '\_s*}',
-      \     'delimiter': ',\s*',
+      \     'end':       '}',
+      \     'delimiter': ',\_s*',
       \     'brackets':  ['([{''"', ')]}''"'],
       \   },
       \   {
