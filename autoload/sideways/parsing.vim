@@ -124,7 +124,7 @@ function! sideways#parsing#Parse(definitions)
     let current_item[2] = col('.') - 1
   endif
 
-  if current_item[1] < current_item[2]
+  if current_item[1] <= current_item[2]
     call add(items, current_item)
   else
     " it's an invalid item, ignore it

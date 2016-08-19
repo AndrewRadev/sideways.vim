@@ -5,18 +5,24 @@ describe "square-bracketed lists" do
 
   specify "simple case" do
     set_file_contents <<-EOF
-      foo = [one, two, three]
+      foo = [1, 2, 3]
     EOF
 
-    vim.search('one')
+    vim.search('1')
     vim.right
     assert_file_contents <<-EOF
-      foo = [two, one, three]
+      foo = [2, 1, 3]
+    EOF
+
+    vim.search('1')
+    vim.right
+    assert_file_contents <<-EOF
+      foo = [2, 3, 1]
     EOF
 
     vim.left
     assert_file_contents <<-EOF
-      foo = [one, two, three]
+      foo = [2, 1, 3]
     EOF
   end
 
