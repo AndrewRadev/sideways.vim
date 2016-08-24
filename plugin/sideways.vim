@@ -78,7 +78,7 @@ autocmd FileType haml,slim let b:sideways_definitions = [
 
 autocmd FileType eruby let b:sideways_definitions = [
       \   {
-      \     'start':     '\k\{1,} ',
+      \     'start':     '<%=\=\s*\k\{1,} ',
       \     'end':       '\s*%>',
       \     'delimiter': ',\s*',
       \     'brackets':  ['([''"', ')]''"'],
