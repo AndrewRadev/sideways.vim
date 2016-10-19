@@ -18,7 +18,7 @@ let g:sideways_definitions =
       \     'start':     '\[\_s*',
       \     'end':       '\]',
       \     'delimiter': ',\_s*',
-      \     'brackets':  ['([''"', ')]''"'],
+      \     'brackets':  ['([{''"', ')]}''"'],
       \   },
       \   {
       \     'start':     '{\_s*',
