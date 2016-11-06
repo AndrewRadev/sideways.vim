@@ -26,12 +26,6 @@ let g:sideways_definitions =
       \     'delimiter': ',\_s*',
       \     'brackets':  ['([{''"', ')]}''"'],
       \   },
-      \   {
-      \     'start':     '\<if\s*',
-      \     'end':       '^$',
-      \     'delimiter': '\s*\(and\|or\|||\|&&\)\s*',
-      \     'brackets':  ['([''"', ')]''"'],
-      \   },
       \ ]
 
 autocmd FileType ruby let b:sideways_definitions = [
