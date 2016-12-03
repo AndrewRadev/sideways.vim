@@ -21,7 +21,7 @@ function! sideways#textobj#Argument(mode)
     elseif !empty(next)
       call s:MarkCols([current[0], current[1]], [next[0], next[1] - 1])
     else
-      call s:MarkCols([current[0], current[1]], [current[0], current[1]])
+      call s:MarkCols([current[0], current[1]], [current[0], current[2]])
     endif
   endif
 endfunction
