@@ -79,6 +79,9 @@ function! sideways#parsing#Parse(definitions)
           normal! l
           call s:SkipWhitespace()
           let current_item = s:NewItem()
+        elseif search('^\s*'.delimiter_pattern.'\zs', '', nextnonblank(line('.') + 1))
+          " the next line starts with a delimiter, skip over it and keep going
+          let current_item = s:NewItem()
         else
           " no need to try to continue, reset current item and bail out
           let current_item = s:NewItem()
@@ -105,6 +108,9 @@ function! sideways#parsing#Parse(definitions)
         " try to continue after the end of this line
         normal! l
         call s:SkipWhitespace()
+        let current_item = s:NewItem()
+      elseif search('^\s*'.delimiter_pattern.'\zs', '', nextnonblank(line('.') + 1))
+        " the next line starts with a delimiter, skip over it and keep going
         let current_item = s:NewItem()
       else
         break

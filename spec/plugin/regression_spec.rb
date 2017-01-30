@@ -51,5 +51,24 @@ describe "regression tests" do
         def initialize(options = {}, attributes = {})
       EOF
     end
+
+    specify "delimiters on next line" do
+      set_file_contents <<-EOF
+        foo = [ one
+              , two
+              , three
+              ]
+      EOF
+
+      vim.search('two')
+      vim.left
+
+      assert_file_contents <<-EOF
+      foo = [ two
+            , one
+            , three
+            ]
+      EOF
+    end
   end
 end
