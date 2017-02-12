@@ -84,7 +84,7 @@ autocmd FileType html let b:sideways_definitions = [
       \     'start':                   '<\k\+\_s\+',
       \     'end':                     '\s*/\?>',
       \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['"', '"'],
+      \     'brackets':                ['"''', '"'''],
       \   },
       \ ]
 
@@ -94,6 +94,12 @@ autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \     'end':                     '\_s*}}',
       \     'delimited_by_whitespace': 1,
       \     'brackets':                ['(''"', ')''"'],
+      \   },
+      \   {
+      \     'start':                   '<\k\+\_s\+',
+      \     'end':                     '\s*/\?>',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['"''{', '"''}'],
       \   },
       \ ]
 
