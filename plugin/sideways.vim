@@ -70,6 +70,15 @@ autocmd FileType haml,slim let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType html let b:sideways_definitions = [
+      \   {
+      \     'start':                   '<\k\+\_s\+',
+      \     'end':                     '\s*/\?>',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['"''', '"'''],
+      \   },
+      \ ]
+
 autocmd FileType eruby let b:sideways_definitions = [
       \   {
       \     'start':     '<%=\=\s*\k\{1,} ',
@@ -77,14 +86,11 @@ autocmd FileType eruby let b:sideways_definitions = [
       \     'delimiter': ',\s*',
       \     'brackets':  ['([''"', ')]''"'],
       \   },
-      \ ]
-
-autocmd FileType html let b:sideways_definitions = [
       \   {
       \     'start':                   '<\k\+\_s\+',
       \     'end':                     '\s*/\?>',
       \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['"''', '"'''],
+      \     'brackets':                ['"''<', '"''>'],
       \   },
       \ ]
 
