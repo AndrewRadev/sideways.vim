@@ -48,7 +48,14 @@ function! sideways#parsing#Parse(definitions)
     let [opening_bracket_match, offset] = s:BracketMatch(remainder_of_line, opening_brackets)
     let [closing_bracket_match, _]      = s:BracketMatch(remainder_of_line, closing_brackets)
 
-    if opening_bracket_match < 0 && closing_bracket_match >= 0
+    if remainder_of_line =~ '^'.delimiter_pattern
+      " then store the current item, and find the next one
+      call s:PushItem(items, current_item, col('.') - 1)
+      let match = matchstr(remainder_of_line, '^'.delimiter_pattern)
+      exe 'normal! '.len(match).'l'
+      call s:SkipWhitespace()
+      let current_item = s:NewItem()
+    elseif opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
       break
     elseif opening_bracket_match >= 0
@@ -91,13 +98,6 @@ function! sideways#parsing#Parse(definitions)
         " not at the end of the line, keep going
         normal! l
       endif
-    elseif remainder_of_line =~ '^'.delimiter_pattern
-      " then store the current item, and find the next one
-      call s:PushItem(items, current_item, col('.') - 1)
-      let match = matchstr(remainder_of_line, '^'.delimiter_pattern)
-      exe 'normal! '.len(match).'l'
-      call s:SkipWhitespace()
-      let current_item = s:NewItem()
     elseif col('.') == col('$') - 1
       " then we're at the end of the line, but not due to a delimiter --
       " finish up with this item
