@@ -96,7 +96,7 @@ autocmd FileType eruby let b:sideways_definitions = [
 
 autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \   {
-      \     'start':                   '{{\%(\k\|-\|/\)\+\s*',
+      \     'start':                   '{{#\=\%(\k\|-\|/\)\+\s*',
       \     'end':                     '\_s*}}',
       \     'delimited_by_whitespace': 1,
       \     'brackets':                ['(''"', ')''"'],
