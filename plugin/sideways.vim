@@ -109,6 +109,15 @@ autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType javascript.jsx let b:sideways_definitions = [
+      \   {
+      \     'start':                   '<\k\+\_s\+',
+      \     'end':                     '\s*/\?>',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['"''{', '"''}'],
+      \   },
+      \ ]
+
 autocmd FileType go let b:sideways_definitions = [
       \   {
       \     'start':     '{\_s*',
