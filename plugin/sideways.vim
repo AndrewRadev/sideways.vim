@@ -81,7 +81,7 @@ autocmd FileType html let b:sideways_definitions = [
 
 autocmd FileType eruby let b:sideways_definitions = [
       \   {
-      \     'start':     '<%=\=\s*\k\{1,} ',
+      \     'start':     '<%=\=\s*\%(\k\|\.\|::\)*\k\{1,} ',
       \     'end':       '\s*%>',
       \     'delimiter': ',\s*',
       \     'brackets':  ['([''"', ')]''"'],
