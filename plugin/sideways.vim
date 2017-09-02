@@ -151,6 +151,17 @@ autocmd FileType cucumber let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType sh let b:sideways_definitions = [
+      \   {
+      \     'skip_syntax': ['shDoubleQuote', 'shSingleQuote', 'shComment'],
+      \     'start':       '\%(^\|[|(`]\)\s*\k\{1,} \ze\s*[^=]',
+      \     'end':         '\s*\%(|\|\_$\)',
+      \     'brackets':    ['([{''"', ')]}''"'],
+      \     'single_line': 1,
+      \     'delimited_by_whitespace': 1,
+      \   },
+      \ ]
+
 command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set("\<Plug>SidewaysLeft")
 command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Plug>SidewaysRight")
 

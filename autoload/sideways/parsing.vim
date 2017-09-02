@@ -29,6 +29,7 @@ function! sideways#parsing#Parse(definitions)
   let start_pattern           = definition.start
   let end_pattern             = definition.end
   let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
+  let single_line             = get(definition, 'single_line', 0)
 
   if delimited_by_whitespace
     let delimiter_pattern = '\s\+'
@@ -81,7 +82,7 @@ function! sideways#parsing#Parse(definitions)
         " bracket check
         call s:PushItem(items, current_item, col('$') - 1)
 
-        if delimited_by_whitespace
+        if delimited_by_whitespace && !single_line
           " there should be something on the next line, keep going
           normal! l
           call s:SkipWhitespace()
@@ -104,7 +105,7 @@ function! sideways#parsing#Parse(definitions)
       call s:PushItem(items, current_item, col('$') - 1)
       let current_item = s:NewItem()
 
-      if delimited_by_whitespace
+      if delimited_by_whitespace && !single_line
         " try to continue after the end of this line
         normal! l
         call s:SkipWhitespace()
