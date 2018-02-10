@@ -162,6 +162,16 @@ autocmd FileType sh let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType java let b:sideways_definitions = [
+      \   {
+      \     'start':       'if\s\+(',
+      \     'end':         ')',
+      \     'delimiter':   '\s*\%(&&\|||\)\s*',
+      \     'brackets':    ['([{''"', ')]}''"'],
+      \     'single_line': 1,
+      \   },
+      \ ]
+
 command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set("\<Plug>SidewaysLeft")
 command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Plug>SidewaysRight")
 
