@@ -37,12 +37,7 @@ function! sideways#parsing#Parse(definitions)
     let delimiter_pattern = definition.delimiter
   endif
 
-  if has_key(definition, 'skip_syntax')
-    let skip_expression = s:SkipSyntaxExpression(definition.skip_syntax)
-  else
-    let skip_expression = ''
-  endif
-
+  let skip_expression = s:SkipSyntaxExpression(definition)
   let [opening_brackets, closing_brackets] = definition.brackets
 
   let current_item = s:NewItem()
@@ -160,12 +155,7 @@ function! s:LocateBestDefinition(definitions)
     let start_pattern = definition.start
     let end_pattern   = definition.end
 
-    if has_key(definition, 'skip_syntax')
-      let skip_expression = s:SkipSyntaxExpression(definition.skip_syntax)
-    else
-      let skip_expression = ''
-    endif
-
+    let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
     if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression) <= 0
@@ -239,8 +229,17 @@ function! s:NewItem()
   return [line('.'), col('.'), -1]
 endfunction
 
-function! s:SkipSyntaxExpression(groups)
-  let syntax_groups = a:groups
+function! s:SkipSyntaxExpression(definition)
+  let syntax_groups = []
+
+  if has_key(a:definition, 'skip_syntax')
+    let syntax_groups += a:definition.skip_syntax
+  endif
+
+  if len(syntax_groups) == 0
+    return ''
+  endif
+
   let skip_pattern  = '\%('.join(syntax_groups, '\|').'\)'
 
   return "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".skip_pattern."'"
