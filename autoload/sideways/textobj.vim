@@ -12,8 +12,15 @@ function! sideways#textobj#Argument(mode)
   elseif a:mode == 'a'
     if !empty(previous)
       if previous[0] < current[0]
-        " this is a new line, no need to delete till the end of the previous
-        call s:MarkCols([current[0], current[1]], [current[0], current[2]])
+        if !empty(next) && next[0] == current[0]
+          " this is a new line with a next item on the same line, delete to
+          " that next item instead
+          call s:MarkCols([current[0], current[1]], [next[0], next[1] - 1])
+        else
+          " this is a new line with no next, delete till previous, remove
+          " newline
+          call s:MarkCols([previous[0], previous[1] + 1], [current[0], current[2]])
+        endif
       else
         " there are other things on the line
         call s:MarkCols([previous[0], previous[2] + 1], [current[0], current[2]])
