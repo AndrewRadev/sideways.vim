@@ -19,6 +19,38 @@ describe "regression tests" do
     end
   end
 
+  describe "java" do
+    let(:filename) { 'test.java' }
+
+    # See https://github.com/AndrewRadev/sideways.vim/issues/24
+    specify "unbalanced brackets in strings" do
+      set_file_contents <<-EOF
+        Debug.Log(string.Format("1) Item: {0}"), item);
+      EOF
+
+      vim.search('item')
+      vim.right
+
+      assert_file_contents <<-EOF
+        Debug.Log(item, string.Format("1) Item: {0}"));
+      EOF
+    end
+
+    # See https://github.com/AndrewRadev/sideways.vim/issues/24
+    specify "escaped quotes" do
+      set_file_contents <<-EOF
+        Debug.Log(string.Format("1\\" Item: {0}"), item);
+      EOF
+
+      vim.search('item')
+      vim.right
+
+      assert_file_contents <<-EOF
+        Debug.Log(item, string.Format("1\\" Item: {0}"));
+      EOF
+    end
+  end
+
   describe "coffee" do
     let(:filename) { 'test.coffee' }
 

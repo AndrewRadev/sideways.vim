@@ -156,8 +156,7 @@ endfunction
 " A partial replacement to search() that consults a skip pattern when
 " performing a search, just like searchpair().
 "
-" Note that it doesn't accept the "n" and "c" flags due to implementation
-" difficulties.
+" Note that it doesn't accept the "n" flag due to implementation difficulties.
 function! sideways#util#SearchSkip(pattern, skip, ...)
   " collect all of our arguments
   let pattern = a:pattern

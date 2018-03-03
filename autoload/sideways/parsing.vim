@@ -71,8 +71,8 @@ function! sideways#parsing#Parse(definitions)
       end
 
       if opening_bracket == closing_bracket
-        " same bracket, search for it
-        call sideways#util#SearchSkip('\V'.closing_bracket, skip_expression, 'W')
+        " same bracket (quote), search for it, unless it's escaped
+        call search('[^\\]\zs\V'.closing_bracket, 'W')
       else
         " different closing, use searchpair
         call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', skip_expression)
@@ -230,10 +230,13 @@ function! s:NewItem()
 endfunction
 
 function! s:SkipSyntaxExpression(definition)
-  let syntax_groups = []
-
   if has_key(a:definition, 'skip_syntax')
-    let syntax_groups += a:definition.skip_syntax
+    let syntax_groups = a:definition.skip_syntax
+  elseif exists('b:sideways_skip_syntax')
+    let syntax_groups = b:sideways_skip_syntax
+  else
+    " By default, try to skip comments and strings
+    let syntax_groups = ['Comment', 'String']
   endif
 
   if len(syntax_groups) == 0
