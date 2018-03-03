@@ -5,6 +5,7 @@ CONTENTS                                           *sideways* *sideways-contents
 
     Installation............................: |sideways-installation|
     Usage...................................: |sideways-usage|
+    Settings................................: |sideways-settings|
     Issues..................................: |sideways-issues|
 
 
@@ -72,12 +73,26 @@ It also works for multiline lists. Try experimenting with this example:
       Example
     </div>
 <
+Syntax skipping ~
+
+The plugin will try to be smart and ignore text in any syntax groups that
+include "Comment" and "String". Some filetype-specific definitions have a
+bigger list of groups, see the "skip_syntax" sections of the definitions.
+
+If you'd like to skip specific syntax groups (or not skip anything at all),
+you can use the |b:sideways_skip_syntax| buffer-local variable. See below in
+|sideways-settings| for detailed instructions.
+
+Mappings ~
+
 It's highly recommended to map the two main commands to convenient keys. For
 example, mapping them to <c-h> and <c-l> would look like this:
 >
     nnoremap <c-h> :SidewaysLeft<cr>
     nnoremap <c-l> :SidewaysRight<cr>
 <
+Supported definitions ~
+
 Other things that sideways works for:
 
 Lists in CSS declarations:
@@ -146,7 +161,27 @@ Also, a useful plugin to use alongside sideways is `fieldtrip`
 (https://github.com/kana/vim-submode) for sideways.vim.
 
 ==============================================================================
-ISSUES                                                        *sideways-issues*
+SETTINGS                                                     *sideways-settings*
+
+                                                        *b:sideways_skip_syntax*
+>
+    let b:sideways_skip_syntax = ['javaString']
+<
+Default value: ['Comment', 'String']
+
+This is a buffer-local setting, which means you should set it per-filetype.
+For instance, if you wanted to skip particular syntax groups in the java
+filetype, you'd put the let-clause in the file ~/.vim/ftplugin/java.vim.
+
+This specifies the syntax groups that the plugin will skip over when looking
+for matching brackets and for the starts of lists. It should be a list of
+syntax groups (or rather, parts of syntax groups -- the names are matched with
+the |=~#| operator). By default, the plugin skips "Comment" and "String"
+syntax items.
+
+
+==============================================================================
+ISSUES                                                         *sideways-issues*
 
 Any issues and suggestions are very welcome on the github bugtracker:
 https://github.com/AndrewRadev/sideways.vim/issues
