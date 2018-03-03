@@ -37,6 +37,12 @@ function! sideways#parsing#Parse(definitions)
     let delimiter_pattern = definition.delimiter
   endif
 
+  if has_key(definition, 'skip_syntax')
+    let skip_expression = s:SkipSyntaxExpression(definition.skip_syntax)
+  else
+    let skip_expression = ''
+  endif
+
   let [opening_brackets, closing_brackets] = definition.brackets
 
   let current_item = s:NewItem()
@@ -71,10 +77,10 @@ function! sideways#parsing#Parse(definitions)
 
       if opening_bracket == closing_bracket
         " same bracket, search for it
-        call search('\V'.closing_bracket, 'W')
+        call sideways#util#SearchSkip('\V'.closing_bracket, skip_expression, 'W')
       else
         " different closing, use searchpair
-        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', '')
+        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', skip_expression)
       endif
 
       if col('.') == col('$') - 1
@@ -166,7 +172,7 @@ function! s:LocateBestDefinition(definitions)
       call sideways#util#PopCursor()
       continue
     else
-      call search(start_pattern, 'Wce', line('.'))
+      call sideways#util#SearchSkip(start_pattern, skip_expression, 'Wce', line('.'))
       normal! l
 
       let match_line = line('.')
