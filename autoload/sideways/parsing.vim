@@ -245,7 +245,7 @@ function! s:SkipSyntaxExpression(definition)
 
   let skip_pattern  = '\%('.join(syntax_groups, '\|').'\)'
 
-  return "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".skip_pattern."'"
+  return "synIDattr(synID(line('.'),col('.'),1),'name') =~# '".skip_pattern."'"
 endfunction
 
 " Simple debugging
