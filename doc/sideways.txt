@@ -119,6 +119,14 @@ Cucumber tables:
       | 2       | 5       | add    | 7      |
       | 0       | 40      | add    | 40     |
 <
+Rust template arguments:
+>
+    let dict = Hash<String, Vec<String>>::new();
+<
+Rust return type (a special case since there's always just one, useful as a text object):
+>
+    fn example() -> Result<String, String> {
+<
 Go lists:
 >
     []string{"One", "Two", "Three"}

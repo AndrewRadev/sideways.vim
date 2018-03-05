@@ -118,6 +118,29 @@ autocmd FileType javascript.jsx let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType rust let b:sideways_definitions = [
+      \   {
+      \     'start':     '\<[A-Z]\k\+<',
+      \     'end':       '>',
+      \     'delimiter': ',\s*',
+      \     'brackets':  ['<([', '>)]'],
+      \     'single_line': 1,
+      \   },
+      \   {
+      \     'start':     '::<',
+      \     'end':       '>',
+      \     'delimiter': ',\s*',
+      \     'brackets':  ['<([', '>)]'],
+      \     'single_line': 1,
+      \   },
+      \   {
+      \     'start':     ')\_s*->\_s*',
+      \     'end':       '\_s*{',
+      \     'delimiter': 'NO_DELIMITER_SIDEWAYS_CARES_ABOUT',
+      \     'brackets':  ['<([', '>)]'],
+      \   },
+      \ ]
+
 autocmd FileType go let b:sideways_definitions = [
       \   {
       \     'start':     '{\_s*',
