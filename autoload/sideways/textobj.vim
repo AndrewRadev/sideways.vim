@@ -19,7 +19,7 @@ function! sideways#textobj#Argument(mode)
         else
           " this is a new line with no next, delete till previous, remove
           " newline
-          call s:MarkCols([previous[0], previous[1] + 1], [current[0], current[2]])
+          call s:MarkCols([previous[0], previous[2] + 1], [current[0], current[2]])
         endif
       else
         " there are other things on the line

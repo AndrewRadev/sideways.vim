@@ -77,32 +77,32 @@ describe "textobj mapping" do
 
     specify "outer argument, with two items on second line" do
       set_file_contents <<-EOF
-        function(a, b,
-          c, d) { }
+        function(one, two,
+          three, four) { }
       EOF
 
-      vim.search('c,')
+      vim.search('three,')
       vim.feedkeys 'daa'
       vim.write
 
       assert_file_contents <<-EOF
-        function(a, b,
-          d) { }
+        function(one, two,
+          four) { }
       EOF
     end
 
     specify "outer argument, with one item on second line" do
       set_file_contents <<-EOF
-        function(a, b,
-          c) { }
+        function(one, two,
+          three) { }
       EOF
 
-      vim.search('c)')
+      vim.search('three)')
       vim.feedkeys 'daa'
       vim.write
 
       assert_file_contents <<-EOF
-        function(a, b) { }
+        function(one, two) { }
       EOF
     end
   end
