@@ -49,6 +49,28 @@ describe "regression tests" do
         Debug.Log(item, string.Format("1\\" Item: {0}"));
       EOF
     end
+
+    # See https://github.com/AndrewRadev/sideways.vim/issues/24
+    specify "empty quotes" do
+      set_file_contents <<-EOF
+        Debug.Log(
+          "",
+          one,
+          two);
+        return "";
+      EOF
+
+      vim.search('one')
+      vim.left
+
+      assert_file_contents <<-EOF
+        Debug.Log(
+          one,
+          "",
+          two);
+        return "";
+      EOF
+    end
   end
 
   describe "coffee" do

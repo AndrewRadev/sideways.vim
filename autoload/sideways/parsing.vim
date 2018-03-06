@@ -72,7 +72,7 @@ function! sideways#parsing#Parse(definitions)
 
       if opening_bracket == closing_bracket
         " same bracket (quote), search for it, unless it's escaped
-        call search('[^\\]\zs\V'.closing_bracket, 'W')
+        call search('\\\@<!\V'.closing_bracket, 'W')
       else
         " different closing, use searchpair
         call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', skip_expression)
