@@ -23,19 +23,19 @@ function! sideways#MoveLeft()
   if active_index == 0
     let first           = items[active_index]
     let second          = items[last_index]
-    let new_cursor_line = second[0]
+    let new_cursor_line = second.start_line
 
-    if first[0] == second[0]
+    if first.start_line == second.start_line
       " same line, adjust for size
-      let new_cursor_column = second[1] + s:Delta(second, first)
+      let new_cursor_column = second.start_col + s:Delta(second, first)
     else
-      let new_cursor_column = second[1]
+      let new_cursor_column = second.start_col
     endif
   else
     let first             = items[active_index - 1]
     let second            = items[active_index]
-    let new_cursor_line   = first[0]
-    let new_cursor_column = first[1]
+    let new_cursor_line   = first.start_line
+    let new_cursor_column = first.start_col
   endif
 
   call s:Swap(first, second, new_cursor_line, new_cursor_column)
@@ -57,18 +57,18 @@ function! sideways#MoveRight()
   if active_index == last_index
     let first             = items[0]
     let second            = items[last_index]
-    let new_cursor_line   = first[0]
-    let new_cursor_column = first[1]
+    let new_cursor_line   = first.start_line
+    let new_cursor_column = first.start_col
   else
     let first             = items[active_index]
     let second            = items[active_index + 1]
-    let new_cursor_line   = second[0]
+    let new_cursor_line   = second.start_line
 
-    if first[0] == second[0]
+    if first.start_line == second.start_line
       " same line, adjust for size
-      let new_cursor_column = second[1] + s:Delta(second, first)
+      let new_cursor_column = second.start_col + s:Delta(second, first)
     else
-      let new_cursor_column = second[1]
+      let new_cursor_column = second.start_col
     endif
   endif
 
@@ -93,13 +93,13 @@ function! sideways#JumpLeft()
   if active_index == 0
     let first       = items[active_index]
     let second      = items[last_index]
-    let position[1] = second[0]
-    let position[2] = second[1]
+    let position[1] = second.start_line
+    let position[2] = second.start_col
   else
     let first       = items[active_index - 1]
     let second      = items[active_index]
-    let position[1] = first[0]
-    let position[2] = first[1]
+    let position[1] = first.start_line
+    let position[2] = first.start_col
   endif
 
   call setpos('.', position)
@@ -125,13 +125,13 @@ function! sideways#JumpRight()
   if active_index == last_index
     let first       = items[0]
     let second      = items[last_index]
-    let position[1] = first[0]
-    let position[2] = first[1]
+    let position[1] = first.start_line
+    let position[2] = first.start_col
   else
     let first       = items[active_index]
     let second      = items[active_index + 1]
-    let position[1] = second[0]
-    let position[2] = second[1]
+    let position[1] = second.start_line
+    let position[2] = second.start_col
   endif
 
   call setpos('.', position)
@@ -172,8 +172,10 @@ endfunction
 " function first places the second item and then the first one, ensuring that
 " the column number remain consistent until it's done.
 function! s:Swap(first, second, new_cursor_line, new_cursor_column)
-  let [first_line, first_start, first_end]   = a:first
-  let [second_line, second_start, second_end] = a:second
+  let [first_line, first_start, first_end] =
+        \ [a:first.start_line, a:first.start_col, a:first.end_col]
+  let [second_line, second_start, second_end] =
+        \ [a:second.start_line, a:second.start_col, a:second.end_col]
 
   let first_body  = sideways#util#GetCols(first_line, first_start, first_end)
   let second_body = sideways#util#GetCols(second_line, second_start, second_end)
@@ -197,9 +199,7 @@ function! s:FindActiveItem(items)
 
   let index = 0
   for item in a:items
-    let [line, start, end] = item
-
-    if line == line('.') && start <= column && column <= end
+    if item.start_line == line('.') && item.start_col <= column && column <= item.end_col
       return index
     endif
 
@@ -216,5 +216,5 @@ endfunction
 " account for the column positions becoming inconsistent after replacing text
 " in the current line.
 function! s:Delta(first, second)
-  return (a:first[2] - a:first[1]) - (a:second[2] - a:second[1])
+  return (a:first.end_col - a:first.start_col) - (a:second.end_col - a:second.start_col)
 endfunction

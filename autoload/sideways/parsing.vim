@@ -1,6 +1,10 @@
 " Extract column positions for "arguments" on the current line. Returns a list
-" of triplets, each triplet contains the line and start and end columns of the
-" item.
+" of objects, each one containing the start and end positions of the item:
+"
+" {
+"   start_line: 3, end_line: 3,
+"   start_col: 12, end_col: 17
+" }
 "
 " Example:
 "
@@ -11,7 +15,11 @@
 "
 " The result would be:
 "
-"   [ [1, 14, 16], [1, 19, 21], [2, 3, 7] ]
+"   [
+"     {start_line: 1, end_line: 1, start_col: 14, end_col: 16},
+"     {start_line: 1, end_line: 1, start_col: 19, end_col: 21},
+"     {start_line: 2, end_line: 2, start_col: 3, end_col: 7},
+"   ]
 "
 function! sideways#parsing#Parse(definitions)
   let viewpos = winsaveview()
@@ -127,12 +135,16 @@ function! sideways#parsing#Parse(definitions)
 
   let &whichwrap = original_whichwrap
 
-  if current_item[2] < 0
+  if current_item.end_col < 0
     " parsing ended before current item was finalized
-    let current_item[2] = col('.') - 1
+    let current_item.end_col = col('.') - 1
   endif
 
-  if current_item[1] <= current_item[2]
+  if current_item.start_line < current_item.end_line ||
+        \ (
+        \   current_item.start_line == current_item.end_line &&
+        \   current_item.start_col  <= current_item.end_col
+        \ )
     call add(items, current_item)
   else
     " it's an invalid item, ignore it
@@ -218,15 +230,18 @@ endfunction
 
 " Finalize the current item and push it to the store
 function! s:PushItem(items, current_item, final_col)
-  let a:current_item[0] = line('.')
-  let a:current_item[2] = a:final_col
+  let a:current_item.end_line = line('.')
+  let a:current_item.end_col = a:final_col
 
   call add(a:items, a:current_item)
 endfunction
 
 " Initialize a brand new item, starting at the current position
 function! s:NewItem()
-  return [line('.'), col('.'), -1]
+  return {
+        \   'start_line': line('.'), 'end_line': line('.'),
+        \   'start_col':  col('.'),  'end_col':  -1,
+        \ }
 endfunction
 
 function! s:SkipSyntaxExpression(definition)
@@ -251,5 +266,5 @@ endfunction
 " Simple debugging
 function! s:DebugItems(items)
   Decho a:items
-  Decho map(copy(a:items), 'sideways#util#GetCols(v:val[0], v:val[1], v:val[2])')
+  Decho map(copy(a:items), 'sideways#util#GetCols(v:val.start_line, v:val.start_col, v:val.end_col)')
 endfunction

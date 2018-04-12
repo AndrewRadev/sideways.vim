@@ -8,27 +8,45 @@ function! sideways#textobj#Argument(mode)
   let [previous, current, next] = coordinates
 
   if a:mode == 'i'
-    call s:MarkCols([current[0], current[1]], [current[0], current[2]])
+    call s:MarkCols(
+          \   [current.start_line, current.start_col],
+          \   [current.start_line, current.end_col]
+          \ )
   elseif a:mode == 'a'
     if !empty(previous)
-      if previous[0] < current[0]
-        if !empty(next) && next[0] == current[0]
+      if previous.start_line < current.start_line
+        if !empty(next) && next.start_line == current.start_line
           " this is a new line with a next item on the same line, delete to
           " that next item instead
-          call s:MarkCols([current[0], current[1]], [next[0], next[1] - 1])
+          call s:MarkCols(
+                \   [current.start_line, current.start_col],
+                \   [next.start_line, next.start_col - 1]
+                \ )
         else
           " this is a new line with no next, delete till previous, remove
           " newline
-          call s:MarkCols([previous[0], previous[2] + 1], [current[0], current[2]])
+          call s:MarkCols(
+                \   [previous.start_line, previous.end_col + 1],
+                \   [current.start_line, current.end_col]
+                \ )
         endif
       else
         " there are other things on the line
-        call s:MarkCols([previous[0], previous[2] + 1], [current[0], current[2]])
+        call s:MarkCols(
+              \   [previous.start_line, previous.end_col + 1],
+              \   [current.start_line, current.end_col]
+              \ )
       endif
     elseif !empty(next)
-      call s:MarkCols([current[0], current[1]], [next[0], next[1] - 1])
+      call s:MarkCols(
+            \   [current.start_line, current.start_col],
+            \   [next.start_line, next.start_col - 1]
+            \ )
     else
-      call s:MarkCols([current[0], current[1]], [current[0], current[2]])
+      call s:MarkCols(
+            \   [current.start_line, current.start_col],
+            \   [current.start_line, current.end_col]
+            \ )
     endif
   endif
 endfunction
