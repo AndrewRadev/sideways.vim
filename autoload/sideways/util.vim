@@ -135,6 +135,19 @@ function! sideways#util#GetCols(line, start, end)
   return strpart(getline(a:line), a:start - 1, a:end - a:start + 1)
 endfunction
 
+" function! sideways#util#GetByPosition([line1, col1], [line2, col2]) {{{2
+"
+" Retrieve the text from the start [line, col] to the end [line, col]
+function! sideways#util#GetByPosition(start, end)
+  let [start_line, start_col] = a:start
+  let [end_line, end_col]     = a:end
+
+  call setpos('.',  [bufnr('%'), start_line, start_col, 0])
+  call setpos("'z", [bufnr('%'), end_line,   end_col,   0])
+
+  return sj#GetMotion('v`z')
+endfunction
+
 " Positioning the cursor {{{1
 "
 

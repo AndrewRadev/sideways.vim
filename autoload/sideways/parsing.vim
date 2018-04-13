@@ -265,6 +265,15 @@ endfunction
 
 " Simple debugging
 function! s:DebugItems(items)
-  Decho a:items
-  Decho map(copy(a:items), 'sideways#util#GetCols(v:val.start_line, v:val.start_col, v:val.end_col)')
+  for item in a:items
+    let text = sideways#util#GetByPosition(
+          \   [item.start_line, item.start_col],
+          \   [item.end_line, item.end_col
+          \ ])
+    Decho string([
+          \   string(item.start_line).":".string(item.start_col),
+          \   string(item.end_line).":".string(item.end_col),
+          \   text
+          \ ])
+  endfor
 endfunction
