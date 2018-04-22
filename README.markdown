@@ -25,6 +25,7 @@ this particular example is in python, this should work for arguments in many
 different languages that use round braces to denote function calls.
 
 For ruby and eruby, it detects **method calls without braces** as well:
+
 ``` ruby
 link_to user_registration_path, 'Something'
 # changes to:
@@ -92,9 +93,31 @@ Examples:
   | 0       | 40      | add    | 40     |
 ```
 
+**Rust template arguments**:
+
+``` rust
+let dict = Hash<String, Vec<String>>::new();
+```
+
+**Rust return type** (a special case since there's always just one, useful as a text object):
+
+``` rust
+fn example() -> Result<String, String> {
+```
+
 **Go lists**:
 ``` go
 []string{"One", "Two", "Three"}
+```
+
+**C++ templates**:
+
+``` cpp
+/*
+ * Relies on "<" being surrounded by non-whitespace, or considers it a
+ * comparison. Parsing C++ is tricky.
+ */
+std::unordered_map<k, v>()
 ```
 
 **Javascript-like objects**:

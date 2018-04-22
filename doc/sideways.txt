@@ -95,13 +95,13 @@ Supported definitions ~
 
 Other things that sideways works for:
 
-Lists in CSS declarations:
->
-    border-radius: 20px 0 0 20px;
-<
-Single-line CSS declarations:
+CSS declarations:
 >
     a { color: #fff; background: blue; text-decoration: underline; }
+<
+Lists within CSS declarations:
+>
+    border-radius: 20px 0 0 20px;
 <
 HTML attributes:
 >
