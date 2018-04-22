@@ -170,7 +170,7 @@ autocmd FileType cpp let b:sideways_definitions = [
       \     'brackets':  ['([{<''"', ')]}>''"'],
       \   },
       \   {
-      \     'start':     '\S\zs<\ze\S',
+      \     'start':     'template \zs<\ze\|\S\zs<\ze\S',
       \     'end':       '>',
       \     'delimiter': ',\_s*',
       \     'brackets':  ['([{<''"', ')]}>''"'],
