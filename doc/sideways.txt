@@ -131,6 +131,14 @@ Go lists:
 >
     []string{"One", "Two", "Three"}
 <
+C++ templates:
+>
+    /*
+     * Relies on "<" being surrounded by non-whitespace, or considers it a
+     * comparison. Parsing C++ is tricky.
+     */
+    std::unordered_map<k, v>()
+<
 Javascript-like objects:
 >
     dict = {one: 1, two: 2, three: 3}
