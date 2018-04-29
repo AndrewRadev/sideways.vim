@@ -21,24 +21,22 @@ function! sideways#MoveLeft()
   endif
 
   if active_index == 0
-    let first           = items[active_index]
-    let second          = items[last_index]
-    let new_cursor_line = second.start_line
-
-    if first.start_line == second.start_line
-      " same line, adjust for size
-      let new_cursor_column = second.start_col + s:Delta(second, first)
-    else
-      let new_cursor_column = second.start_col
-    endif
+    let first            = items[active_index]
+    let second           = items[last_index]
+    let first_index      = active_index
+    let new_active_index = last_index
   else
-    let first             = items[active_index - 1]
-    let second            = items[active_index]
-    let new_cursor_line   = first.start_line
-    let new_cursor_column = first.start_col
+    let first            = items[active_index - 1]
+    let second           = items[active_index]
+    let first_index      = active_index - 1
+    let new_active_index = active_index - 1
   endif
 
-  call s:Swap(first, second, new_cursor_line, new_cursor_column)
+  call s:Swap(first, second)
+  call s:JumpToItem(items, first_index)
+  let new_items = sideways#Parse()
+  call s:JumpToItem(new_items, new_active_index)
+
   return 1
 endfunction
 
@@ -55,24 +53,20 @@ function! sideways#MoveRight()
   endif
 
   if active_index == last_index
-    let first             = items[0]
-    let second            = items[last_index]
-    let new_cursor_line   = first.start_line
-    let new_cursor_column = first.start_col
+    let first = items[0]
+    let second = items[last_index]
+    let new_active_index = 0
   else
-    let first             = items[active_index]
-    let second            = items[active_index + 1]
-    let new_cursor_line   = second.start_line
-
-    if first.start_line == second.start_line
-      " same line, adjust for size
-      let new_cursor_column = second.start_col + s:Delta(second, first)
-    else
-      let new_cursor_column = second.start_col
-    endif
+    let first = items[active_index]
+    let second = items[active_index + 1]
+    let new_active_index = active_index + 1
   endif
 
-  call s:Swap(first, second, new_cursor_line, new_cursor_column)
+  call s:Swap(first, second)
+  call s:JumpToItem(items, active_index)
+  let new_items = sideways#Parse()
+  call s:JumpToItem(new_items, new_active_index)
+
   return 1
 endfunction
 
@@ -82,27 +76,17 @@ function! sideways#JumpLeft()
     return 0
   end
 
-  let last_index   = len(items) - 1
+  let last_index = len(items) - 1
   let active_index = s:FindActiveItem(items)
   if active_index < 0
     return 0
   endif
 
-  let position = getpos('.')
-
   if active_index == 0
-    let first       = items[active_index]
-    let second      = items[last_index]
-    let position[1] = second.start_line
-    let position[2] = second.start_col
+    call s:JumpToItem(items, last_index)
   else
-    let first       = items[active_index - 1]
-    let second      = items[active_index]
-    let position[1] = first.start_line
-    let position[2] = first.start_col
+    call s:JumpToItem(items, active_index - 1)
   endif
-
-  call setpos('.', position)
 
   return 1
 endfunction
@@ -123,18 +107,10 @@ function! sideways#JumpRight()
   let position = getpos('.')
 
   if active_index == last_index
-    let first       = items[0]
-    let second      = items[last_index]
-    let position[1] = first.start_line
-    let position[2] = first.start_col
+    call s:JumpToItem(items, 0)
   else
-    let first       = items[active_index]
-    let second      = items[active_index + 1]
-    let position[1] = second.start_line
-    let position[2] = second.start_col
+    call s:JumpToItem(items, active_index + 1)
   endif
-
-  call setpos('.', position)
 
   return 1
 endfunction
@@ -163,6 +139,13 @@ function! sideways#AroundCursor()
   return [previous, current, next]
 endfunction
 
+function s:JumpToItem(items, index)
+  let position = getpos('.')
+  let position[1] = a:items[a:index].start_line
+  let position[2] = a:items[a:index].start_col
+  call setpos('.', position)
+endfunction
+
 " Swaps the a:first and a:second items in the buffer. Both first arguments are
 " expected to be pairs of start and end columns. The last argument is a
 " number, the new column to position the cursor on.
@@ -171,22 +154,15 @@ endfunction
 " a:first is expected to be positioned before a:second. Assuming that, the
 " function first places the second item and then the first one, ensuring that
 " the column number remain consistent until it's done.
-function! s:Swap(first, second, new_cursor_line, new_cursor_column)
-  let [first_line, first_start, first_end] =
-        \ [a:first.start_line, a:first.start_col, a:first.end_col]
-  let [second_line, second_start, second_end] =
-        \ [a:second.start_line, a:second.start_col, a:second.end_col]
-
-  let first_body  = sideways#util#GetCols(first_line, first_start, first_end)
-  let second_body = sideways#util#GetCols(second_line, second_start, second_end)
+function! s:Swap(first, second)
+  let first_body  = sideways#util#GetItem(a:first)
+  let second_body = sideways#util#GetItem(a:second)
 
   let position = getpos('.')
 
-  call sideways#util#ReplaceCols(second_line, second_start, second_end, first_body)
-  call sideways#util#ReplaceCols(first_line, first_start, first_end, second_body)
+  call sideways#util#ReplaceItem(a:second, first_body)
+  call sideways#util#ReplaceItem(a:first, second_body)
 
-  let position[1] = a:new_cursor_line
-  let position[2] = a:new_cursor_column
   call setpos('.', position)
 endfunction
 
@@ -195,11 +171,14 @@ endfunction
 "
 " Returns the index of the found item, or -1 if it's not found.
 function! s:FindActiveItem(items)
-  let column = col('.')
+  let cursor_offset = line2byte(line('.')) + col('.') - 1
 
   let index = 0
   for item in a:items
-    if item.start_line == line('.') && item.start_col <= column && column <= item.end_col
+    let start_offset = line2byte(item.start_line) + item.start_col - 1
+    let end_offset   = line2byte(item.end_line)   + item.end_col   - 1
+
+    if start_offset <= cursor_offset && cursor_offset <= end_offset
       return index
     endif
 
@@ -207,14 +186,4 @@ function! s:FindActiveItem(items)
   endfor
 
   return -1
-endfunction
-
-" Return the difference in length between the first start-end column pair and
-" the second one.
-"
-" It is assumed that a:first is positioned before a:second. This is used to
-" account for the column positions becoming inconsistent after replacing text
-" in the current line.
-function! s:Delta(first, second)
-  return (a:first.end_col - a:first.start_col) - (a:second.end_col - a:second.start_col)
 endfunction

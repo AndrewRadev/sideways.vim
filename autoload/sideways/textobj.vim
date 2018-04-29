@@ -10,7 +10,7 @@ function! sideways#textobj#Argument(mode)
   if a:mode == 'i'
     call s:MarkCols(
           \   [current.start_line, current.start_col],
-          \   [current.start_line, current.end_col]
+          \   [current.end_line, current.end_col]
           \ )
   elseif a:mode == 'a'
     if !empty(previous)
@@ -26,15 +26,15 @@ function! sideways#textobj#Argument(mode)
           " this is a new line with no next, delete till previous, remove
           " newline
           call s:MarkCols(
-                \   [previous.start_line, previous.end_col + 1],
-                \   [current.start_line, current.end_col]
+                \   [previous.end_line, previous.end_col + 1],
+                \   [current.end_line, current.end_col]
                 \ )
         endif
       else
         " there are other things on the line
         call s:MarkCols(
-              \   [previous.start_line, previous.end_col + 1],
-              \   [current.start_line, current.end_col]
+              \   [previous.end_line, previous.end_col + 1],
+              \   [current.end_line, current.end_col]
               \ )
       endif
     elseif !empty(next)
@@ -45,7 +45,7 @@ function! sideways#textobj#Argument(mode)
     else
       call s:MarkCols(
             \   [current.start_line, current.start_col],
-            \   [current.start_line, current.end_col]
+            \   [current.end_line, current.end_col]
             \ )
     endif
   endif
