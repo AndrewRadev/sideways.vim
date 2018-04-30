@@ -95,13 +95,13 @@ Supported definitions ~
 
 Other things that sideways works for:
 
-Lists in CSS declarations:
->
-    border-radius: 20px 0 0 20px;
-<
-Single-line CSS declarations:
+CSS declarations:
 >
     a { color: #fff; background: blue; text-decoration: underline; }
+<
+Lists within CSS declarations:
+>
+    border-radius: 20px 0 0 20px;
 <
 HTML attributes:
 >
@@ -130,6 +130,14 @@ Rust return type (a special case since there's always just one, useful as a text
 Go lists:
 >
     []string{"One", "Two", "Three"}
+<
+C++ templates:
+>
+    /*
+     * Relies on "<" being surrounded by non-whitespace, or considers it a
+     * comparison. Parsing C++ is tricky.
+     */
+    std::unordered_map<k, v>()
 <
 Javascript-like objects:
 >

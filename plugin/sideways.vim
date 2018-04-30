@@ -150,6 +150,33 @@ autocmd FileType go let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType cpp let b:sideways_definitions = [
+      \   {
+      \     'start':     '(\_s*',
+      \     'end':       ')',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{<''"', ')]}>''"'],
+      \   },
+      \   {
+      \     'start':     '\[\_s*',
+      \     'end':       '\]',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{<''"', ')]}>''"'],
+      \   },
+      \   {
+      \     'start':     '{\_s*',
+      \     'end':       '}',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{<''"', ')]}>''"'],
+      \   },
+      \   {
+      \     'start':     'template \zs<\ze\|\S\zs<\ze\S',
+      \     'end':       '>',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{<''"', ')]}>''"'],
+      \   },
+      \ ]
+
 autocmd FileType css,scss,less let b:sideways_definitions = [
       \   {
       \     'start':     '\k:\s*',
