@@ -27,4 +27,29 @@ describe "multi-line args" do
       ), six)
     EOF
   end
+
+  specify "the last argument, on multiple lines" do
+    set_file_contents <<-EOF
+      function_call(one, two, six, three(
+        "four", "five"
+      ))
+    EOF
+
+    vim.search 'six'
+    vim.right
+
+    assert_file_contents <<-EOF
+      function_call(one, two, three(
+        "four", "five"
+      ), six)
+    EOF
+
+    vim.left
+
+    assert_file_contents <<-EOF
+      function_call(one, two, six, three(
+        "four", "five"
+      ))
+    EOF
+  end
 end

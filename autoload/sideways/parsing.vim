@@ -138,6 +138,7 @@ function! sideways#parsing#Parse(definitions)
   if current_item.end_col < 0
     " parsing ended before current item was finalized
     let current_item.end_col = col('.') - 1
+    let current_item.end_line = line('.')
   endif
 
   if current_item.start_line < current_item.end_line ||
