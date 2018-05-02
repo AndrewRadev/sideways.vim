@@ -164,6 +164,9 @@ function! s:LocateBestDefinition(definitions)
   let best_definition_col  = 0
   let best_definition_line = -1
 
+  let cursor_line = line('.')
+  let cursor_col  = col('.')
+
   for definition in a:definitions
     let start_pattern = definition.start
     let end_pattern   = definition.end
@@ -177,14 +180,28 @@ function! s:LocateBestDefinition(definitions)
     else
       call sideways#util#SearchSkip(start_pattern, skip_expression, 'Wce', line('.'))
       normal! l
+      let match_start_line = line('.')
+      let match_start_col  = col('.')
 
-      let match_line = line('.')
-      let match_col = col('.')
+      if searchpair(start_pattern, '', end_pattern, 'W', skip_expression) > 0
+        normal! h
+        let match_end_line = line('.')
+        let match_end_col  = col('.')
 
-      if match_line > best_definition_line ||
-            \ (match_line == best_definition_line && match_col > best_definition_col)
-        let best_definition_line = match_line
-        let best_definition_col  = match_col
+        if !s:Between(
+              \ [cursor_line, cursor_col],
+              \ [match_start_line, match_start_col],
+              \ [match_end_line, match_end_col]
+              \ )
+          call sideways#util#PopCursor()
+          continue
+        endif
+      end
+
+      if match_start_line > best_definition_line ||
+            \ (match_start_line == best_definition_line && match_start_col > best_definition_col)
+        let best_definition_line = match_start_line
+        let best_definition_col  = match_start_col
         let best_definition      = definition
       endif
     endif
@@ -243,6 +260,18 @@ function! s:NewItem()
         \   'start_line': line('.'), 'end_line': line('.'),
         \   'start_col':  col('.'),  'end_col':  -1,
         \ }
+endfunction
+
+function! s:Between(position, start, end)
+  let [line, col]             = a:position
+  let [start_line, start_col] = a:start
+  let [end_line, end_col]     = a:end
+
+  if line < start_line  || line > end_line  | return 0 | endif
+  if line == start_line && col  < start_col | return 0 | endif
+  if line == end_line   && col  > end_col   | return 0 | endif
+
+  return 1
 endfunction
 
 function! s:SkipSyntaxExpression(definition)
