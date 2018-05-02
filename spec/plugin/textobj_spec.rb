@@ -41,6 +41,26 @@ describe "textobj mapping" do
       EOF
     end
 
+    specify "delete before argument" do
+      vim.search(' two')
+      vim.feedkeys 'daa'
+      vim.write
+
+      assert_file_contents <<-EOF
+        def func(one, three):
+          pass
+      EOF
+
+      vim.search(' three')
+      vim.feedkeys 'daa'
+      vim.write
+
+      assert_file_contents <<-EOF
+        def func(one):
+          pass
+      EOF
+    end
+
     specify "change middle argument" do
       vim.search('two')
       vim.feedkeys 'ciachanged'
@@ -62,6 +82,7 @@ describe "textobj mapping" do
           pass
       EOF
 
+      vim.search('two')
       vim.feedkeys 'ciachanged'
       vim.write
 

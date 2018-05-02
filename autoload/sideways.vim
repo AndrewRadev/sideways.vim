@@ -125,13 +125,13 @@ function! sideways#AroundCursor()
   let current       = items[current_index]
 
   if current_index <= 0
-    let previous = []
+    let previous = {}
   else
     let previous = items[current_index - 1]
   endif
 
   if current_index >= len(items) - 1
-    let next = []
+    let next = {}
   else
     let next = items[current_index + 1]
   endif
@@ -167,15 +167,21 @@ function! s:Swap(first, second)
 endfunction
 
 " Finds an item in the given list of column pairs, which the cursor is
-" currently positioned in.
+" currently positioned in. Considers the space before an item a part of that
+" item.
 "
 " Returns the index of the found item, or -1 if it's not found.
 function! s:FindActiveItem(items)
+  if len(a:items) == 0
+    return -1
+  endif
+
   let cursor_offset = line2byte(line('.')) + col('.') - 1
+  let previous_offset = line2byte(a:items[0].start_line) + a:items[0].start_col - 1
 
   let index = 0
   for item in a:items
-    let start_offset = line2byte(item.start_line) + item.start_col - 1
+    let start_offset = previous_offset
     let end_offset   = line2byte(item.end_line)   + item.end_col   - 1
 
     if start_offset <= cursor_offset && cursor_offset <= end_offset
@@ -183,6 +189,7 @@ function! s:FindActiveItem(items)
     endif
 
     let index += 1
+    let previous_offset = end_offset
   endfor
 
   return -1
