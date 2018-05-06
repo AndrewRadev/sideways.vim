@@ -162,7 +162,7 @@ function! s:LocateBestDefinition(definitions)
 
   let best_definition      = {}
   let best_definition_col  = 0
-  let best_definition_line = -1
+  let best_definition_line = 0
 
   let cursor_line = line('.')
   let cursor_col  = col('.')
@@ -174,7 +174,7 @@ function! s:LocateBestDefinition(definitions)
     let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression, best_definition_line) <= 0
       call sideways#util#PopCursor()
       continue
     else
