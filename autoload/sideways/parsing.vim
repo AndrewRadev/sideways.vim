@@ -1,5 +1,6 @@
-" Extract column positions for "arguments" on the current line. Returns a list
-" of objects, each one containing the start and end positions of the item:
+" Extract column positions for "arguments" on the current line. Returns the
+" used definition, and a list of objects, each one containing the start and
+" end positions of the item:
 "
 " {
 "   start_line: 3, end_line: 3,
@@ -16,9 +17,12 @@
 " The result would be:
 "
 "   [
-"     {start_line: 1, end_line: 1, start_col: 14, end_col: 16},
-"     {start_line: 1, end_line: 1, start_col: 19, end_col: 21},
-"     {start_line: 2, end_line: 2, start_col: 3, end_col: 7},
+"     { start: '(\_s*', end: ')', ... },
+"     [
+"       {start_line: 1, end_line: 1, start_col: 14, end_col: 16},
+"       {start_line: 1, end_line: 1, start_col: 19, end_col: 21},
+"       {start_line: 2, end_line: 2, start_col: 3, end_col: 7},
+"     ]
 "   ]
 "
 function! sideways#parsing#Parse(definitions)
@@ -154,7 +158,7 @@ function! sideways#parsing#Parse(definitions)
   " call s:DebugItems(items)
 
   call winrestview(viewpos)
-  return items
+  return [definition, items]
 endfunction
 
 function! s:LocateBestDefinition(definitions)

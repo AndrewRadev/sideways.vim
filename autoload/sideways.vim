@@ -9,7 +9,7 @@ function! sideways#Parse()
 endfunction
 
 function! sideways#MoveLeft()
-  let items = sideways#Parse()
+  let [definition, items] = sideways#Parse()
   if empty(items)
     return 0
   end
@@ -34,14 +34,14 @@ function! sideways#MoveLeft()
 
   call s:Swap(first, second)
   call s:JumpToItem(items, first_index)
-  let new_items = sideways#Parse()
+  let [_, new_items] = sideways#parsing#Parse([definition])
   call s:JumpToItem(new_items, new_active_index)
 
   return 1
 endfunction
 
 function! sideways#MoveRight()
-  let items = sideways#Parse()
+  let [definition, items] = sideways#Parse()
   if empty(items)
     return 0
   end
@@ -64,14 +64,14 @@ function! sideways#MoveRight()
 
   call s:Swap(first, second)
   call s:JumpToItem(items, active_index)
-  let new_items = sideways#Parse()
+  let [_, new_items] = sideways#parsing#Parse([definition])
   call s:JumpToItem(new_items, new_active_index)
 
   return 1
 endfunction
 
 function! sideways#JumpLeft()
-  let items = sideways#Parse()
+  let [_, items] = sideways#Parse()
   if empty(items)
     return 0
   end
@@ -92,7 +92,7 @@ function! sideways#JumpLeft()
 endfunction
 
 function! sideways#JumpRight()
-  let items = sideways#Parse()
+  let [_, items] = sideways#Parse()
 
   if empty(items)
     return 0
@@ -116,7 +116,7 @@ function! sideways#JumpRight()
 endfunction
 
 function! sideways#AroundCursor()
-  let items = sideways#Parse()
+  let [_, items] = sideways#Parse()
   if empty(items)
     return []
   end
