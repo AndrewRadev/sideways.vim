@@ -212,6 +212,14 @@ autocmd FileType sh let b:sideways_definitions = [
       \   },
       \ ]
 
+if !exists('g:sideways_search_timeout')
+  let g:sideways_search_timeout = 100
+endif
+
+if !exists('g:sideways_skip_strings_and_comments')
+  let g:sideways_skip_strings_and_comments = 1
+endif
+
 command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set("\<Plug>SidewaysLeft")
 command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Plug>SidewaysRight")
 

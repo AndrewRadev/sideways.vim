@@ -174,7 +174,7 @@ function! s:LocateBestDefinition(definitions)
     let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression, best_definition_line) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression, best_definition_line, g:sideways_search_timeout) <= 0
       call sideways#util#PopCursor()
       continue
     else
@@ -275,6 +275,10 @@ function! s:Between(position, start, end)
 endfunction
 
 function! s:SkipSyntaxExpression(definition)
+  if !g:sideways_skip_strings_and_comments
+    return ''
+  endif
+
   if has_key(a:definition, 'skip_syntax')
     let syntax_groups = a:definition.skip_syntax
   elseif exists('b:sideways_skip_syntax')

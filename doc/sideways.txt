@@ -176,6 +176,7 @@ Also, a useful plugin to use alongside sideways is `fieldtrip`
 (https://github.com/tek/vim-fieldtrip). This defines a submode
 (https://github.com/kana/vim-submode) for sideways.vim.
 
+
 ==============================================================================
 SETTINGS                                                     *sideways-settings*
 
@@ -194,6 +195,45 @@ for matching brackets and for the starts of lists. It should be a list of
 syntax groups (or rather, parts of syntax groups -- the names are matched with
 the |=~#| operator). By default, the plugin skips "Comment" and "String"
 syntax items.
+
+
+                                                     *g:sideways_search_timeout*
+>
+    let g:sideways_search_timeout = 10
+<
+Default value: 100
+
+If deleting arguments feels slow, it might be a result of the plugin trying
+and failing to find matches. Currently, it tries all possible patterns it has,
+so that it can find the one closest to the cursor. It also ignores entries
+highlighted as strings or comments. That last part seems to be expensive to
+do. That's why there's a timeout of 100 (in milliseconds) set to this search.
+
+Making this number lower should make the search faster. However, it increases
+the odds an a search fails to detect the right pattern. For instance, for a
+100-argument function call with nested function calls as arguments, it might
+end up failing to detect the pattern. Though this seems like an unlikely
+case.
+
+A different thing you can do is disable syntax filtering using the
+|g:sideways_skip_strings_and_comments| setting.
+
+
+                                          *g:sideways_skip_strings_and_comments*
+>
+    let g:sideways_skip_strings_and_comments = 0
+<
+Default value: 1
+
+If deleting arguments feels slow, it might be a result of the plugin trying
+and failing to find matches. Currently, it tries all possible patterns it has,
+so that it can find the one closest to the cursor. It also ignores entries
+highlighted as strings or comments. That last part seems to be expensive to
+do.
+
+If you'd like to completely disable this filtering, you can set this variable
+to 0. This should greatly speed it up, but it would cause issues with
+unbalanced brackets in strings or comments.
 
 
 ==============================================================================
