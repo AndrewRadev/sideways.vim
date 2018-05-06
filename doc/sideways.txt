@@ -199,21 +199,25 @@ syntax items.
 
                                                      *g:sideways_search_timeout*
 >
-    let g:sideways_search_timeout = 10
+    let g:sideways_search_timeout = 50
 <
-Default value: 100
+Default value: 0
 
 If deleting arguments feels slow, it might be a result of the plugin trying
 and failing to find matches. Currently, it tries all possible patterns it has,
-so that it can find the one closest to the cursor. It also ignores entries
-highlighted as strings or comments. That last part seems to be expensive to
-do. That's why there's a timeout of 100 (in milliseconds) set to this search.
+so that it can find the one closest to the cursor. It also skips pattern
+matches highlighted as strings or comments. That last part seems to be
+expensive to do. That's why there's the option of providing a timeout to this
+search.
 
-Making this number lower should make the search faster. However, it increases
-the odds an a search fails to detect the right pattern. For instance, for a
-100-argument function call with nested function calls as arguments, it might
-end up failing to detect the pattern. Though this seems like an unlikely
-case.
+Setting a low number (in milliseconds) should make the search faster. On my
+machine, a number as low as 10 works quite well for some examples. However,
+the lower the timeout, the higher the odds that a search fails to detect the
+right pattern. Say, for a 100-argument function call with nested function
+calls as arguments, it might end up failing to detect the pattern. This seems
+like an unlikely case, so it depends on how safe you'd like to be.
+
+Setting this to 0 (the default) removes the timeout limitation.
 
 A different thing you can do is disable syntax filtering using the
 |g:sideways_skip_strings_and_comments| setting.

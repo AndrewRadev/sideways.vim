@@ -178,7 +178,8 @@ function! s:LocateBestDefinition(definitions)
     let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression, best_definition_line, g:sideways_search_timeout) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW',
+          \ skip_expression, best_definition_line, g:sideways_search_timeout) <= 0
       call sideways#util#PopCursor()
       continue
     else

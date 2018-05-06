@@ -213,7 +213,7 @@ autocmd FileType sh let b:sideways_definitions = [
       \ ]
 
 if !exists('g:sideways_search_timeout')
-  let g:sideways_search_timeout = 100
+  let g:sideways_search_timeout = 0
 endif
 
 if !exists('g:sideways_skip_strings_and_comments')
