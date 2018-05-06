@@ -149,7 +149,7 @@ source to do this.
                                                             *SidewaysJumpLeft*
                                                             *SidewaysJumpRight*
 
-Bonus functionality: ~
+Text objects: ~
 
 The plugin's machinery makes it easy to implement an "argument" text object.
 There are two mappings provided:
