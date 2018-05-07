@@ -35,7 +35,7 @@ function! sideways#parsing#Parse(definitions)
 
   if empty(definition)
     call winrestview(viewpos)
-    return []
+    return [{}, []]
   endif
 
   let start_pattern           = definition.start
