@@ -184,9 +184,8 @@ function! s:LocateBestDefinition(definitions)
       continue
     else
       call sideways#util#SearchSkip(start_pattern, skip_expression, 'Wce', line('.'))
-      normal! l
       let match_start_line = line('.')
-      let match_start_col  = col('.')
+      let match_start_col  = col('.') + 1
 
       if searchpair(start_pattern, '', end_pattern, 'W', skip_expression) > 0
         normal! h

@@ -125,4 +125,22 @@ describe "regression tests" do
       EOF
     end
   end
+
+  describe "javascript" do
+    let(:filename) { 'test.js' }
+
+    # See https://github.com/AndrewRadev/sideways.vim/issues/31
+    specify "empty () after opening (" do
+      set_file_contents <<-EOF
+        foo(() => { bar(baz); }, qwe);
+      EOF
+
+      vim.search('qwe')
+      vim.left
+
+      assert_file_contents <<-EOF
+        foo(qwe, () => { bar(baz); });
+      EOF
+    end
+  end
 end
