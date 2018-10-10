@@ -212,6 +212,15 @@ autocmd FileType sh let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType ocaml let b:sideways_definitions = [
+      \   {
+      \     'start':     '\[\_s*',
+      \     'end':       '\]',
+      \     'delimiter': ';\_s*',
+      \     'brackets':  ['(["', ')]"'],
+      \   },
+      \ ]
+
 if !exists('g:sideways_search_timeout')
   let g:sideways_search_timeout = 0
 endif

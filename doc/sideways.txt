@@ -143,6 +143,11 @@ Javascript-like objects:
 >
     dict = {one: 1, two: 2, three: 3}
 <
+OCaml lists
+>
+    let xs = [1;2;3]
+<
+
 The plugin is customizable, though at this point you'd need to look at the
 source to do this.
 
