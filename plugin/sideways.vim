@@ -214,8 +214,8 @@ autocmd FileType sh let b:sideways_definitions = [
 
 autocmd FileType ocaml let b:sideways_definitions = [
       \   {
-      \     'start':     '\[\_s*',
-      \     'end':       '\]',
+      \     'start':     '\[|\=\_s*',
+      \     'end':       '|\=\]',
       \     'delimiter': ';\_s*',
       \     'brackets':  ['(["', ')]"'],
       \   },
