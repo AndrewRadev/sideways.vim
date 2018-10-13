@@ -28,6 +28,15 @@ let g:sideways_definitions =
       \   },
       \ ]
 
+autocmd FileType ruby
+      \ if !exists('b:sideways_skip_syntax') |
+      \   let b:sideways_skip_syntax = [
+      \     '^rubyString$',
+      \     '^rubySymbol$',
+      \     '^rubyComment$',
+      \     '^rubyInterpolation$',
+      \   ] |
+      \ endif
 autocmd FileType ruby let b:sideways_definitions = [
       \   {
       \     'start':     '|\s*',
@@ -36,7 +45,6 @@ autocmd FileType ruby let b:sideways_definitions = [
       \     'brackets':  ['([{''"', ')]}''"'],
       \   },
       \   {
-      \     'skip_syntax': ['rubyString', 'rubySymbol', 'rubyComment', 'rubyInterpolation'],
       \     'start':       '\k\{1,}[?!]\= \ze\s*[^=,*/%<>+-]',
       \     'end':         '\s*\%(\<do\>\|#\)',
       \     'delimiter':   ',\s*',
