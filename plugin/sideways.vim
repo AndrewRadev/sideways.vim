@@ -128,6 +128,18 @@ autocmd FileType javascript.jsx let b:sideways_definitions = [
 
 autocmd FileType rust let b:sideways_definitions = [
       \   {
+      \     'start':     '|\s*',
+      \     'end':       '\s*|',
+      \     'delimiter': ',\s*',
+      \     'brackets':  ['<([', '>)]'],
+      \   },
+      \   {
+      \     'start':     '(\_s*',
+      \     'end':       ')',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{''"|', ')]}''"|'],
+      \   },
+      \   {
       \     'start':     '\<[A-Z]\k\+<',
       \     'end':       '>',
       \     'delimiter': ',\s*',
