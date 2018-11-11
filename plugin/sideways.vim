@@ -140,7 +140,7 @@ autocmd FileType rust let b:sideways_definitions = [
       \     'brackets':  ['([{''"|', ')]}''"|'],
       \   },
       \   {
-      \     'start':     '\<[A-Z]\k\+<',
+      \     'start':     '\<\k\+<',
       \     'end':       '>',
       \     'delimiter': ',\s*',
       \     'brackets':  ['<([', '>)]'],
