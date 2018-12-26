@@ -52,6 +52,15 @@ autocmd FileType ruby let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType python let b:sideways_definitions = [
+      \   {
+      \     'start':     '^\%(from .*\)\=import ',
+      \     'end':       '$',
+      \     'delimiter': ',\s*',
+      \     'brackets':  ['', ''],
+      \   },
+      \ ]
+
 autocmd FileType coffee let b:sideways_definitions = [
       \   {
       \     'skip_syntax': ['coffeeString', 'coffeeComment'],
