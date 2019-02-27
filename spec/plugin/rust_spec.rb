@@ -149,6 +149,42 @@ describe "rust" do
     end
   end
 
+  describe "lifetimes in a function declaration" do
+    before :each do
+      set_file_contents <<-EOF
+        fn define_custom<'a, 'b>(&mut self, mut i: S<'a>) -> Result<S<'a>, Error> { }
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('mut i')
+    end
+
+    specify "to the left" do
+      vim.left
+      assert_file_contents <<-EOF
+        fn define_custom<'a, 'b>(mut i: S<'a>, &mut self) -> Result<S<'a>, Error> { }
+      EOF
+    end
+  end
+
+  describe "comparison in a function invocation" do
+    before :each do
+      set_file_contents <<-EOF
+        foo(a < b, b > c);
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('a < b')
+    end
+
+    specify "to the right" do
+      vim.left
+      assert_file_contents <<-EOF
+        foo(b > c, a < b);
+      EOF
+    end
+  end
+
   describe "text object for a result" do
     before :each do
       set_file_contents <<-EOF
