@@ -143,6 +143,12 @@ autocmd FileType rust let b:sideways_definitions = [
       \     'brackets':  ['<([', '>)]'],
       \   },
       \   {
+      \     'start':     'struct \k\+\%(<.\{-}>\)\=\s*{\_s*',
+      \     'end':       '}',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([<', ')]>'],
+      \   },
+      \   {
       \     'start':     'fn \k\+\%(<.\{-}>\)\=(\_s*',
       \     'end':       ')',
       \     'delimiter': ',\_s*',

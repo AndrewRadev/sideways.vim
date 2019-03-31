@@ -124,6 +124,30 @@ describe "rust" do
     end
   end
 
+  describe "template args in struct definitions" do
+    before :each do
+      set_file_contents <<-EOF
+        pub struct Forth {
+            stack: Vec<Value>,
+            environment: HashMap<String, String>,
+        }
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('stack:')
+    end
+
+    specify "to the left" do
+      vim.left
+      assert_file_contents <<-EOF
+        pub struct Forth {
+            environment: HashMap<String, String>,
+            stack: Vec<Value>,
+        }
+      EOF
+    end
+  end
+
   describe "template args in a turbofish" do
     before :each do
       set_file_contents <<-EOF
