@@ -173,6 +173,33 @@ describe "rust" do
     end
   end
 
+  describe "correct cursor position in nested template args" do
+    before :each do
+      set_file_contents <<-EOF
+        Result<Box<Error>, ()>
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('Box')
+    end
+
+    specify "to the left" do
+      vim.left
+      expect(vim.echo('expand("<cword>")')).to eq 'Box'
+
+      vim.left
+      expect(vim.echo('expand("<cword>")')).to eq 'Box'
+    end
+
+    specify "to the right" do
+      vim.right
+      expect(vim.echo('expand("<cword>")')).to eq 'Box'
+
+      vim.right
+      expect(vim.echo('expand("<cword>")')).to eq 'Box'
+    end
+  end
+
   describe "lifetimes in a function declaration" do
     before :each do
       set_file_contents <<-EOF

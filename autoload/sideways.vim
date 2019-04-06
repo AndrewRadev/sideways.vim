@@ -23,17 +23,15 @@ function! sideways#MoveLeft()
   if active_index == 0
     let first            = items[active_index]
     let second           = items[last_index]
-    let first_index      = active_index
     let new_active_index = last_index
   else
     let first            = items[active_index - 1]
     let second           = items[active_index]
-    let first_index      = active_index - 1
     let new_active_index = active_index - 1
   endif
 
   call s:Swap(first, second)
-  call s:JumpToItem(items, first_index)
+  call s:JumpToItem(items, 0)
   let [_, new_items] = sideways#parsing#Parse([definition])
   call s:JumpToItem(new_items, new_active_index)
 
@@ -63,7 +61,7 @@ function! sideways#MoveRight()
   endif
 
   call s:Swap(first, second)
-  call s:JumpToItem(items, active_index)
+  call s:JumpToItem(items, 0)
   let [_, new_items] = sideways#parsing#Parse([definition])
   call s:JumpToItem(new_items, new_active_index)
 
