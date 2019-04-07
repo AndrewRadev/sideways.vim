@@ -148,6 +148,42 @@ describe "rust" do
     end
   end
 
+  describe "template args in tuple struct definitions" do
+    before :each do
+      set_file_contents <<-EOF
+        pub struct Forth(Vec<Value>, HashMap<String, String>)
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('Vec')
+    end
+
+    specify "to the left" do
+      vim.left
+      assert_file_contents <<-EOF
+        pub struct Forth(HashMap<String, String>, Vec<Value>)
+      EOF
+    end
+  end
+
+  describe "template args in a newtype declaration" do
+    before :each do
+      set_file_contents <<-EOF
+        type Foo = (First<Foo, Bar>, Second<Foo, Bar>)
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('First')
+    end
+
+    specify "to the left" do
+      vim.left
+      assert_file_contents <<-EOF
+        type Foo = (Second<Foo, Bar>, First<Foo, Bar>)
+      EOF
+    end
+  end
+
   describe "template args in a turbofish" do
     before :each do
       set_file_contents <<-EOF

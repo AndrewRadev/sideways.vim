@@ -143,8 +143,20 @@ autocmd FileType rust let b:sideways_definitions = [
       \     'brackets':  ['<([', '>)]'],
       \   },
       \   {
-      \     'start':     'struct \k\+\%(<.\{-}>\)\=\s*{\_s*',
+      \     'start':     '\%(struct\|enum\) \k\+\%(<.\{-}>\)\=\s*{\_s*',
       \     'end':       '}',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([<', ')]>'],
+      \   },
+      \   {
+      \     'start':     '\%(struct\|enum\) \k\+\%(<.\{-}>\)\=\s*(\_s*',
+      \     'end':       ')',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([<', ')]>'],
+      \   },
+      \   {
+      \     'start':     'type \k\+\s*=.*(',
+      \     'end':       ')',
       \     'delimiter': ',\_s*',
       \     'brackets':  ['([<', ')]>'],
       \   },
