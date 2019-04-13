@@ -28,17 +28,52 @@
 function! sideways#parsing#Parse(definitions)
   let definitions = a:definitions
 
-  let viewpos = winsaveview()
-  let [best_definition, start_line, start_col] = s:LocateBestDefinition(definitions)
+  let viewpos     = winsaveview()
+  let cursor_line = line('.')
+  let cursor_col  = col('.')
 
-  if empty(best_definition)
-    call winrestview(viewpos)
-    return [{}, []]
-  endif
+  let valid_definitions = s:LocateValidDefinitions(definitions)
+  call sort(valid_definitions, function('s:CompareDefinitionStarts'))
 
-  let result = s:ParseSingleDefinition(best_definition, start_line, start_col)
+  " for item in map(copy(valid_definitions), 'v:val[0]."/".v:val[1].": ".v:val[2].start')
+  "   Decho item
+  " endfor
+
+  for [start_line, start_col, definition] in valid_definitions
+    let items = s:ParseSingleDefinition(definition, start_line, start_col)
+    if len(items) == 0
+      continue
+    endif
+
+    let first_item = items[0]
+    let last_item  = items[len(items) - 1]
+
+    if s:Between(
+          \ [cursor_line, cursor_col],
+          \ [first_item.start_line, first_item.start_col],
+          \ [last_item.end_line, last_item.end_col]
+          \ )
+      call winrestview(viewpos)
+      return [definition, items]
+    endif
+  endfor
+
   call winrestview(viewpos)
-  return result
+  return [{}, []]
+endfunction
+
+" Compare lines, columns of a definition -- later positions are first
+function! s:CompareDefinitionStarts(first, second)
+  let [first_line, first_col, _d1]   = a:first
+  let [second_line, second_col, _d2] = a:second
+
+  if first_line > second_line || (first_line == second_line && first_col > second_col)
+    return -1
+  elseif second_line > first_line || (second_line == first_line && second_col > first_col)
+    return 1
+  else
+    return 0
+  endif
 endfunction
 
 function! s:ParseSingleDefinition(definition, start_line, start_col)
@@ -165,31 +200,29 @@ function! s:ParseSingleDefinition(definition, start_line, start_col)
     " it's an invalid item, ignore it
   endif
 
+  " Decho definition.start
   " call s:DebugItems(items)
 
   call winrestview(viewpos)
-  return [definition, items]
+  return items
 endfunction
 
-function! s:LocateBestDefinition(definitions)
+function! s:LocateValidDefinitions(definitions)
   silent! normal! zO
-
-  let best_definition      = {}
-  let best_definition_col  = 0
-  let best_definition_line = 0
 
   let cursor_line = line('.')
   let cursor_col  = col('.')
+  let results     = []
 
   for definition in a:definitions
     let start_pattern = definition.start
-    let end_pattern   = definition.end
+    let end_pattern = definition.end
 
     let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
     if searchpair(start_pattern, '', end_pattern, 'bW',
-          \ skip_expression, best_definition_line, g:sideways_search_timeout) <= 0
+          \ skip_expression, 0, g:sideways_search_timeout) <= 0
       call sideways#util#PopCursor()
       continue
     else
@@ -197,37 +230,13 @@ function! s:LocateBestDefinition(definitions)
       let match_start_line = line('.')
       let match_start_col  = col('.') + 1
 
-      if searchpair(start_pattern, '', end_pattern, 'W', skip_expression) > 0
-        normal! h
-        let match_end_line = line('.')
-        let match_end_col  = col('.')
-
-        if !s:Between(
-              \ [cursor_line, cursor_col],
-              \ [match_start_line, match_start_col],
-              \ [match_end_line, match_end_col]
-              \ )
-          call sideways#util#PopCursor()
-          continue
-        endif
-      end
-
-      if match_start_line > best_definition_line ||
-            \ (match_start_line == best_definition_line && match_start_col > best_definition_col)
-        let best_definition_line = match_start_line
-        let best_definition_col  = match_start_col
-        let best_definition      = definition
-      endif
+      call add(results, [match_start_line, match_start_col, definition])
     endif
 
     call sideways#util#PopCursor()
   endfor
 
-  if best_definition_col > 0
-    return [best_definition, best_definition_line, best_definition_col]
-  else
-    return [{}, -1, -1]
-  endif
+  return results
 endfunction
 
 function! s:BracketMatch(text, brackets)
