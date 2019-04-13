@@ -26,17 +26,27 @@
 "   ]
 "
 function! sideways#parsing#Parse(definitions)
-  let viewpos = winsaveview()
-
   let definitions = a:definitions
-  let items       = []
 
-  let definition = s:LocateBestDefinition(definitions)
+  let viewpos = winsaveview()
+  let [best_definition, start_line, start_col] = s:LocateBestDefinition(definitions)
 
-  if empty(definition)
+  if empty(best_definition)
     call winrestview(viewpos)
     return [{}, []]
   endif
+
+  let result = s:ParseSingleDefinition(best_definition, start_line, start_col)
+  call winrestview(viewpos)
+  return result
+endfunction
+
+function! s:ParseSingleDefinition(definition, start_line, start_col)
+  let definition = a:definition
+  call sideways#util#SetPos(a:start_line, a:start_col)
+
+  let viewpos = winsaveview()
+  let items   = []
 
   let start_pattern           = definition.start
   let end_pattern             = definition.end
@@ -214,10 +224,9 @@ function! s:LocateBestDefinition(definitions)
   endfor
 
   if best_definition_col > 0
-    call sideways#util#SetPos(best_definition_line, best_definition_col)
-    return best_definition
+    return [best_definition, best_definition_line, best_definition_col]
   else
-    return {}
+    return [{}, -1, -1]
   endif
 endfunction
 
