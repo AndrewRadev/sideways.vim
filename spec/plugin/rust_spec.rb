@@ -99,6 +99,59 @@ describe "rust" do
     end
   end
 
+  describe "lambdas in structs" do
+    before :each do
+      set_file_contents <<-EOF
+        let processor = Processor {
+            before,
+            lambda: |x, y| { x + 1 },
+            after,
+        };
+      EOF
+
+      vim.set 'filetype', 'rust'
+    end
+
+    specify "before lambda" do
+      vim.search('before')
+      vim.right
+
+      assert_file_contents <<-EOF
+        let processor = Processor {
+            lambda: |x, y| { x + 1 },
+            before,
+            after,
+        };
+      EOF
+    end
+
+    specify "after lambda" do
+      vim.search('after')
+      vim.left
+
+      assert_file_contents <<-EOF
+        let processor = Processor {
+            before,
+            after,
+            lambda: |x, y| { x + 1 },
+        };
+      EOF
+    end
+
+    specify "in lambda args" do
+      vim.search('x,')
+      vim.left
+
+      assert_file_contents <<-EOF
+        let processor = Processor {
+            before,
+            lambda: |y, x| { x + 1 },
+            after,
+        };
+      EOF
+    end
+  end
+
   describe "template args in types" do
     before :each do
       set_file_contents <<-EOF
