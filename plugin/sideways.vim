@@ -137,10 +137,11 @@ autocmd FileType javascript.jsx let b:sideways_definitions = [
 
 autocmd FileType rust let b:sideways_definitions = [
       \   {
-      \     'start':     '|\s*',
-      \     'end':       '\s*|',
-      \     'delimiter': ',\s*',
-      \     'brackets':  ['<([', '>)]'],
+      \     'start':       '|\s*',
+      \     'end':         '\s*|',
+      \     'delimiter':   ',\s*',
+      \     'single_line': 1,
+      \     'brackets':    ['<([', '>)]'],
       \   },
       \   {
       \     'start':     '\%(struct\|enum\) \k\+\%(<.\{-}>\)\=\s*{\_s*',
@@ -153,6 +154,12 @@ autocmd FileType rust let b:sideways_definitions = [
       \     'end':       ')',
       \     'delimiter': ',\_s*',
       \     'brackets':  ['([<', ')]>'],
+      \   },
+      \   {
+      \     'start':     '\k\s*{\_s*',
+      \     'end':       '}',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{''"|', ')]}''"|'],
       \   },
       \   {
       \     'start':     'type \k\+\s*=.*(',
