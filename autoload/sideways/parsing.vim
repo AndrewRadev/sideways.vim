@@ -35,12 +35,10 @@ function! sideways#parsing#Parse(definitions)
   let valid_definitions = s:LocateValidDefinitions(definitions)
   call sort(valid_definitions, function('s:CompareDefinitionStarts'))
 
-  " for item in map(copy(valid_definitions), 'v:val[0]."/".v:val[1].": ".v:val[2].start')
-  "   Decho item
-  " endfor
+  " call s:DebugValidDefinitions(valid_definitions)
 
   for [start_line, start_col, definition] in valid_definitions
-    let items = s:ParseSingleDefinition(definition, start_line, start_col)
+    let items = s:ParseItems(definition, start_line, start_col)
     if len(items) == 0
       continue
     endif
@@ -62,7 +60,8 @@ function! sideways#parsing#Parse(definitions)
   return [{}, []]
 endfunction
 
-" Compare lines, columns of a definition -- later positions are first
+" Compares lines, columns of a definition -- later positions are first.
+"
 function! s:CompareDefinitionStarts(first, second)
   let [first_line, first_col, _d1]   = a:first
   let [second_line, second_col, _d2] = a:second
@@ -76,12 +75,16 @@ function! s:CompareDefinitionStarts(first, second)
   endif
 endfunction
 
-function! s:ParseSingleDefinition(definition, start_line, start_col)
+" Tries to parse items according to the given definition. Returns [] if it
+" fails.
+"
+function! s:ParseItems(definition, start_line, start_col)
   let definition = a:definition
   call sideways#util#SetPos(a:start_line, a:start_col)
 
-  let viewpos = winsaveview()
-  let items   = []
+  let viewpos     = winsaveview()
+  let cursor_line = line('.')
+  let items       = []
 
   let start_pattern           = definition.start
   let end_pattern             = definition.end
@@ -179,6 +182,11 @@ function! s:ParseSingleDefinition(definition, start_line, start_col)
       normal! l
     endif
 
+    if single_line && line('.') > cursor_line
+      " no point in continuing, this is not a valid definition
+      return []
+    endif
+
     let remainder_of_line = s:RemainderOfLine()
   endwhile
 
@@ -200,8 +208,7 @@ function! s:ParseSingleDefinition(definition, start_line, start_col)
     " it's an invalid item, ignore it
   endif
 
-  " Decho definition.start
-  " call s:DebugItems(items)
+  " call s:DebugItems(definition, items)
 
   call winrestview(viewpos)
   return items
@@ -216,19 +223,23 @@ function! s:LocateValidDefinitions(definitions)
 
   for definition in a:definitions
     let start_pattern = definition.start
-    let end_pattern = definition.end
+    let end_pattern   = definition.end
 
     let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW',
-          \ skip_expression, 0, g:sideways_search_timeout) <= 0
+    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression, 0, g:sideways_search_timeout) <= 0 &&
+          \ sideways#util#SearchSkip(start_pattern, skip_expression, 'bW', 0, g:sideways_search_timeout) <= 0
       call sideways#util#PopCursor()
       continue
     else
       call sideways#util#SearchSkip(start_pattern, skip_expression, 'Wce', line('.'))
       let match_start_line = line('.')
       let match_start_col  = col('.') + 1
+
+      if cursor_line < match_start_line || (cursor_line == match_start_line && cursor_col < match_start_col)
+        continue
+      endif
 
       call add(results, [match_start_line, match_start_col, definition])
     endif
@@ -320,7 +331,9 @@ function! s:SkipSyntaxExpression(definition)
 endfunction
 
 " Simple debugging
-function! s:DebugItems(items)
+function! s:DebugItems(definition, items)
+  Decho "Start: ".a:definition.start
+
   for item in a:items
     let text = sideways#util#GetItem(item)
     Decho string([
@@ -328,5 +341,11 @@ function! s:DebugItems(items)
           \   string(item.end_line).":".string(item.end_col),
           \   text
           \ ])
+  endfor
+endfunction
+
+function! s:DebugValidDefinitions(valid_definitions)
+  for item in map(copy(a:valid_definitions), 'v:val[0]."/".v:val[1].": ".v:val[2].start')
+    Decho item
   endfor
 endfunction
