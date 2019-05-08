@@ -1,6 +1,16 @@
 function! sideways#Parse()
   if exists('b:sideways_definitions')
-    let definitions = extend(b:sideways_definitions, copy(g:sideways_definitions))
+    let defined = {}
+    let definitions = []
+
+    for d in extend(copy(b:sideways_definitions), copy(g:sideways_definitions))
+      if has_key(defined, d.start . d.end)
+        " we already have one for this start/end pair
+      else
+        let defined[d.start . d.end] = 1
+        call add(definitions, d)
+      endif
+    endfor
   else
     let definitions = g:sideways_definitions
   endif

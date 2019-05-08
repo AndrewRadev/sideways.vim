@@ -318,9 +318,62 @@ describe "rust" do
     end
 
     specify "to the right" do
-      vim.left
+      vim.right
       assert_file_contents <<-EOF
         foo(b > c, a < b);
+      EOF
+    end
+  end
+
+  describe "arrays of chars" do
+    before :each do
+      set_file_contents <<-EOF
+        let v = vec!['a', ',', 'c'];
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('a')
+    end
+
+    specify "to the right" do
+      vim.right
+      assert_file_contents <<-EOF
+        let v = vec![',', 'a', 'c'];
+      EOF
+    end
+  end
+
+  describe "static references" do
+    before :each do
+      set_file_contents <<-EOF
+        struct Picture {
+            bitmap: &'static [&'static str],
+            color_table: &'static [(&'static str, u8, u8, u8)],
+        }
+      EOF
+
+      vim.set 'filetype', 'rust'
+    end
+
+    specify "in the struct" do
+      vim.search('color_table')
+      vim.left
+      assert_file_contents <<-EOF
+        struct Picture {
+            color_table: &'static [(&'static str, u8, u8, u8)],
+            bitmap: &'static [&'static str],
+        }
+      EOF
+    end
+
+    specify "in the tuple" do
+      vim.search('(\zs&\'static str')
+      vim.right
+      assert_file_contents <<-EOF
+        struct Picture {
+            bitmap: &'static [&'static str],
+            color_table: &'static [(u8, &'static str, u8, u8)],
+        }
       EOF
     end
   end

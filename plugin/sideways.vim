@@ -135,6 +135,16 @@ autocmd FileType javascript.jsx let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType rust
+      \ if !exists('b:sideways_skip_syntax') |
+      \   let b:sideways_skip_syntax = [
+      \     '^rustString$',
+      \     '^rustCommentLine$',
+      \     '^rustCommentBlock$',
+      \     '^rustCommentLineDoc$',
+      \     '^rustCharacter$',
+      \   ] |
+      \ endif
 autocmd FileType rust let b:sideways_definitions = [
       \   {
       \     'start':       '|\s*',
@@ -177,7 +187,13 @@ autocmd FileType rust let b:sideways_definitions = [
       \     'start':     '(\_s*',
       \     'end':       ')',
       \     'delimiter': ',\_s*',
-      \     'brackets':  ['([{''"|', ')]}''"|'],
+      \     'brackets':  ['([{"|', ')]}"|'],
+      \   },
+      \   {
+      \     'start':     '\[\_s*',
+      \     'end':       '\]',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{"', ')]}"'],
       \   },
       \   {
       \     'start':     '\<\k\+<',
