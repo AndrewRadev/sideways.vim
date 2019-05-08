@@ -138,11 +138,9 @@ autocmd FileType javascript.jsx let b:sideways_definitions = [
 autocmd FileType rust
       \ if !exists('b:sideways_skip_syntax') |
       \   let b:sideways_skip_syntax = [
-      \     '^rustString$',
-      \     '^rustCommentLine$',
-      \     '^rustCommentBlock$',
-      \     '^rustCommentLineDoc$',
-      \     '^rustCharacter$',
+      \     'String',
+      \     'Comment',
+      \     'rustCharacter',
       \   ] |
       \ endif
 autocmd FileType rust let b:sideways_definitions = [
