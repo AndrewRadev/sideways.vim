@@ -39,10 +39,11 @@ autocmd FileType ruby
       \ endif
 autocmd FileType ruby let b:sideways_definitions = [
       \   {
-      \     'start':     '|\s*',
-      \     'end':       '\s*|',
-      \     'delimiter': ',\s*',
-      \     'brackets':  ['([{''"', ')]}''"'],
+      \     'start':       '|\s*',
+      \     'end':         '\s*|',
+      \     'single_line': 1,
+      \     'delimiter':   ',\s*',
+      \     'brackets':    ['([{''"', ')]}''"'],
       \   },
       \   {
       \     'start':       '\k\{1,}[?!]\= \ze\s*[^=,*/%<>+-]',
