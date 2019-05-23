@@ -78,11 +78,15 @@ function! sideways#MoveRight()
   return 1
 endfunction
 
-function! sideways#JumpLeft()
+function! sideways#JumpLeft(initial_position, count)
   let [_, items] = sideways#Parse()
   if empty(items)
     return 0
   end
+
+  if a:initial_position != '.'
+    call setpos('.', getpos(a:initial_position))
+  endif
 
   let last_index = len(items) - 1
   let active_index = s:FindActiveItem(items)
@@ -90,16 +94,20 @@ function! sideways#JumpLeft()
     return 0
   endif
 
-  if active_index == 0
-    call s:JumpToItem(items, last_index)
-  else
-    call s:JumpToItem(items, active_index - 1)
-  endif
+  for _ in range(1, a:count)
+    if active_index == 0
+      call s:JumpToItem(items, last_index)
+      let active_index = last_index
+    else
+      call s:JumpToItem(items, active_index - 1)
+      let active_index -= 1
+    endif
+  endfor
 
   return 1
 endfunction
 
-function! sideways#JumpRight()
+function! sideways#JumpRight(initial_position, count)
   let [_, items] = sideways#Parse()
 
   if empty(items)
@@ -112,13 +120,19 @@ function! sideways#JumpRight()
     return 0
   endif
 
-  let position = getpos('.')
-
-  if active_index == last_index
-    call s:JumpToItem(items, 0)
-  else
-    call s:JumpToItem(items, active_index + 1)
+  if a:initial_position != '.'
+    call setpos('.', getpos(a:initial_position))
   endif
+
+  for _ in range(1, a:count)
+    if active_index == last_index
+      call s:JumpToItem(items, 0)
+      let active_index = 0
+    else
+      call s:JumpToItem(items, active_index + 1)
+      let active_index += 1
+    endif
+  endfor
 
   return 1
 endfunction

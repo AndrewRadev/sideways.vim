@@ -1,4 +1,4 @@
-function! sideways#textobj#Argument(mode)
+function! sideways#textobj#Argument(mode, count)
   let coordinates = sideways#AroundCursor()
   if empty(coordinates)
     return

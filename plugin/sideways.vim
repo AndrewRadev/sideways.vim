@@ -308,16 +308,24 @@ endif
 command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set("\<Plug>SidewaysLeft")
 command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Plug>SidewaysRight")
 
-command! SidewaysJumpLeft  call sideways#JumpLeft()
-command! SidewaysJumpRight call sideways#JumpRight()
+command! SidewaysJumpLeft  call sideways#JumpLeft('.', 1)
+command! SidewaysJumpRight call sideways#JumpRight('.', 1)
 
 nnoremap <silent> <Plug>SidewaysLeft :<c-u>SidewaysLeft<cr>
 nnoremap <silent> <Plug>SidewaysRight :<c-u>SidewaysRight<cr>
 
-onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
-xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
-onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
-xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
+nnoremap <Plug>SidewaysJumpLeft  :<c-u>call sideways#JumpLeft(".", v:count1)<cr>
+onoremap <Plug>SidewaysJumpLeft  :<c-u>call sideways#JumpLeft(".", v:count1)<cr>
+xnoremap <Plug>SidewaysJumpLeft  :<c-u>call sideways#JumpLeft("'>", v:count1)<cr>v`<o
+
+nnoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight(".", v:count1)<cr>
+onoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight(".", v:count1)<cr>
+xnoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight("'>", v:count1)<cr>v`<o
+
+onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>
+xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>
+onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count)<cr>
+xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count)<cr>
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
