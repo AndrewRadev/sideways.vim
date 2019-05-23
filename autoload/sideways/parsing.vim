@@ -225,15 +225,29 @@ function! s:LocateValidDefinitions(definitions)
     let start_pattern = definition.start
     let end_pattern   = definition.end
 
+    if get(definition, 'single_line', 0)
+      let stopline = line('.')
+    else
+      let stopline = 0
+    endif
+
     let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
-    if searchpair(start_pattern, '', end_pattern, 'bW', skip_expression, 0, g:sideways_search_timeout) <= 0 &&
-          \ sideways#util#SearchSkip(start_pattern, skip_expression, 'bW', 0, g:sideways_search_timeout) <= 0
+    let pair_search_result = searchpair(start_pattern, '', end_pattern, 'bW',
+          \ skip_expression, stopline, g:sideways_search_timeout)
+    if pair_search_result <= 0
+      let start_search_result = sideways#util#SearchSkip(start_pattern, 'bW',
+            \ skip_expression, stopline, g:sideways_search_timeout)
+    else
+      let start_search_result = 0
+    endif
+
+    if pair_search_result <= 0 && start_search_result <= 0
       call sideways#util#PopCursor()
       continue
     else
-      call sideways#util#SearchSkip(start_pattern, skip_expression, 'Wce', line('.'))
+      call sideways#util#SearchSkip(start_pattern, 'Wce', skip_expression, line('.'))
       let match_start_line = line('.')
       let match_start_col  = col('.') + 1
 

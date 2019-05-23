@@ -80,10 +80,11 @@ autocmd FileType haml,slim let b:sideways_definitions = [
       \     'brackets':    ['([''"', ')]''"'],
       \   },
       \   {
-      \     'start':     '^[^.]*\.',
-      \     'end':       '\%(\k\|\.\)\@!',
-      \     'delimiter': '\.',
-      \     'brackets':  ['', ''],
+      \     'start':       '^[^.]*\.',
+      \     'end':         '\%(\k\|\.\)\@!',
+      \     'single_line': 1,
+      \     'delimiter':   '\.',
+      \     'brackets':    ['', ''],
       \   },
       \ ]
 

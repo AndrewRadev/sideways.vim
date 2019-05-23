@@ -178,32 +178,27 @@ endfunction
 " Searching for patterns {{{1
 "
 
-" function! sideways#util#SearchSkip(pattern, skip, ...) {{{2
+" function! sideways#util#SearchSkip(pattern, flags, skip, ...) {{{2
 "
 " A partial replacement to search() that consults a skip pattern when
 " performing a search, just like searchpair().
 "
 " Note that it doesn't accept the "n" flag due to implementation difficulties.
-function! sideways#util#SearchSkip(pattern, skip, ...)
+function! sideways#util#SearchSkip(pattern, flags, skip, ...)
   " collect all of our arguments
   let pattern = a:pattern
   let skip    = a:skip
-
-  if a:0 >= 1
-    let flags = a:1
-  else
-    let flags = ''
-  endif
+  let flags   = a:flags
 
   if stridx(flags, 'n') > -1
     echoerr "Doesn't work with 'n' flag, was given: ".flags
     return
   endif
 
-  let stopline = (a:0 >= 2) ? a:2 : 0
-  let timeout  = (a:0 >= 3) ? a:3 : 0
+  let stopline = (a:0 >= 1) ? a:1 : 0
+  let timeout  = (a:0 >= 2) ? a:2 : 0
 
-  " just delegate to search() directly if no skip expression was given
+  " delegate to search() directly if no skip expression was given
   if skip == ''
     return search(pattern, flags, stopline, timeout)
   endif
