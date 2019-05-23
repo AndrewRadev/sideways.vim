@@ -91,6 +91,22 @@ describe "textobj mapping" do
           pass
       EOF
     end
+
+    specify "with a count" do
+      set_file_contents <<-EOF
+          def func(one, two, three, four):
+            pass
+      EOF
+
+      vim.search('two')
+      vim.feedkeys '2daa'
+      vim.write
+
+      assert_file_contents <<-EOF
+          def func(one, four):
+            pass
+      EOF
+    end
   end
 
   describe "multiline" do

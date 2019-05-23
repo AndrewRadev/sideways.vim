@@ -322,10 +322,10 @@ nnoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight(".", v:count1)<cr
 onoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight(".", v:count1)<cr>
 xnoremap <Plug>SidewaysJumpRight :<c-u>call sideways#JumpRight("'>", v:count1)<cr>v`<o
 
-onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>
-xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count)<cr>
-onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count)<cr>
-xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count)<cr>
+onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count1)<cr>
+xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a', v:count1)<cr>
+onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count1)<cr>
+xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i', v:count1)<cr>
 
 let &cpo = s:keepcpo
 unlet s:keepcpo

@@ -137,7 +137,21 @@ function! sideways#JumpRight(initial_position, count)
   return 1
 endfunction
 
-function! sideways#AroundCursor()
+" This function locates a set of items around the cursor. The result looks
+" like this:
+"
+"   [previous_item, current_item, next_item]
+"
+" The list of items doesn't loop:
+"
+"   - If the current item is first then the previous one is an empty list.
+"   - If the current item is last then the next one is an empty list.
+"
+" TODO optional argument
+"
+function! sideways#AroundCursor(forward_count)
+  let forward_count = a:forward_count
+
   let [_, items] = sideways#Parse()
   if empty(items)
     return []
@@ -152,10 +166,18 @@ function! sideways#AroundCursor()
     let previous = items[current_index - 1]
   endif
 
-  if current_index >= len(items) - 1
+  if current_index + forward_count >= len(items)
+    let next_index = len(items)
     let next = {}
   else
-    let next = items[current_index + 1]
+    let next_index = current_index + forward_count
+    let next = items[next_index]
+  endif
+
+  if next_index - current_index > 1
+    " then we "stretch" the current element's end with the one before the next
+    let current.end_line = items[next_index - 1].end_line
+    let current.end_col  = items[next_index - 1].end_col
   endif
 
   return [previous, current, next]
