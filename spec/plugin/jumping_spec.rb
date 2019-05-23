@@ -5,7 +5,7 @@ describe "jumping" do
 
   before :each do
     set_file_contents <<-EOF
-      def function(one, two, three):
+      def function(one, two, three, four):
           pass
     EOF
 
@@ -15,19 +15,19 @@ describe "jumping" do
   specify "to the left" do
     vim.jump_left.normal('~').write
     assert_file_contents <<-EOF
-      def function(one, two, Three):
+      def function(one, two, three, Four):
           pass
     EOF
 
     vim.jump_left.normal('~').write
     assert_file_contents <<-EOF
-      def function(one, Two, Three):
+      def function(one, two, Three, Four):
           pass
     EOF
 
     vim.jump_left.normal('~').write
     assert_file_contents <<-EOF
-      def function(One, Two, Three):
+      def function(one, Two, Three, Four):
           pass
     EOF
   end
@@ -35,31 +35,50 @@ describe "jumping" do
   specify "to the right" do
     vim.jump_right.normal('~').write
     assert_file_contents <<-EOF
-      def function(one, Two, three):
+      def function(one, Two, three, four):
           pass
     EOF
 
     vim.jump_right.normal('~').write
     assert_file_contents <<-EOF
-      def function(one, Two, Three):
+      def function(one, Two, Three, four):
           pass
     EOF
 
-    vim.jump_right.normal('~').write
+    vim.jump_right.jump_right.normal('~').write
     assert_file_contents <<-EOF
-      def function(One, Two, Three):
+      def function(One, Two, Three, four):
           pass
     EOF
   end
 
-  specify "with a count" do
-    vim.jump_right(2).normal('~').write
-    assert_file_contents <<-EOF
-      def function(one, two, Three):
-          pass
-    EOF
-
+  describe "with a count" do
     # TODO (2014-03-09) Operators? Would make more sense when there are
     # default mappings to avoid leaking knowledge of temporary maps in here
+
+    specify "in normal mode" do
+      vim.jump_right(2).normal('~').write
+      assert_file_contents <<-EOF
+        def function(one, two, Three, four):
+            pass
+      EOF
+
+      vim.jump_right(3).normal('~').write
+      assert_file_contents <<-EOF
+        def function(one, Two, Three, four):
+            pass
+      EOF
+    end
+
+    specify "in visual mode" do
+      vim.search('one')
+      vim.feedkeys('v')
+      vim.jump_right(2).feedkeys('e~')
+      vim.write
+      assert_file_contents <<-EOF
+        def function(ONE, TWO, THREE, four):
+            pass
+      EOF
+    end
   end
 end
