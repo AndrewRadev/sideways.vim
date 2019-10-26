@@ -108,6 +108,19 @@ describe "ruby" do
                       two, four)
       EOF
     end
+
+    specify "with nested %-strings" do
+      set_file_contents <<-EOF
+        function_call(%q{(one) two}, three)
+      EOF
+
+      vim.search('three')
+
+      vim.left
+      assert_file_contents <<-EOF
+        function_call(three, %q{(one) two})
+      EOF
+    end
   end
 
   describe "lists" do

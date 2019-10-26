@@ -135,7 +135,15 @@ function! s:ParseItems(definition, start_line, start_col)
         call search('\\\@<!\V'.closing_bracket, 'W')
       else
         " different closing, use searchpair
-        call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', skip_expression)
+        if eval(skip_expression)
+          " then we're currently in something that's sort of a string, don't
+          " consider the skip expression.
+          "
+          " Example: ruby's %q{...}
+          call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W')
+        else
+          call searchpair('\V'.opening_bracket, '', '\V'.closing_bracket, 'W', skip_expression)
+        endif
       endif
 
       if col('.') == col('$') - 1
