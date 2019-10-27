@@ -253,6 +253,21 @@ autocmd FileType cpp let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType java let b:sideways_definitions = [
+      \   {
+      \     'start':     '(\_s*',
+      \     'end':       ')',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{<''"', ')]}>''"'],
+      \   },
+      \   {
+      \     'start':     '\S\zs<\ze\S',
+      \     'end':       '>',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{<''"', ')]}>''"'],
+      \   },
+      \ ]
+
 autocmd FileType css,scss,less let b:sideways_definitions = [
       \   {
       \     'start':     '\k:\s*',
