@@ -307,6 +307,30 @@ describe "rust" do
     end
   end
 
+  describe "lifetimes in a struct (regression)" do
+    before :each do
+      set_file_contents <<-EOF
+        pub struct Iter<'a, T: 'a> {
+            next: Option<&'a Node<T>>,
+            foo: bar,
+        }
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('T:')
+    end
+
+    specify "to the left" do
+      vim.left
+      assert_file_contents <<-EOF
+        pub struct Iter<T: 'a, 'a> {
+            next: Option<&'a Node<T>>,
+            foo: bar,
+        }
+      EOF
+    end
+  end
+
   describe "comparison in a function invocation" do
     before :each do
       set_file_contents <<-EOF

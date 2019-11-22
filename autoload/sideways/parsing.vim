@@ -260,6 +260,7 @@ function! s:LocateValidDefinitions(definitions)
       let match_start_col  = col('.') + 1
 
       if cursor_line < match_start_line || (cursor_line == match_start_line && cursor_col < match_start_col)
+        call sideways#util#PopCursor()
         continue
       endif
 
