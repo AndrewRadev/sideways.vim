@@ -56,10 +56,16 @@ function! s:MarkCols(start_coords, end_coords)
   let end_byte    = line2byte(a:end_coords[0]) + a:end_coords[1] - 1
 
   if &selection == "exclusive"
-    exe 'normal! '.start_byte.'gov'.(end_byte + 1).'go'
-  else
-    exe 'normal! '.start_byte.'gov'.end_byte.'go'
+    let end_byte += 1
   endif
 
-  return 1
+  try
+    let saved_virtualedit = &virtualedit
+    set virtualedit=onemore
+
+    exe 'normal! '.start_byte.'gov'.end_byte.'go'
+    return 1
+  finally
+    let &virtualedit = saved_virtualedit
+  endtry
 endfunction
