@@ -123,6 +123,10 @@ Rust template arguments:
 >
     let dict = Hash<String, Vec<String>>::new();
 <
+Rust trait bounds (separated with "+"):
+>
+    fn foo<T: Copy + Clone>() { }
+<
 Rust return type (a special case since there's always just one, useful as a text object):
 >
     fn example() -> Result<String, String> {

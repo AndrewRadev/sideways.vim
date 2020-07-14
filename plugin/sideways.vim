@@ -203,6 +203,13 @@ autocmd FileType rust let b:sideways_definitions = [
       \     'single_line': 1,
       \   },
       \   {
+      \     'start':     '\k\+:\s*',
+      \     'end':       '[,>]',
+      \     'delimiter': '\s*+\s*',
+      \     'brackets':  ['', ''],
+      \     'single_line': 1,
+      \   },
+      \   {
       \     'start':     '::<',
       \     'end':       '>',
       \     'delimiter': ',\s*',
