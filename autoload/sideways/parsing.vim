@@ -86,7 +86,6 @@ function! s:ParseItems(definition, start_line, start_col)
   let cursor_line = line('.')
   let items       = []
 
-  let start_pattern           = definition.start
   let end_pattern             = definition.end
   let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
   let single_line             = get(definition, 'single_line', 0)
