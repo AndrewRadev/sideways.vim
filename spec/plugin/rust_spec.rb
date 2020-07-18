@@ -385,8 +385,6 @@ describe "rust" do
     end
 
     specify "to the right" do
-      pending "No rust syntax on TravisCI's Vim 7.4" if ENV['CI']
-
       vim.right
       assert_file_contents <<-EOF
         let v = vec![',', 'a', 'c'];
