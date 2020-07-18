@@ -143,4 +143,26 @@ describe "regression tests" do
       EOF
     end
   end
+
+  describe "html" do
+    let(:filename) { 'test.html' }
+
+    # See https://github.com/AndrewRadev/sideways.vim/issues/39
+    specify "no leading whitespace, first item is the last char of the start pattern" do
+      set_file_contents <<-EOF
+        <form
+        id="formid"
+        name="myform">
+      EOF
+
+      vim.search('id=')
+      vim.left
+
+      assert_file_contents <<-EOF
+        <form
+        name="myform"
+        id="formid">
+      EOF
+    end
+  end
 end

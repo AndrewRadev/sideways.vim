@@ -255,6 +255,16 @@ function! s:LocateValidDefinitions(definitions)
       continue
     else
       call sideways#util#SearchSkip(start_pattern, 'Wce', skip_expression, line('.'))
+
+      if col('.') == col('$') - 1
+        " we're at the end of the line, col('.') + 1 overflows:
+        let match_start_line = line('.') + 1
+        let match_start_col  = 0
+      else
+        let match_start_line = line('.')
+        let match_start_col  = col('.') + 1
+      endif
+
       let match_start_line = line('.')
       let match_start_col  = col('.') + 1
 
