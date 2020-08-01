@@ -341,5 +341,8 @@ xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a'
 onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
 xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
 
+nnoremap <Plug>SidewaysArgumentInsert :<c-u>call sideways#new_item#Add('i')<cr>
+nnoremap <Plug>SidewaysArgumentAppend :<c-u>call sideways#new_item#Add('a')<cr>
+
 let &cpo = s:keepcpo
 unlet s:keepcpo
