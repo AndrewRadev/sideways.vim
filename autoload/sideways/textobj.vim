@@ -4,7 +4,7 @@ function! sideways#textobj#Argument(mode)
     return
   endif
 
-  " coordinates have the form [line, start_col, end_col]
+  " coordinates have the form {start_line, start_col, end_line, end_col}
   let [previous, current, next] = coordinates
 
   if a:mode == 'i'
