@@ -124,9 +124,9 @@ function! sideways#JumpRight()
 endfunction
 
 function! sideways#AroundCursor()
-  let [_, items] = sideways#Parse()
+  let [definition, items] = sideways#Parse()
   if empty(items)
-    return []
+    return [{}, []]
   end
 
   let current_index = s:FindActiveItem(items)
@@ -144,7 +144,7 @@ function! sideways#AroundCursor()
     let next = items[current_index + 1]
   endif
 
-  return [previous, current, next]
+  return [definition, [previous, current, next]]
 endfunction
 
 function s:JumpToItem(items, index)
