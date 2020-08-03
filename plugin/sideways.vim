@@ -128,7 +128,7 @@ autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \   },
       \ ]
 
-autocmd FileType javascript.jsx let b:sideways_definitions = [
+autocmd FileType javascript.jsx,javascriptreact let b:sideways_definitions = [
       \   {
       \     'start':                   '<\k\+\_s\+',
       \     'end':                     '\s*/\?>',
