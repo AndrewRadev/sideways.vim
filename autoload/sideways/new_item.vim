@@ -8,7 +8,7 @@ function! sideways#new_item#Add(mode)
     let delimiter_string = ' '
   else
     let delimiter_pattern = definition.delimiter
-    let delimiter_string = substitute(delimiter_pattern, '\\_\=s\*', ' ', 'g')
+    let delimiter_string = substitute(delimiter_pattern, '\\_\=s\*\=', ' ', 'g')
   endif
 
   " coordinates have the form {start_line, start_col, end_line, end_col}
