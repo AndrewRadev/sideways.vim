@@ -20,6 +20,11 @@ Vimrunner::RSpec.configure do |config|
     vim.command('omap ia <Plug>SidewaysArgumentTextobjI')
     vim.command('xmap ia <Plug>SidewaysArgumentTextobjI')
 
+    vim.command('nmap ,ia <Plug>SidewaysArgumentInsertBefore')
+    vim.command('nmap ,aa <Plug>SidewaysArgumentAppendAfter')
+    vim.command('nmap ,Ia <Plug>SidewaysArgumentInsertFirst')
+    vim.command('nmap ,Aa <Plug>SidewaysArgumentAppendLast')
+
     def vim.left
       command 'SidewaysLeft'
       write
@@ -49,4 +54,3 @@ end
 RSpec.configure do |config|
   config.include Support::Vim
 end
-

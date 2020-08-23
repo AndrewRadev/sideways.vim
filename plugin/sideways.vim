@@ -333,7 +333,7 @@ command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Pl
 command! SidewaysJumpLeft  call sideways#JumpLeft()
 command! SidewaysJumpRight call sideways#JumpRight()
 
-nnoremap <silent> <Plug>SidewaysLeft :<c-u>SidewaysLeft<cr>
+nnoremap <silent> <Plug>SidewaysLeft  :<c-u>SidewaysLeft<cr>
 nnoremap <silent> <Plug>SidewaysRight :<c-u>SidewaysRight<cr>
 
 onoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a')<cr>
@@ -341,8 +341,10 @@ xnoremap <Plug>SidewaysArgumentTextobjA :<c-u>call sideways#textobj#Argument('a'
 onoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
 xnoremap <Plug>SidewaysArgumentTextobjI :<c-u>call sideways#textobj#Argument('i')<cr>
 
-nnoremap <Plug>SidewaysArgumentInsert :<c-u>call sideways#new_item#Add('i')<cr>
-nnoremap <Plug>SidewaysArgumentAppend :<c-u>call sideways#new_item#Add('a')<cr>
+nnoremap <Plug>SidewaysArgumentInsertBefore :<c-u>call sideways#new_item#Add('i')<cr>
+nnoremap <Plug>SidewaysArgumentAppendAfter  :<c-u>call sideways#new_item#Add('a')<cr>
+nnoremap <Plug>SidewaysArgumentInsertFirst  :<c-u>call sideways#new_item#AddFirst()<cr>
+nnoremap <Plug>SidewaysArgumentAppendLast   :<c-u>call sideways#new_item#AddLast()<cr>
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
