@@ -10,7 +10,7 @@ describe "adding new items" do
       EOF
 
       vim.search('t\zswo')
-      vim.feedkeys ',ia'
+      vim.feedkeys '\<Plug>SidewaysArgumentInsertBefore'
       vim.feedkeys 'new'
       vim.write
 
@@ -25,7 +25,7 @@ describe "adding new items" do
       EOF
 
       vim.search('t\zswo')
-      vim.feedkeys ',aa'
+      vim.feedkeys '\<Plug>SidewaysArgumentAppendAfter'
       vim.feedkeys 'new'
       vim.write
 
@@ -40,7 +40,7 @@ describe "adding new items" do
       EOF
 
       vim.search('t\zswo')
-      vim.feedkeys ',Ia'
+      vim.feedkeys '\<Plug>SidewaysArgumentInsertFirst'
       vim.feedkeys 'new'
       vim.write
 
@@ -56,7 +56,7 @@ describe "adding new items" do
 
       # At end of list
       vim.search('t\zswo')
-      vim.feedkeys ',Aa'
+      vim.feedkeys '\<Plug>SidewaysArgumentAppendLast'
       vim.feedkeys 'new'
       vim.write
 
@@ -75,7 +75,7 @@ describe "adding new items" do
       EOF
 
       vim.search('two')
-      vim.feedkeys ',ia'
+      vim.feedkeys '\<Plug>SidewaysArgumentInsertBefore'
       vim.feedkeys 'new="N"'
       vim.write
 
