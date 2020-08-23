@@ -20,6 +20,10 @@ Vimrunner::RSpec.configure do |config|
     vim.command('omap ia <Plug>SidewaysArgumentTextobjI')
     vim.command('xmap ia <Plug>SidewaysArgumentTextobjI')
 
+    # Use consistent indentation:
+    vim.command('autocmd FileType * set expandtab')
+    vim.command('autocmd FileType * set shiftwidth=2')
+
     def vim.left
       command 'SidewaysLeft'
       write

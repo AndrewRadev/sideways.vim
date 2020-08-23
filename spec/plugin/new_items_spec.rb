@@ -137,8 +137,6 @@ describe "adding new items" do
     end
 
     specify "insert at start" do
-      pending "Doesn't work on 7.4" if ENV['TRAVIS_CI']
-
       set_file_contents <<~EOF
         function_call(
           one,
