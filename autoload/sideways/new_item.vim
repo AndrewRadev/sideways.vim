@@ -15,14 +15,9 @@ function! sideways#new_item#Add(mode)
   let [_, current, _] = coordinates
 
   if a:mode == 'i'
-    call sideways#util#SetPos(current.start_line, current.start_col)
-    exe 'normal! i'.delimiter_string
-    call sideways#util#SetPos(current.start_line, current.start_col)
-    call feedkeys('i', 'n')
+    call s:InsertBefore(delimiter_string, current)
   elseif a:mode == 'a'
-    call sideways#util#SetPos(current.end_line, current.end_col)
-    exe 'normal! a'.delimiter_string
-    call feedkeys('a', 'n')
+    call s:InsertAfter(delimiter_string, current)
   endif
 endfunction
 
@@ -40,11 +35,7 @@ function! sideways#new_item#AddFirst()
   endif
 
   let first_item = items[0]
-
-  call sideways#util#SetPos(first_item.start_line, first_item.start_col)
-  exe 'normal! i'.delimiter_string
-  call sideways#util#SetPos(first_item.start_line, first_item.start_col)
-  call feedkeys('i', 'n')
+  call s:InsertBefore(delimiter_string, first_item)
 endfunction
 
 function! sideways#new_item#AddLast()
@@ -61,8 +52,24 @@ function! sideways#new_item#AddLast()
   endif
 
   let last_item = items[len(items) - 1]
+  call s:InsertAfter(delimiter_string, last_item)
+endfunction
 
-  call sideways#util#SetPos(last_item.end_line, last_item.end_col)
+function! s:InsertBefore(delimiter_string, item)
+  let item = a:item
+  let delimiter_string = a:delimiter_string
+
+  call sideways#util#SetPos(item.start_line, item.start_col)
+  exe 'normal! i'.delimiter_string
+  call sideways#util#SetPos(item.start_line, item.start_col)
+  call feedkeys('i', 'n')
+endfunction
+
+function! s:InsertAfter(delimiter_string, item)
+  let item = a:item
+  let delimiter_string = a:delimiter_string
+
+  call sideways#util#SetPos(item.end_line, item.end_col)
   exe 'normal! a'.delimiter_string
   call feedkeys('a', 'n')
 endfunction
