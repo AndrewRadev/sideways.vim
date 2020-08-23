@@ -220,3 +220,43 @@ function! sideways#util#SearchSkip(pattern, flags, skip, ...)
 
   return match
 endfunction
+
+" Miscellaneous {{{1
+"
+
+" function! sideways#util#Uniq(items) {{{2
+"
+" Wraps the built-in uniq() if it's available, otherwise reimplements it.
+function! sideways#util#Uniq(list)
+  if exists('*uniq')
+    return uniq(a:list)
+  else
+    " taken from vim-rails
+    let i = 0
+    let seen = {}
+    while i < len(a:list)
+      let key = string(a:list[i])
+      if has_key(seen, key)
+        call remove(a:list, i)
+      else
+        let seen[key] = 1
+        let i += 1
+      endif
+    endwhile
+    return a:list
+  endif
+endfunction
+
+" function! sideways#util#Trim(string) {{{2
+"
+" Surprisingly, Vim doesn't seem to have a "trim" function. In any case, these
+" should be fairly obvious.
+function! sideways#util#Ltrim(s)
+  return substitute(a:s, '^\_s\+', '', '')
+endfunction
+function! sideways#util#Rtrim(s)
+  return substitute(a:s, '\_s\+$', '', '')
+endfunction
+function! sideways#util#Trim(s)
+  return sideways#util#Rtrim(sideways#util#Ltrim(a:s))
+endfunction

@@ -84,4 +84,104 @@ describe "adding new items" do
       EOF
     end
   end
+
+  describe "on new lines" do
+    let(:filename) { 'test.rb' }
+
+    specify "insert before item" do
+      set_file_contents <<~EOF
+        function_call(
+          one,
+          two,
+          three
+        )
+      EOF
+
+      vim.search('t\zswo')
+      vim.feedkeys '\<Plug>SidewaysArgumentInsertBefore'
+      vim.feedkeys 'new'
+      vim.write
+
+      assert_file_contents <<~EOF
+        function_call(
+          one,
+          new,
+          two,
+          three
+        )
+      EOF
+    end
+
+    specify "append after item" do
+      set_file_contents <<~EOF
+        function_call(
+          one,
+          two,
+          three
+        )
+      EOF
+
+      vim.search('t\zswo')
+      vim.feedkeys '\<Plug>SidewaysArgumentAppendAfter'
+      vim.feedkeys 'new'
+      vim.write
+
+      assert_file_contents <<~EOF
+        function_call(
+          one,
+          two,
+          new,
+          three
+        )
+      EOF
+    end
+
+    specify "insert at start" do
+      set_file_contents <<~EOF
+        function_call(
+          one,
+          two,
+          three
+        )
+      EOF
+
+      vim.search('t\zswo')
+      vim.feedkeys '\<Plug>SidewaysArgumentInsertFirst'
+      vim.feedkeys 'new'
+      vim.write
+
+      assert_file_contents <<~EOF
+        function_call(
+          new,
+          one,
+          two,
+          three
+        )
+      EOF
+    end
+
+    specify "append at end" do
+      set_file_contents <<~EOF
+        function_call(
+          one,
+          two,
+          three
+        )
+      EOF
+
+      vim.search('t\zswo')
+      vim.feedkeys '\<Plug>SidewaysArgumentAppendLast'
+      vim.feedkeys 'new'
+      vim.write
+
+      assert_file_contents <<~EOF
+        function_call(
+          one,
+          two,
+          three,
+          new
+        )
+      EOF
+    end
+  end
 end
