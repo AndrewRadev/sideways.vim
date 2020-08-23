@@ -4,13 +4,12 @@ function! sideways#new_item#Add(mode)
     return
   endif
 
-  let coordinates = sideways#AroundCursor(items)
+  let coordinates      = sideways#AroundCursor(items)
   let delimiter_string = s:BuildDelimiterString(definition)
+  let new_line         = s:DecideNewLine(items)
 
   " coordinates have the form {start_line, start_col, end_line, end_col}
   let [_, current, _] = coordinates
-
-  let new_line = s:DecideNewLine(items)
 
   if a:mode == 'i'
     call s:InsertBefore(current, delimiter_string, new_line)
@@ -25,8 +24,8 @@ function! sideways#new_item#AddFirst()
     return
   endif
 
-  let new_line = s:DecideNewLine(items)
   let delimiter_string = s:BuildDelimiterString(definition)
+  let new_line         = s:DecideNewLine(items)
 
   let first_item = items[0]
   call s:InsertBefore(first_item, delimiter_string, new_line)
@@ -38,8 +37,8 @@ function! sideways#new_item#AddLast()
     return
   endif
 
-  let new_line = s:DecideNewLine(items)
   let delimiter_string = s:BuildDelimiterString(definition)
+  let new_line         = s:DecideNewLine(items)
 
   let last_item = items[len(items) - 1]
   call s:InsertAfter(last_item, delimiter_string, new_line)
