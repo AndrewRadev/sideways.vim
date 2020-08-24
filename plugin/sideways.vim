@@ -91,6 +91,18 @@ autocmd FileType haml,slim let b:sideways_definitions = [
 
 autocmd FileType html let b:sideways_definitions = [
       \   {
+      \     'start':                   '\<class=''',
+      \     'end':                     '''',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['"''', '"'''],
+      \   },
+      \   {
+      \     'start':                   '\<class="',
+      \     'end':                     '"',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['"''', '"'''],
+      \   },
+      \   {
       \     'start':                   '<\k\+\_s\+',
       \     'end':                     '\s*/\?>',
       \     'delimited_by_whitespace': 1,

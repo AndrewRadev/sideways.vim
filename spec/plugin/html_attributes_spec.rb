@@ -156,4 +156,122 @@ describe "html attributes" do
       EOF
     end
   end
+
+  describe "has class but cursor outside" do
+    let(:filename) { 'test.html' }
+
+    before :each do
+      set_file_contents <<-EOF
+        <div class='foo' data-one='value' data-two='value'></div>
+      EOF
+
+      vim.set 'filetype', 'html'
+      vim.search('class')
+    end
+
+    specify "to the left" do
+      assert_file_contents <<-EOF
+        <div class='foo' data-one='value' data-two='value'></div>
+      EOF
+
+      vim.left
+      assert_file_contents <<-EOF
+        <div data-two='value' data-one='value' class='foo'></div>
+      EOF
+    end
+
+    specify "to the right" do
+      vim.right
+      assert_file_contents <<-EOF
+        <div data-one='value' class='foo' data-two='value'></div>
+      EOF
+
+      vim.right
+      assert_file_contents <<-EOF
+        <div data-one='value' data-two='value' class='foo'></div>
+      EOF
+    end
+  end
+
+  describe "cursor inside single quote class" do
+    let(:filename) { 'test.html' }
+
+    before :each do
+      set_file_contents <<-EOF
+        <div class='one two three'></div>
+      EOF
+
+      vim.set 'filetype', 'html'
+      vim.search('one')
+    end
+
+    specify "to the left" do
+      assert_file_contents <<-EOF
+        <div class='one two three'></div>
+      EOF
+
+      vim.left
+      assert_file_contents <<-EOF
+        <div class='three two one'></div>
+      EOF
+
+      vim.left
+      assert_file_contents <<-EOF
+        <div class='three one two'></div>
+      EOF
+    end
+
+    specify "to the right" do
+      vim.right
+      assert_file_contents <<-EOF
+        <div class='two one three'></div>
+      EOF
+
+      vim.right
+      assert_file_contents <<-EOF
+        <div class='two three one'></div>
+      EOF
+    end
+  end
+
+  describe "cursor inside double quote class" do
+    let(:filename) { 'test.html' }
+
+    before :each do
+      set_file_contents <<-EOF
+        <div class="one two three"></div>
+      EOF
+
+      vim.set 'filetype', 'html'
+      vim.search('one')
+    end
+
+    specify "to the left" do
+      assert_file_contents <<-EOF
+        <div class="one two three"></div>
+      EOF
+
+      vim.left
+      assert_file_contents <<-EOF
+        <div class="three two one"></div>
+      EOF
+
+      vim.left
+      assert_file_contents <<-EOF
+        <div class="three one two"></div>
+      EOF
+    end
+
+    specify "to the right" do
+      vim.right
+      assert_file_contents <<-EOF
+        <div class="two one three"></div>
+      EOF
+
+      vim.right
+      assert_file_contents <<-EOF
+        <div class="two three one"></div>
+      EOF
+    end
+  end
 end
