@@ -156,4 +156,88 @@ describe "html attributes" do
       EOF
     end
   end
+
+  describe "class attribute values" do
+    describe "inside single quote class" do
+      let(:filename) { 'test.html' }
+
+      before :each do
+        set_file_contents <<-EOF
+          <div class='one two three'></div>
+        EOF
+
+        vim.set 'filetype', 'html'
+        vim.search('one')
+      end
+
+      specify "to the left" do
+        assert_file_contents <<-EOF
+          <div class='one two three'></div>
+        EOF
+
+        vim.left
+        assert_file_contents <<-EOF
+          <div class='three two one'></div>
+        EOF
+
+        vim.left
+        assert_file_contents <<-EOF
+          <div class='three one two'></div>
+        EOF
+      end
+
+      specify "to the right" do
+        vim.right
+        assert_file_contents <<-EOF
+          <div class='two one three'></div>
+        EOF
+
+        vim.right
+        assert_file_contents <<-EOF
+          <div class='two three one'></div>
+        EOF
+      end
+    end
+
+    describe "inside double quote class" do
+      let(:filename) { 'test.html' }
+
+      before :each do
+        set_file_contents <<-EOF
+          <div class="one two three"></div>
+        EOF
+
+        vim.set 'filetype', 'html'
+        vim.search('one')
+      end
+
+      specify "to the left" do
+        assert_file_contents <<-EOF
+          <div class="one two three"></div>
+        EOF
+
+        vim.left
+        assert_file_contents <<-EOF
+          <div class="three two one"></div>
+        EOF
+
+        vim.left
+        assert_file_contents <<-EOF
+          <div class="three one two"></div>
+        EOF
+      end
+
+      specify "to the right" do
+        vim.right
+        assert_file_contents <<-EOF
+          <div class="two one three"></div>
+        EOF
+
+        vim.right
+        assert_file_contents <<-EOF
+          <div class="two three one"></div>
+        EOF
+      end
+    end
+  end
 end
