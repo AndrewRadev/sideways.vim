@@ -51,14 +51,25 @@ function! s:InsertBefore(item, delimiter_string, new_line)
 
   call sideways#util#SetPos(item.start_line, item.start_col)
 
+  " Blank lines need the extra whitespace inserted after opening the line, and
+  " before entering insert mode again:
+  let whitespace = ''
+
   if new_line
-    exe 'normal! O'.sideways#util#Rtrim(delimiter_string)
+    let delimiter_string = sideways#util#Rtrim(delimiter_string)
+    if empty(delimiter_string)
+      " then this line will be blank, we'll need to enter the needed
+      " whitespace manually:
+      let whitespace = matchstr(getline('.'), '^\s*')
+    endif
+
+    exe 'normal! O'.delimiter_string
   else
     exe 'normal! i'.delimiter_string
   endif
 
   call sideways#util#SetPos(item.start_line, item.start_col)
-  call feedkeys('i', 'n')
+  call feedkeys('i'.whitespace, 'n')
 endfunction
 
 function! s:InsertAfter(item, delimiter_string, new_line)

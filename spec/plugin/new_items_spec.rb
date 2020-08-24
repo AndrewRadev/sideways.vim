@@ -83,6 +83,30 @@ describe "adding new items" do
         <div one="1" new="N" two="2" three="3"></div>
       EOF
     end
+
+    specify "multiline insert before item" do
+      set_file_contents <<~EOF
+        <div
+          one="1"
+          two="2"
+          three="3">
+        </div>
+      EOF
+
+      vim.search('two')
+      vim.feedkeys '\<Plug>SidewaysArgumentInsertBefore'
+      vim.feedkeys 'new="N"'
+      vim.write
+
+      assert_file_contents <<~EOF
+        <div
+          one="1"
+          new="N"
+          two="2"
+          three="3">
+        </div>
+      EOF
+    end
   end
 
   describe "on new lines" do
