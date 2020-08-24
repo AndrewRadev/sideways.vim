@@ -96,6 +96,20 @@ autocmd FileType html let b:sideways_definitions = [
       \     'delimited_by_whitespace': 1,
       \     'brackets':                ['"''', '"'''],
       \   },
+      \   {
+      \     'skip_syntax':             [],
+      \     'start':                   '\<class="',
+      \     'end':                     '"',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['', ''],
+      \   },
+      \   {
+      \     'skip_syntax':             [],
+      \     'start':                   '\<class=''',
+      \     'end':                     "'",
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['', ''],
+      \   },
       \ ]
 
 autocmd FileType eruby let b:sideways_definitions = [
