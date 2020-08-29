@@ -161,7 +161,7 @@ Also, a useful plugin to use alongside sideways is
 [fieldtrip](https://github.com/tek/vim-fieldtrip). This defines a
 [submode](https://github.com/kana/vim-submode) for sideways.vim.
 
-### Addding items
+### Adding items
 
 The plugin defines mappings to add new items to the list as well. There's four of them that mirror the `i`, `a`, `I`, and `A` built-in keybindings:
 
