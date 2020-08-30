@@ -6,6 +6,33 @@ let g:loaded_sideways = '0.3.0' " version number
 let s:keepcpo = &cpo
 set cpo&vim
 
+function! s:WithOverrides(definition, overrides)
+  return extend(copy(a:definition), a:overrides)
+endfunction
+
+let s:html_like_definitions = {
+      \   'tag_attributes': {
+      \     'start':                   '<\k\+\_s\+',
+      \     'end':                     '\s*/\?>',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['"''', '"'''],
+      \   },
+      \   'double_quoted_class': {
+      \     'skip_syntax':             [],
+      \     'start':                   '\<class="',
+      \     'end':                     '"',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['', ''],
+      \   },
+      \   'single_quoted_class': {
+      \     'skip_syntax':             [],
+      \     'start':                   '\<class=''',
+      \     'end':                     "'",
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['', ''],
+      \   },
+      \ }
+
 let g:sideways_definitions =
       \ [
       \   {
@@ -90,26 +117,9 @@ autocmd FileType haml,slim let b:sideways_definitions = [
       \ ]
 
 autocmd FileType html let b:sideways_definitions = [
-      \   {
-      \     'start':                   '<\k\+\_s\+',
-      \     'end':                     '\s*/\?>',
-      \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['"''', '"'''],
-      \   },
-      \   {
-      \     'skip_syntax':             [],
-      \     'start':                   '\<class="',
-      \     'end':                     '"',
-      \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['', ''],
-      \   },
-      \   {
-      \     'skip_syntax':             [],
-      \     'start':                   '\<class=''',
-      \     'end':                     "'",
-      \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['', ''],
-      \   },
+      \   s:html_like_definitions.tag_attributes,
+      \   s:html_like_definitions.double_quoted_class,
+      \   s:html_like_definitions.single_quoted_class,
       \ ]
 
 autocmd FileType eruby let b:sideways_definitions = [
@@ -119,12 +129,9 @@ autocmd FileType eruby let b:sideways_definitions = [
       \     'delimiter': ',\s*',
       \     'brackets':  ['([''"', ')]''"'],
       \   },
-      \   {
-      \     'start':                   '<\k\+\_s\+',
-      \     'end':                     '\s*/\?>',
-      \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['"''<', '"''>'],
-      \   },
+      \   s:WithOverrides(s:html_like_definitions.tag_attributes,      { 'brackets': ['"''<', '"''>'] }),
+      \   s:WithOverrides(s:html_like_definitions.double_quoted_class, { 'brackets': ['<', '>'] }),
+      \   s:WithOverrides(s:html_like_definitions.single_quoted_class, { 'brackets': ['<', '>'] }),
       \ ]
 
 autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
@@ -134,21 +141,15 @@ autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \     'delimited_by_whitespace': 1,
       \     'brackets':                ['(''"', ')''"'],
       \   },
-      \   {
-      \     'start':                   '<\k\+\_s\+',
-      \     'end':                     '\s*/\?>',
-      \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['"''{', '"''}'],
-      \   },
+      \   s:WithOverrides(s:html_like_definitions.tag_attributes,      { 'brackets': ['"''{', '"''}'] }),
+      \   s:WithOverrides(s:html_like_definitions.double_quoted_class, { 'brackets': ['{', '}'] }),
+      \   s:WithOverrides(s:html_like_definitions.single_quoted_class, { 'brackets': ['{', '}'] }),
       \ ]
 
 autocmd FileType javascript.jsx,javascriptreact let b:sideways_definitions = [
-      \   {
-      \     'start':                   '<\k\+\_s\+',
-      \     'end':                     '\s*/\?>',
-      \     'delimited_by_whitespace': 1,
-      \     'brackets':                ['"''{', '"''}'],
-      \   },
+      \   s:WithOverrides(s:html_like_definitions.tag_attributes,      { 'brackets': ['"''{', '"''}'] }),
+      \   s:WithOverrides(s:html_like_definitions.double_quoted_class, { 'brackets': ['{', '}'] }),
+      \   s:WithOverrides(s:html_like_definitions.single_quoted_class, { 'brackets': ['{', '}'] }),
       \ ]
 
 autocmd FileType rust
