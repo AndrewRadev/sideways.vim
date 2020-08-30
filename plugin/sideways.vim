@@ -146,10 +146,22 @@ autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \   s:WithOverrides(s:html_like_definitions.single_quoted_class, { 'brackets': ['{', '}'] }),
       \ ]
 
-autocmd FileType javascript.jsx,javascriptreact let b:sideways_definitions = [
+autocmd FileType javascript.jsx,javascriptreact,typescript.tsx,typescriptreact let b:sideways_definitions = [
       \   s:WithOverrides(s:html_like_definitions.tag_attributes,      { 'brackets': ['"''{', '"''}'] }),
-      \   s:WithOverrides(s:html_like_definitions.double_quoted_class, { 'brackets': ['{', '}'] }),
-      \   s:WithOverrides(s:html_like_definitions.single_quoted_class, { 'brackets': ['{', '}'] }),
+      \   {
+      \     'skip_syntax':             [],
+      \     'start':                   '\<className="',
+      \     'end':                     '"',
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['{', '}'],
+      \   },
+      \   {
+      \     'skip_syntax':             [],
+      \     'start':                   '\<className=''',
+      \     'end':                     "'",
+      \     'delimited_by_whitespace': 1,
+      \     'brackets':                ['{', '}'],
+      \   },
       \ ]
 
 autocmd FileType rust
