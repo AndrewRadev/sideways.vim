@@ -12,21 +12,28 @@ CONTENTS                                           *sideways* *sideways-contents
 ==============================================================================
 INSTALLATION                                            *sideways-installation*
 
-There are several ways to install the plugin. The recommended one is by using
-Tim Pope's pathogen (http://www.vim.org/scripts/script.php?script_id=2332). In
-that case, you can clone the plugin's git repository like so:
->
-    git clone git://github.com/AndrewRadev/sideways.vim.git ~/.vim/bundle/sideways
-<
-If your vim configuration is under git version control, you could also set up
-the repository as a submodule, which would allow you to update more easily.
-The command is (provided you're in ~/.vim):
->
-    git submodule add git://github.com/AndrewRadev/sideways.vim.git bundle/sideways
-<
+The easiest way to install the plugin is with a plugin manager:
 
-Another way is to simply copy all the essential directories inside the ~/.vim
-directory: plugin, autoload, doc.
+- vim-plug: https://github.com/junegunn/vim-plug
+- Vundle:   https://github.com/VundleVim/Vundle.vim
+
+If you use one, just follow the instructions in its documentation.
+
+You can install the plugin yourself using Vim's |packages| functionality by
+cloning the project (or adding it as a submodule) under
+`~/.vim/pack/<any-name>/start/`. For example:
+>
+    git clone https://github.com/AndrewRadev/sideways.vim ~/.vim/pack/_/start/sideways
+<
+This should automatically load the plugin for you on Vim start. Alternatively,
+you can add it to `~/.vim/pack/<any-name>/opt/` instead and load it in your
+.vimrc manually with:
+>
+    packadd sideways
+<
+If you'd rather not use git, you can download the files from the "releases"
+tab and unzip them in the relevant directory:
+https://github.com/AndrewRadev/sideways.vim/releases.
 
 ==============================================================================
 USAGE                                                           *sideways-usage*
