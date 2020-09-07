@@ -49,6 +49,10 @@ function! s:InsertBefore(item, delimiter_string, new_line)
   let delimiter_string = a:delimiter_string
   let new_line         = a:new_line
 
+  if g:sideways_add_item_cursor_restore
+    call s:StorePosition()
+  endif
+
   call sideways#util#SetPos(item.start_line, item.start_col)
 
   " Blank lines need the extra whitespace inserted after opening the line, and
@@ -69,6 +73,10 @@ function! s:InsertBefore(item, delimiter_string, new_line)
   endif
 
   call sideways#util#SetPos(item.start_line, item.start_col)
+  if g:sideways_add_item_cursor_restore
+    call s:SetupRestorePosition()
+  endif
+
   call feedkeys('i'.whitespace, 'n')
 endfunction
 
@@ -76,6 +84,10 @@ function! s:InsertAfter(item, delimiter_string, new_line)
   let item             = a:item
   let delimiter_string = a:delimiter_string
   let new_line         = a:new_line
+
+  if g:sideways_add_item_cursor_restore
+    call s:StorePosition()
+  endif
 
   call sideways#util#SetPos(item.end_line, item.end_col)
 
@@ -90,6 +102,10 @@ function! s:InsertAfter(item, delimiter_string, new_line)
   else
     exe 'normal! a'.delimiter_string
     call feedkeys('a', 'n')
+  endif
+
+  if g:sideways_add_item_cursor_restore
+    call s:SetupRestorePosition()
   endif
 endfunction
 
@@ -119,4 +135,55 @@ function! s:DecideNewLine(items)
   else
     return 0
   endif
+endfunction
+
+function! s:StorePosition()
+  " Define new prop type we'll be working with
+  if empty(prop_type_get('sideways_saved_position', {'bufnr': bufnr()}))
+    call prop_type_add('sideways_saved_position', {'bufnr': bufnr()})
+  endif
+
+  let b:sideways_changedtick = b:changedtick
+  call prop_add(line('.'), col('.'), {
+        \ 'id': b:sideways_changedtick,
+        \ 'type': 'sideways_saved_position',
+        \ 'length': 0,
+        \ })
+endfunction
+
+function! s:SetupRestorePosition()
+  exe "augroup sideways_add_item_cursor_restore_".bufnr('%')
+    autocmd!
+
+    autocmd InsertLeave <buffer> call s:JumpToSavedPosition()
+    autocmd InsertLeave <buffer> call s:ClearSavedPosition()
+  augroup END
+endfunction
+
+function! s:JumpToSavedPosition()
+  if exists('b:sideways_changedtick')
+    let position = prop_find({'id': b:sideways_changedtick}, 'f')
+    if empty(position)
+      let position = prop_find({'id': b:sideways_changedtick}, 'b')
+    endif
+
+    if has_key(position, 'lnum')
+      let view = winsaveview()
+      let view.lnum = position.lnum
+      " note for winsaveview, the first column is 0
+      let view.col = position.col - 1
+      call winrestview(view)
+    endif
+
+    unlet b:sideways_changedtick
+  endif
+endfunction
+
+function! s:ClearSavedPosition()
+  " clear everything
+  exe "augroup sideways_add_item_cursor_restore_".bufnr('%')
+    autocmd!
+  augroup END
+
+  call prop_remove({'type': 'sideways_saved_position', 'all': 1})
 endfunction
