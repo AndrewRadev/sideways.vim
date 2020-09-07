@@ -208,4 +208,46 @@ describe "adding new items" do
       EOF
     end
   end
+
+  describe "restoring the cursor position" do
+    let(:filename) { 'test.rb' }
+
+    before :each do
+      vim.command('let g:sideways_add_item_cursor_restore = 1')
+    end
+
+    specify "insert before item" do
+      set_file_contents <<~EOF
+        function_call(one, two, three)
+      EOF
+
+      vim.search('t\zswo')
+      vim.feedkeys '\<Plug>SidewaysArgumentInsertBefore'
+      vim.feedkeys 'new\<esc>'
+      vim.write
+
+      assert_file_contents <<~EOF
+        function_call(one, new, two, three)
+      EOF
+
+      expect(vim.command('echo expand("<cword>")')).to eq "two"
+    end
+
+    specify "append after item" do
+      set_file_contents <<~EOF
+        function_call(one, two, three)
+      EOF
+
+      vim.search('t\zswo')
+      vim.feedkeys '\<Plug>SidewaysArgumentAppendAfter'
+      vim.feedkeys 'new\<esc>'
+      vim.write
+
+      assert_file_contents <<~EOF
+        function_call(one, two, new, three)
+      EOF
+
+      expect(vim.command('echo expand("<cword>")')).to eq "two"
+    end
+  end
 end

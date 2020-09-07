@@ -52,4 +52,9 @@ end
 
 RSpec.configure do |config|
   config.include Support::Vim
+
+  config.before :each do
+    # restore defaults
+    vim.command('let g:sideways_add_item_cursor_restore = 0')
+  end
 end
