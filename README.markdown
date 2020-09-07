@@ -230,3 +230,7 @@ function_call(
 ```
 
 Again, these mappings are not created by default -- copy the suggested ones to your vimrc, or create your own.
+
+If you set `g:sideways_add_item_cursor_restore` to 1 and your vim has the `+textprop` feature, the plugin will jump back to where you triggered the mapping when you leave insert mode.
+
+Note, however, that this relies on the `InsertLeave` autocommand, so if you exit insert mode via `Ctrl+C` (which doesn't trigger it), it won't jump until the next time you leave insert mode normally. If exiting via `Ctrl+C` is a part of your workflow, it's recommended you keep this setting off.

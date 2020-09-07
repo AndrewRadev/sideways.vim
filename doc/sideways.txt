@@ -257,6 +257,15 @@ the new item should be on a new line as well:
 Again, these mappings are not created by default -- copy the suggested ones to
 your vimrc, or create your own.
 
+If you set |g:sideways_add_item_cursor_restore| to 1 and your vim has the
+|+textprop| feature, the plugin will jump back to where you triggered the
+mapping when you leave insert mode.
+
+Note, however, that this relies on the |InsertLeave| autocommand, so if you
+exit insert mode via Ctrl+C (which doesn't trigger it), it won't jump until
+the next time you leave insert mode normally. If exiting via Ctrl+C is a part
+of your workflow, it's recommended you keep this setting off.
+
 
 ==============================================================================
 SETTINGS                                                     *sideways-settings*
@@ -319,6 +328,23 @@ do.
 If you'd like to completely disable this filtering, you can set this variable
 to 0. This should greatly speed it up, but it would cause issues with
 unbalanced brackets in strings or comments.
+
+                                            *g:sideways_add_item_cursor_restore*
+>
+    let g:sideways_add_item_cursor_restore = 1
+<
+Default value: 0
+
+If you set this variable to 1 and your vim has the |+textprop| feature, the
+plugin will jump back to where you triggered the mapping when you leave insert
+mode. By default, it's turned off, since it might be surprising. It could be
+useful if you decide to add a new item while doing something else and would
+like to get back to it after.
+
+Note, however, that this relies on the |InsertLeave| autocommand, so if you
+exit insert mode via Ctrl+C (which doesn't trigger it), it won't jump until
+the next time you leave insert mode normally. If exiting via Ctrl+C is a part
+of your workflow, it's recommended you keep this setting off.
 
 
 ==============================================================================
