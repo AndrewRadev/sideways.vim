@@ -49,7 +49,7 @@ function! s:InsertBefore(item, delimiter_string, new_line)
   let delimiter_string = a:delimiter_string
   let new_line         = a:new_line
 
-  if g:sideways_add_item_cursor_restore
+  if g:sideways_add_item_cursor_restore && has('+textprop')
     call s:StorePosition()
   endif
 
@@ -73,7 +73,7 @@ function! s:InsertBefore(item, delimiter_string, new_line)
   endif
 
   call sideways#util#SetPos(item.start_line, item.start_col)
-  if g:sideways_add_item_cursor_restore
+  if g:sideways_add_item_cursor_restore && has('+textprop')
     call s:SetupRestorePosition()
   endif
 
@@ -85,7 +85,7 @@ function! s:InsertAfter(item, delimiter_string, new_line)
   let delimiter_string = a:delimiter_string
   let new_line         = a:new_line
 
-  if g:sideways_add_item_cursor_restore
+  if g:sideways_add_item_cursor_restore && has('+textprop')
     call s:StorePosition()
   endif
 
@@ -104,7 +104,7 @@ function! s:InsertAfter(item, delimiter_string, new_line)
     call feedkeys('a', 'n')
   endif
 
-  if g:sideways_add_item_cursor_restore
+  if g:sideways_add_item_cursor_restore && has('+textprop')
     call s:SetupRestorePosition()
   endif
 endfunction
