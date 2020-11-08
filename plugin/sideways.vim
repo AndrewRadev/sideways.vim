@@ -36,6 +36,21 @@ let s:html_like_definitions = {
 let g:sideways_definitions =
       \ [
       \   {
+      \     'start':            '\_^\s*',
+      \     'end':              '\s*=',
+      \     'delimiter':        ',\s*',
+      \     'single_line':      1,
+      \     'zero_width_start': 1,
+      \     'brackets':         ['', ''],
+      \   },
+      \   {
+      \     'start':       '=\s*',
+      \     'end':         '$',
+      \     'delimiter':   ',\s*',
+      \     'single_line': 1,
+      \     'brackets':    ['([{''"', ')]}''"'],
+      \   },
+      \   {
       \     'start':     '(\_s*',
       \     'end':       ')',
       \     'delimiter': ',\_s*',

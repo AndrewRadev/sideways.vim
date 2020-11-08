@@ -229,8 +229,9 @@ function! s:LocateValidDefinitions(definitions)
   let results     = []
 
   for definition in a:definitions
-    let start_pattern = definition.start
-    let end_pattern   = definition.end
+    let start_pattern    = definition.start
+    let end_pattern      = definition.end
+    let zero_width_start = get(definition, 'zero_width_start', 0)
 
     if get(definition, 'single_line', 0)
       let stopline = line('.')
@@ -241,10 +242,15 @@ function! s:LocateValidDefinitions(definitions)
     let skip_expression = s:SkipSyntaxExpression(definition)
     call sideways#util#PushCursor()
 
-    let pair_search_result = searchpair(start_pattern, '', end_pattern, 'bW',
+    let search_flags = 'bW'
+    if zero_width_start
+      let search_flags .= 'c'
+    endif
+
+    let pair_search_result = searchpair(start_pattern, '', end_pattern, search_flags,
           \ skip_expression, stopline, g:sideways_search_timeout)
     if pair_search_result <= 0
-      let start_search_result = sideways#util#SearchSkip(start_pattern, 'bW',
+      let start_search_result = sideways#util#SearchSkip(start_pattern, search_flags,
             \ skip_expression, stopline, g:sideways_search_timeout)
     else
       let start_search_result = 0
@@ -262,7 +268,12 @@ function! s:LocateValidDefinitions(definitions)
         let match_start_col  = 0
       else
         let match_start_line = line('.')
-        let match_start_col  = col('.') + 1
+
+        if zero_width_start && col('.') == 1
+          let match_start_col = 1
+        else
+          let match_start_col  = col('.') + 1
+        endif
       endif
 
       if cursor_line < match_start_line || (cursor_line == match_start_line && cursor_col < match_start_col)
