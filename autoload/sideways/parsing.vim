@@ -89,6 +89,7 @@ function! s:ParseItems(definition, start_line, start_col)
   let end_pattern             = definition.end
   let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
   let single_line             = get(definition, 'single_line', 0)
+  let required_end_pattern    = get(definition, 'required_end_pattern', 0)
 
   if delimited_by_whitespace
     let delimiter_pattern = '\s\+'
@@ -118,7 +119,12 @@ function! s:ParseItems(definition, start_line, start_col)
       let current_item = s:NewItem()
     elseif opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
-      break
+      if required_end_pattern
+        " didn't meet the required end, not a valid definition
+        return []
+      else
+        break
+      endif
     elseif opening_bracket_match >= 0
       " then try to jump to the closing bracket
       let opening_bracket = opening_brackets[opening_bracket_match]
@@ -181,6 +187,9 @@ function! s:ParseItems(definition, start_line, start_col)
       elseif search('^\s*'.delimiter_pattern.'\zs', '', nextnonblank(line('.') + 1))
         " the next line starts with a delimiter, skip over it and keep going
         let current_item = s:NewItem()
+      elseif required_end_pattern
+        " didn't meet the required end, not a valid definition
+        return []
       else
         break
       endif
