@@ -114,6 +114,10 @@ HTML attributes:
 >
     <input name="one" id="two" class="three" />
 <
+Contents of HTML `class` and `style` values:
+>
+    <div class="one two three" style="width: 100px; height: 50px;"></div>
+<
 Handlebars components:
 >
     {{parent/some-component one=two three="four" five=(action 'six')}}

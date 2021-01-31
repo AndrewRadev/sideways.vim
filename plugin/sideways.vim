@@ -31,6 +31,20 @@ let s:html_like_definitions = {
       \     'delimited_by_whitespace': 1,
       \     'brackets':                ['', ''],
       \   },
+      \   'double_quoted_style': {
+      \     'skip_syntax':       [],
+      \     'start':             '\<style="',
+      \     'end':               '"',
+      \     'delimiter':         ';\_s*',
+      \     'brackets':          ['', ''],
+      \   },
+      \   'single_quoted_style': {
+      \     'skip_syntax':       [],
+      \     'start':             '\<style=''',
+      \     'end':               "'",
+      \     'delimiter':         ';\_s*',
+      \     'brackets':          ['', ''],
+      \   },
       \ }
 
 let g:sideways_definitions =
@@ -120,6 +134,8 @@ autocmd FileType html let b:sideways_definitions = [
       \   s:html_like_definitions.tag_attributes,
       \   s:html_like_definitions.double_quoted_class,
       \   s:html_like_definitions.single_quoted_class,
+      \   s:html_like_definitions.double_quoted_style,
+      \   s:html_like_definitions.single_quoted_style,
       \ ]
 
 autocmd FileType eruby let b:sideways_definitions = [
@@ -132,6 +148,8 @@ autocmd FileType eruby let b:sideways_definitions = [
       \   s:WithOverrides(s:html_like_definitions.tag_attributes,      { 'brackets': ['"''<', '"''>'] }),
       \   s:WithOverrides(s:html_like_definitions.double_quoted_class, { 'brackets': ['<', '>'] }),
       \   s:WithOverrides(s:html_like_definitions.single_quoted_class, { 'brackets': ['<', '>'] }),
+      \   s:WithOverrides(s:html_like_definitions.double_quoted_style, { 'brackets': ['<', '>'] }),
+      \   s:WithOverrides(s:html_like_definitions.single_quoted_style, { 'brackets': ['<', '>'] }),
       \ ]
 
 autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
@@ -144,6 +162,8 @@ autocmd FileType handlebars,html.handlebars let b:sideways_definitions = [
       \   s:WithOverrides(s:html_like_definitions.tag_attributes,      { 'brackets': ['"''{', '"''}'] }),
       \   s:WithOverrides(s:html_like_definitions.double_quoted_class, { 'brackets': ['{', '}'] }),
       \   s:WithOverrides(s:html_like_definitions.single_quoted_class, { 'brackets': ['{', '}'] }),
+      \   s:WithOverrides(s:html_like_definitions.double_quoted_style, { 'brackets': ['<', '>'] }),
+      \   s:WithOverrides(s:html_like_definitions.single_quoted_style, { 'brackets': ['<', '>'] }),
       \ ]
 
 autocmd FileType javascript.jsx,javascriptreact,typescript.tsx,typescriptreact let b:sideways_definitions = [
