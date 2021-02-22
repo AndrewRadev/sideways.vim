@@ -71,17 +71,26 @@ endfunction
 " Note that the motion needs to include a visual mode key, like "V", "v" or
 " "gv"
 function! sideways#util#ReplaceMotion(motion, text)
-  let original_selection = &selection
+  " reset clipboard to avoid problems with 'unnamed' and 'autoselect'
+  let saved_clipboard = &clipboard
+  set clipboard=
+  let saved_selection = &selection
   let &selection = "inclusive"
 
-  let original_reg      = getreg('z')
-  let original_reg_type = getregtype('z')
+  let saved_register_text = getreg('"', 1)
+  let saved_register_type = getregtype('"')
+  let saved_opening_visual = getpos("'<")
+  let saved_closing_visual = getpos("'>")
 
-  let @z = a:text
-  exec 'normal! '.a:motion.'"zp'
+  call setreg('"', a:text, 'v')
+  exec 'silent noautocmd normal! '.a:motion.'p'
 
-  call setreg('z', original_reg, original_reg_type)
-  let &selection = original_selection
+  call setreg('"', saved_register_text, saved_register_type)
+  call setpos("'<", saved_opening_visual)
+  call setpos("'>", saved_closing_visual)
+
+  let &clipboard = saved_clipboard
+  let &selection = saved_selection
 endfunction
 
 " function! sideways#util#ReplaceCols(line, start, end, text) {{{2
@@ -125,18 +134,23 @@ endfunction
 function! sideways#util#GetMotion(motion)
   call sideways#util#PushCursor()
 
-  let original_selection = &selection
-  let &selection = "inclusive"
+  let saved_register_text = getreg('z', 1)
+  let saved_register_type = getregtype('z')
+  let saved_opening_visual = getpos("'<")
+  let saved_closing_visual = getpos("'>")
 
-  let original_reg      = getreg('z')
-  let original_reg_type = getregtype('z')
-
-  exec 'normal! '.a:motion.'"zy'
+  let @z = ''
+  exec 'silent noautocmd normal! '.a:motion.'"zy'
   let text = @z
 
-  call setreg('z', original_reg, original_reg_type)
-  let &selection = original_selection
+  if text == ''
+    " nothing got selected, so we might still be in visual mode
+    exe "normal! \<esc>"
+  endif
 
+  call setreg('z', saved_register_text, saved_register_type)
+  call setpos("'<", saved_opening_visual)
+  call setpos("'>", saved_closing_visual)
   call sideways#util#PopCursor()
 
   return text
