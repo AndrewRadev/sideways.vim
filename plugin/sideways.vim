@@ -346,6 +346,24 @@ autocmd FileType cucumber let b:sideways_definitions = [
       \   },
       \ ]
 
+autocmd FileType vimwiki let b:sideways_definitions = [
+      \   {
+      \     'start':     '^\s*|\s*',
+      \     'end':       '\s*|$',
+      \     'delimiter': '\s*|\s*',
+      \     'brackets':  ['(''"', ')''"'],
+      \   },
+      \ ]
+
+autocmd FileType markdown let b:sideways_definitions = [
+      \   {
+      \     'start':     '^\s*|\s*',
+      \     'end':       '\s*|$',
+      \     'delimiter': '\s*|\s*',
+      \     'brackets':  ['(''"', ')''"'],
+      \   },
+      \ ]
+
 autocmd FileType sh let b:sideways_definitions = [
       \   {
       \     'skip_syntax': ['shDoubleQuote', 'shSingleQuote', 'shComment'],
