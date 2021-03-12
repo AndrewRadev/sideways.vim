@@ -362,6 +362,12 @@ autocmd FileType tex let b:sideways_definitions = [
       \     'delimiter': '\s*&\s*',
       \     'brackets':  ['$[(''"', '$])''"'],
       \   },
+      \   {
+      \     'start':     '{',
+      \     'end':       '}\s*',
+      \     'delimiter': '\s*}{\s*',
+      \     'brackets':  ['$[(''"', '$])''"'],
+      \   },
       \ ]
 
 autocmd FileType sh let b:sideways_definitions = [
