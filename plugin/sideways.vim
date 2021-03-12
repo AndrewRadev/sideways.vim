@@ -355,12 +355,12 @@ autocmd FileType vimwiki let b:sideways_definitions = [
       \   },
       \ ]
 
-autocmd FileType markdown let b:sideways_definitions = [
+autocmd FileType tex let b:sideways_definitions = [
       \   {
-      \     'start':     '^\s*|\s*',
-      \     'end':       '\s*|$',
-      \     'delimiter': '\s*|\s*',
-      \     'brackets':  ['(''"', ')''"'],
+      \     'start':     '^\s*',
+      \     'end':       '\s*\(\\\\\)\?\s*$',
+      \     'delimiter': '\s*&\s*',
+      \     'brackets':  ['$[(''"', '$])''"'],
       \   },
       \ ]
 
