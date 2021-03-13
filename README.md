@@ -130,7 +130,7 @@ dict = {one: 1, two: 2, three: 3}
 let xs = [1;2;3]
 ```
 
-**LaTeX tabular**
+**LaTeX tabular:**
 ``` tex
 \begin{center}
   \begin{tabular}{ll}
@@ -140,7 +140,7 @@ let xs = [1;2;3]
 \end{center}
 ```
 
-**LaTeX align environment**
+**LaTeX align environment:**
 ``` tex
 \begin{align}
   a & b \\
@@ -148,7 +148,7 @@ let xs = [1;2;3]
 \end{align}
 ```
 
-**LaTeX equations and other delimiters**
+**LaTeX equations and other delimiters:**
 ``` tex
 \begin{gather}
   2 \pi = \tau \\
@@ -161,7 +161,7 @@ let xs = [1;2;3]
 \end{gather}
 ```
 
-**LaTeX inline math**
+**LaTeX inline math:**
 ``` tex
 Can switch item inside inline math \( x + 2 - 10 = \zeta - y \)
 this way too $ a + b = c $
