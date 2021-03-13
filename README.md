@@ -130,6 +130,43 @@ dict = {one: 1, two: 2, three: 3}
 let xs = [1;2;3]
 ```
 
+**LaTeX tabular**
+``` tex
+\begin{center}
+  \begin{tabular}{ll}
+    a & b \\
+    c & d
+  \end{tabular}
+\end{center}
+```
+
+**LaTeX align environment**
+``` tex
+\begin{align}
+  a & b \\
+  c & d 
+\end{align}
+```
+
+**LaTeX equations and other delimiters**
+``` tex
+\begin{gather}
+  2 \pi = \tau \\
+  | a + b | \leq |a| + |b| \\
+  [ \alpha + \beta + \gamma ]\\
+  \left| a < t + b > z \right|\\
+  \left( \zeta < \alpha + a + \beta \right)\\
+  \left[ (a + z) \geq c + b \right]\\
+  \{ \ldots  , a , b, c \}
+\end{gather}
+```
+
+**LaTeX inline math**
+``` tex
+Can switch item inside inline math \( x + 2 - 10 = \zeta - y \)
+this way too $ a + b = c $
+```
+
 The plugin is intended to be customizable, though at this point you'd need to
 look at the source to do this.
 

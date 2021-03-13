@@ -357,16 +357,58 @@ autocmd FileType vimwiki let b:sideways_definitions = [
 
 autocmd FileType tex let b:sideways_definitions = [
       \   {
-      \     'start':     '^\s*',
-      \     'end':       '\s*\(\\\\\)\?\s*$',
-      \     'delimiter': '\s*&\s*',
-      \     'brackets':  ['$[(''"', '$])''"'],
+      \     'start':     '\\left\[\s*',
+      \     'end':       '\s*\\right\]',
+      \     'delimiter': '\s*\%([+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
       \   },
       \   {
-      \     'start':     '\s\\\S\+{',
-      \     'end':       '}\s',
-      \     'delimiter': '\s*}{\s*',
-      \     'brackets':  ['$[(''"', '$])''"'],
+      \     'start':     '\\left(\s*',
+      \     'end':       '\s*\\right)',
+      \     'delimiter': '\s*\%([+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
+      \   },
+      \   {
+      \     'start':     '\\left|\s*',
+      \     'end':       '\s*\\right|',
+      \     'delimiter': '\s*\%([+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
+      \   },
+      \   {
+      \     'start':     '\\(\s*',
+      \     'end':       '\s*\\)',
+      \     'delimiter': '\s*\%([=+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
+      \   },
+      \   {
+      \     'start':     '^\s*',
+      \     'end':       '\s*\(\\\\\)\?\s*$',
+      \     'delimiter': '\s*\%([&=+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['$|[(', '$|])'],
+      \   },
+      \   {
+      \     'start':     '\[\s*',
+      \     'end':       '\s*\]',
+      \     'delimiter': '\s*\%([+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
+      \   },
+      \   {
+      \     'start':     '(\s*',
+      \     'end':       '\s*)',
+      \     'delimiter': '\s*\%([+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
+      \   },
+      \   {
+      \     'start':     '\\{\s*',
+      \     'end':       '\s*\\}',
+      \     'delimiter': '\s*\%([+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
+      \   },
+      \   {
+      \     'start':     '\$\s*',
+      \     'end':       '\s*\$',
+      \     'delimiter': '\s*\%([=+\-,<>]\|\\leq\|\\geq\)\s*',
+      \     'brackets':  ['|[(', '|])'],
       \   },
       \ ]
 
