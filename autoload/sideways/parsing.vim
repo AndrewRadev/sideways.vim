@@ -313,6 +313,14 @@ function! s:PushItem(items, current_item, final_col)
   let a:current_item.end_line = line('.')
   let a:current_item.end_col = a:final_col
 
+  if a:current_item.start_line == a:current_item.end_line &&
+        \ a:current_item.end_col <= a:current_item.start_col
+    " A special case -- the end is before the start. It could happen with an
+    " empty item between two delimiters.
+    " Let's pin a zero-size character
+    let a:current_item.start_col = a:current_item.end_col
+  endif
+
   call add(a:items, a:current_item)
 endfunction
 
