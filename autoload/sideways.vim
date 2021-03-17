@@ -1,18 +1,15 @@
 function! sideways#Parse()
-  if exists('b:sideways_definitions')
-    let defined = {}
-    let definitions = []
+  let defined = {}
 
-    for d in extend(copy(b:sideways_definitions), copy(g:sideways_definitions))
-      if has_key(defined, d.start . d.end)
-        " we already have one for this start/end pair
-      else
-        let defined[d.start . d.end] = 1
-        call add(definitions, d)
-      endif
-    endfor
+  if exists('b:sideways_definitions')
+    let definitions = s:ExtendDefinitions(b:sideways_definitions, g:sideways_definitions)
   else
     let definitions = g:sideways_definitions
+  endif
+
+  if exists('b:sideways_custom_definitions') &&
+        \ type(b:sideways_custom_definitions) == type([])
+    let definitions = s:ExtendDefinitions(b:sideways_custom_definitions, definitions)
   endif
 
   return sideways#parsing#Parse(definitions)
@@ -201,4 +198,35 @@ function! s:FindActiveItem(items)
   endfor
 
   return -1
+endfunction
+
+" Merges a:source and a:extension definitions in that order, checking for
+" duplicates based on start and end pattern.
+"
+" This means that patterns defined in a:source will take priority over
+" a:extension.
+"
+function! s:ExtendDefinitions(source, extension)
+  let defined = {}
+  let result = []
+
+  for d in a:source
+    if has_key(defined, d.start . d.end)
+      " we already have one for this start/end pair
+    else
+      let defined[d.start . d.end] = 1
+      call add(result, d)
+    endif
+  endfor
+
+  for d in a:extension
+    if has_key(defined, d.start . d.end)
+      " we already have one for this start/end pair
+    else
+      let defined[d.start . d.end] = 1
+      call add(result, d)
+    endif
+  endfor
+
+  return result
 endfunction
