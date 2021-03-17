@@ -362,7 +362,7 @@ autocmd FileType markdown let b:sideways_definitions = [
       \     'start':               '^\s\{-}|',
       \     'end':                 '|$',
       \     'delimiter':           '|',
-      \     'brackets':            ['(''"', ')''"'],
+      \     'brackets':            ['[(''"', '])''"'],
       \   },
       \ ]
 

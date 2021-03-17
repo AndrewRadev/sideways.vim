@@ -33,4 +33,17 @@ describe "Markdown" do
       |     | One | Three |
     EOF
   end
+
+  specify "table with a markdown link" do
+    set_file_contents <<~EOF
+      | One | [Two|Four](https://foo) | Three |
+    EOF
+
+    vim.search 'One'
+    vim.right
+
+    assert_file_contents <<~EOF
+      | [Two|Four](https://foo) | One | Three |
+    EOF
+  end
 end
