@@ -89,6 +89,7 @@ function! s:ParseItems(definition, start_line, start_col)
   let end_pattern             = definition.end
   let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
   let single_line             = get(definition, 'single_line', 0)
+  let preserve_whitespace     = get(definition, 'preserve_whitespace', 0)
 
   if delimited_by_whitespace
     let delimiter_pattern = '\s\+'
@@ -114,7 +115,11 @@ function! s:ParseItems(definition, start_line, start_col)
       call s:PushItem(items, current_item, col('.') - 1)
       let match = matchstr(remainder_of_line, '^'.delimiter_pattern)
       exe 'normal! '.len(match).'l'
-      call s:SkipWhitespace()
+
+      if !preserve_whitespace
+        call s:SkipWhitespace()
+      endif
+
       let current_item = s:NewItem()
     elseif opening_bracket_match < 0 && closing_bracket_match >= 0
       " there's an extra closing bracket from outside the list, bail out
