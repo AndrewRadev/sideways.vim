@@ -5,6 +5,7 @@ CONTENTS                                           *sideways* *sideways-contents
 
     Installation............................: |sideways-installation|
     Usage...................................: |sideways-usage|
+    Customization...........................: |sideways-customization|
     Settings................................: |sideways-settings|
     Issues..................................: |sideways-issues|
 
@@ -122,7 +123,7 @@ Handlebars components:
 >
     {{parent/some-component one=two three="four" five=(action 'six')}}
 <
-Cucumber tables:
+Markdown and cucumber tables:
 >
     Examples:
       | input_1 | input_2 | button | output |
@@ -164,8 +165,8 @@ OCaml lists and arrays
     let xs = [|1; 2; 3|]
 <
 
-The plugin is customizable, though at this point you'd need to look at the
-source to do this.
+See |sideways-customization| for instructions on how to add more definitions
+or override existing ones.
 
                                                             *SidewaysJumpLeft*
                                                             *SidewaysJumpRight*
@@ -272,7 +273,90 @@ of your workflow, it's recommended you keep this setting off.
 
 
 ==============================================================================
+CUSTOMIZATION                                           *sideways-customization*
+
+The core of the plugin is a loop that takes a "definition" and tries to parse
+a sequence of items based on it. Here's an example definition, which matches
+items in bracketed lists:
+>
+    let example_definition = {
+          \   'start':     '(\_s*',
+          \   'end':       ')',
+          \   'delimiter': ',\_s*',
+          \   'brackets':  ['([{''"', ')]}''"'],
+          \ }
+<
+The most important parts are the `start`, `end`, and `delimiter` keys. The
+plugin uses them to find the `start` of the list, and then moves forward,
+character by character, until it gets to something matching the `end` pattern.
+Every time it hits a `delimiter`, it marks the coordinates of what it has so
+far as a separate item.
+
+The `brackets` array needs to always be present and have exactly 2 strings.
+The first one is all the opening brackets expected in the list, and the other
+is the matching closing brackets, including string quotes that have the same
+opener and closer. When the plugin hits an opening bracket, it jumps to the
+closing one, which is what ensures that it can handle nested lists. If it hits
+an unmatched closing bracket, it assumes that this list is inside of some
+other one and considers it the end of the list.
+
+You can try the above definition by positioning the cursor on a round-bracket
+list and running:
+>
+    echo sideways#parsing#Parse([example_definition])
+<
+You should get an array of two items -- the first one is going to be the
+definition you just passed in (if you pass a list of multiple definitions, the
+plugin is going to return the "best" one that works). The second items is
+going to be a list of dictionaries, each one having the keys `start_line`,
+`start_col`, `end_line`, `end_col`. That's the raw parsing data the plugin
+uses to do its magic.
+
+There are multiple other flags and properties that can be given to a definition:
+
+- `delimited_by_whitespace`: Indicates the items are delimited by whitespace,
+    like HTML attributes. You still need to have a delimiter, it's just an
+    indicator for the plugin.
+- `single_line`: Indicates that there's no need to keep going after the end of
+    the line. An optimization, but also necessary for some particular kinds of
+    lists.
+- `skip_syntax`: A list of syntax group regexes to ignore when checking for
+    brackets or delimiters. It defaults to `['Comment', 'String']`, which
+    usually works well. Can also be provided on a per-filetype basis with
+    `b:sideways_skip_syntax`.
+
+These are a bit messy and more might be added, because a lot of them are
+workarounds. The plugin works well in the general case, but there's a lot of
+specific cases, and adding a special flag can be an easy way to fix support
+for something special.
+
+You can look at `plugin/sideways.vim` for the global definitions of the
+plugin. All the filetype-specific ones are in
+`ftplugin/<filetype>/sideways.vim`. My advice is to explore the patterns
+before trying to make your own.
+
+If you want to override the built-in definitions, you can define your own
+`g:sideways_definitions` or `b:sideways_definitions` variables and they will
+take priority of the built-ins. If you'd like to extend them, you can use
+`g:sideways_custom_definitions` and `b:sideways_custom_definitions`. Note that
+definitions must have unique `start` and `end` patterns, so if you'd like to
+override a specific one, pick the same start and end for it.
+
+
+==============================================================================
 SETTINGS                                                     *sideways-settings*
+
+                                                 *g:sideways_custom_definitions*
+                                                 *b:sideways_custom_definitions*
+>
+    let g:sideways_custom_definitions = []
+    let b:sideways_custom_definitions = []
+<
+Default value: Unset
+
+If these variables exist, they will be merged into the built-in plugin
+definitions. See the section |sideways-customization| for more information.
+
 
                                                         *b:sideways_skip_syntax*
 >
