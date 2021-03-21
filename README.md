@@ -130,8 +130,8 @@ dict = {one: 1, two: 2, three: 3}
 let xs = [1;2;3]
 ```
 
-The plugin is intended to be customizable, though at this point you'd need to
-look at the source to do this.
+The plugin is customizable -- take a look at `:help sideways-customization`
+for instructions on how to implement support for other kinds of lists.
 
 ## Bonus functionality
 
