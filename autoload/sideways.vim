@@ -1,14 +1,16 @@
 function! sideways#Parse()
   let defined = {}
+  let definitions = g:sideways_definitions
 
-  if exists('b:sideways_definitions')
-    let definitions = s:ExtendDefinitions(b:sideways_definitions, g:sideways_definitions)
-  else
-    let definitions = g:sideways_definitions
+  if exists('g:sideways_custom_definitions')
+    let definitions = s:ExtendDefinitions(g:sideways_custom_definitions, definitions)
   endif
 
-  if exists('b:sideways_custom_definitions') &&
-        \ type(b:sideways_custom_definitions) == type([])
+  if exists('b:sideways_definitions')
+    let definitions = s:ExtendDefinitions(b:sideways_definitions, definitions)
+  endif
+
+  if exists('b:sideways_custom_definitions')
     let definitions = s:ExtendDefinitions(b:sideways_custom_definitions, definitions)
   endif
 

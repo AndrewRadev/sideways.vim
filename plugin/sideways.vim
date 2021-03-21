@@ -7,27 +7,29 @@ let s:keepcpo = &cpo
 set cpo&vim
 
 " Global definitions, active in all filetypes (local ones are in ftplugin):
-let g:sideways_definitions =
-      \ [
-      \   {
-      \     'start':     '(\_s*',
-      \     'end':       ')',
-      \     'delimiter': ',\_s*',
-      \     'brackets':  ['([{''"', ')]}''"'],
-      \   },
-      \   {
-      \     'start':     '\[\_s*',
-      \     'end':       '\]',
-      \     'delimiter': ',\_s*',
-      \     'brackets':  ['([{''"', ')]}''"'],
-      \   },
-      \   {
-      \     'start':     '{\_s*',
-      \     'end':       '}',
-      \     'delimiter': ',\_s*',
-      \     'brackets':  ['([{''"', ')]}''"'],
-      \   },
-      \ ]
+if !exists('g:sideways_definitions')
+  let g:sideways_definitions =
+        \ [
+        \   {
+        \     'start':     '(\_s*',
+        \     'end':       ')',
+        \     'delimiter': ',\_s*',
+        \     'brackets':  ['([{''"', ')]}''"'],
+        \   },
+        \   {
+        \     'start':     '\[\_s*',
+        \     'end':       '\]',
+        \     'delimiter': ',\_s*',
+        \     'brackets':  ['([{''"', ')]}''"'],
+        \   },
+        \   {
+        \     'start':     '{\_s*',
+        \     'end':       '}',
+        \     'delimiter': ',\_s*',
+        \     'brackets':  ['([{''"', ')]}''"'],
+        \   },
+        \ ]
+endif
 
 if !exists('g:sideways_search_timeout')
   let g:sideways_search_timeout = 0
