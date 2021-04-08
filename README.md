@@ -84,7 +84,7 @@ border-radius: 20px 0 0 20px;
 {{parent/some-component one=two three="four" five=(action 'six')}}
 ```
 
-**Cucumber**:
+**Cucumber tables**:
 ``` cucumber
 Examples:
   | input_1 | input_2 | button | output |
