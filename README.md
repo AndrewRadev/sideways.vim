@@ -138,7 +138,7 @@ let xs = [1;2;3]
 \end{tabular}
 ```
 
-**LaTeX equations and other delimiters:**
+**LaTeX equations:**
 ``` tex
 \[ e^{i \pi} + 1 = 0 \]
 \[e^x = \sum_{n = 0}^{\infty} \frac{x^n}{n!}\]
