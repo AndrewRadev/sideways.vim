@@ -130,6 +130,7 @@ dict = {one: 1, two: 2, three: 3}
 let xs = [1;2;3]
 ```
 
+<<<<<<< HEAD
 **LaTeX tabular:**
 ``` tex
 \begin{center}
@@ -169,6 +170,10 @@ this way too $ a + b = c $
 
 The plugin is intended to be customizable, though at this point you'd need to
 look at the source to do this.
+=======
+The plugin is customizable -- take a look at `:help sideways-customization`
+for instructions on how to implement support for other kinds of lists.
+>>>>>>> 171d6a39eb46973b229aaf1d88691e40d45f64ad
 
 ## Bonus functionality
 

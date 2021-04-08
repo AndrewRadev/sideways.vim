@@ -6,6 +6,7 @@ let g:loaded_sideways = '0.4.0' " version number
 let s:keepcpo = &cpo
 set cpo&vim
 
+<<<<<<< HEAD
 function! s:WithOverrides(definition, overrides)
   return extend(copy(a:definition), a:overrides)
 endfunction
@@ -440,6 +441,32 @@ autocmd FileType ocaml let b:sideways_definitions = [
       \     'brackets':  ['(["', ')]"'],
       \   },
       \ ]
+=======
+" Global definitions, active in all filetypes (local ones are in ftplugin):
+if !exists('g:sideways_definitions')
+  let g:sideways_definitions =
+        \ [
+        \   {
+        \     'start':     '(\_s*',
+        \     'end':       ')',
+        \     'delimiter': ',\_s*',
+        \     'brackets':  ['([{''"', ')]}''"'],
+        \   },
+        \   {
+        \     'start':     '\[\_s*',
+        \     'end':       '\]',
+        \     'delimiter': ',\_s*',
+        \     'brackets':  ['([{''"', ')]}''"'],
+        \   },
+        \   {
+        \     'start':     '{\_s*',
+        \     'end':       '}',
+        \     'delimiter': ',\_s*',
+        \     'brackets':  ['([{''"', ')]}''"'],
+        \   },
+        \ ]
+endif
+>>>>>>> 171d6a39eb46973b229aaf1d88691e40d45f64ad
 
 if !exists('g:sideways_search_timeout')
   let g:sideways_search_timeout = 0
