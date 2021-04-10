@@ -164,6 +164,18 @@ OCaml lists and arrays
     let xs = [1; 2; 3]
     let xs = [|1; 2; 3|]
 <
+LaTeX align/tabular
+>
+    \begin{tabular}{ll}
+      a & b \\
+      c & d
+    \end{tabular}
+<
+LaTeX equations
+>
+    \[ e^{i \pi} + 1 = 0 \]
+    \[e^x = \sum_{n = 0}^{\infty} \frac{x^n}{n!}\]
+<
 
 See |sideways-customization| for instructions on how to add more definitions
 or override existing ones.
