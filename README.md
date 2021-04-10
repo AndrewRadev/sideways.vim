@@ -130,6 +130,20 @@ dict = {one: 1, two: 2, three: 3}
 let xs = [1;2;3]
 ```
 
+**LaTeX align/tabular:**
+``` tex
+\begin{tabular}{ll}
+  a & b \\
+  c & d
+\end{tabular}
+```
+
+**LaTeX equations:**
+``` tex
+\[ e^{i \pi} + 1 = 0 \]
+\[e^x = \sum_{n = 0}^{\infty} \frac{x^n}{n!}\]
+```
+
 The plugin is customizable -- take a look at `:help sideways-customization`
 for instructions on how to implement support for other kinds of lists.
 
