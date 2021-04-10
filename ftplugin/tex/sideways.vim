@@ -34,8 +34,8 @@ let b:sideways_definitions = [
       \     'brackets':  ['$|[(','$|])'],
       \   },
       \   {
-      \     'start':     '\[\s*',
-      \     'end':       '\s*\]',
+      \     'start':     '\\\[\s*',
+      \     'end':       '\s*\\\]',
       \     'delimiter': '\s*\%([+\-,<>]\|\\leq\|\\geq\)\s*',
       \     'brackets':  ['|[(','|])'],
       \   },
