@@ -13,8 +13,10 @@ function! sideways#new_item#Add(mode)
 
   if a:mode == 'i'
     call s:InsertBefore(current, delimiter_string, new_line)
+    call s:SetupRepeat("\<Plug>SidewaysArgumentInsertBefore")
   elseif a:mode == 'a'
     call s:InsertAfter(current, delimiter_string, new_line)
+    call s:SetupRepeat("\<Plug>SidewaysArgumentAppendAfter")
   endif
 endfunction
 
@@ -29,6 +31,7 @@ function! sideways#new_item#AddFirst()
 
   let first_item = items[0]
   call s:InsertBefore(first_item, delimiter_string, new_line)
+  call s:SetupRepeat("\<Plug>SidewaysArgumentInsertFirst")
 endfunction
 
 function! sideways#new_item#AddLast()
@@ -42,6 +45,7 @@ function! sideways#new_item#AddLast()
 
   let last_item = items[len(items) - 1]
   call s:InsertAfter(last_item, delimiter_string, new_line)
+  call s:SetupRepeat("\<Plug>SidewaysArgumentAppendLast")
 endfunction
 
 function! s:InsertBefore(item, delimiter_string, new_line)
@@ -186,4 +190,17 @@ function! s:ClearSavedPosition()
   augroup END
 
   call prop_remove({'type': 'sideways_saved_position', 'all': 1})
+endfunction
+
+function! s:SetupRepeat(mapping)
+  if !g:sideways_add_item_repeat
+    return
+  endif
+
+  if !(has('patch-8.1.1113') || has('nvim-0.4.0'))
+    " then ++once is not available
+    return
+  endif
+
+  exe 'autocmd InsertLeavePre <buffer> ++once silent! call repeat#set("' . a:mapping . '")'
 endfunction

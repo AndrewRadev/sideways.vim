@@ -446,6 +446,16 @@ exit insert mode via Ctrl+C (which doesn't trigger it), it won't jump until
 the next time you leave insert mode normally. If exiting via Ctrl+C is a part
 of your workflow, it's recommended you keep this setting off.
 
+                                                    *g:sideways_add_item_repeat*
+>
+    let g:sideways_add_item_repeat = 0
+<
+Default value: 1
+
+This variable controls whether the plugin will activate vim-repeat for the
+mappings to add a new item. The setup for them is a bit more complicated,
+which is why this flag exists to disable it if it causes problems.
+
 
 ==============================================================================
 ISSUES                                                         *sideways-issues*
