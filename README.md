@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/AndrewRadev/sideways.vim.svg?branch=master)](http://travis-ci.org/AndrewRadev/sideways.vim)
+[![Build Status](https://secure.travis-ci.org/AndrewRadev/sideways.vim.svg?branch=main)](http://travis-ci.org/AndrewRadev/sideways.vim)
 
 ## Usage
 
