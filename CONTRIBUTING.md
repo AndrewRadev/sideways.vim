@@ -33,4 +33,4 @@ $ bundle install
 $ bundle exec rspec spec
 ```
 
-Depending on what kind of Vim you have installed, this may spawn a GUI Vim instance, or even several. You can read up on [vimrunner's README](https://github.com/AndrewRadev/vimrunner/blob/master/README.md) to understand how that works.
+Depending on what kind of Vim you have installed, this may spawn a GUI Vim instance, or even several. You can read up on [vimrunner's README](https://github.com/AndrewRadev/vimrunner/blob/main/README.md) to understand how that works.
