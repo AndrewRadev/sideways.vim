@@ -1,6 +1,6 @@
 let s:definitions = {
       \   'tag_attributes': {
-      \     'start':                   '<\k\+\_s\+',
+      \     'start':                   '<\%(\k\|\.\)\+\_s\+',
       \     'end':                     '\s*/\?>',
       \     'delimited_by_whitespace': 1,
       \     'brackets':                ['"''', '"'''],
