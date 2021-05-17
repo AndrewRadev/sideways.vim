@@ -43,6 +43,10 @@ if !exists('g:sideways_add_item_cursor_restore')
   let g:sideways_add_item_cursor_restore = 0
 endif
 
+if !exists('g:sideways_add_item_repeat')
+  let g:sideways_add_item_repeat = 1
+endif
+
 command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set("\<Plug>SidewaysLeft")
 command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Plug>SidewaysRight")
 

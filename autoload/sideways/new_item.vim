@@ -13,8 +13,10 @@ function! sideways#new_item#Add(mode)
 
   if a:mode == 'i'
     call s:InsertBefore(current, delimiter_string, new_line)
+    call s:SetRepeatAutocommand('SidewaysArgumentInsertBefore')
   elseif a:mode == 'a'
     call s:InsertAfter(current, delimiter_string, new_line)
+    call s:SetRepeatAutocommand('SidewaysArgumentAppendAfter')
   endif
 endfunction
 
@@ -29,6 +31,7 @@ function! sideways#new_item#AddFirst()
 
   let first_item = items[0]
   call s:InsertBefore(first_item, delimiter_string, new_line)
+  call s:SetRepeatAutocommand('SidewaysArgumentInsertFirst')
 endfunction
 
 function! sideways#new_item#AddLast()
@@ -42,12 +45,20 @@ function! sideways#new_item#AddLast()
 
   let last_item = items[len(items) - 1]
   call s:InsertAfter(last_item, delimiter_string, new_line)
+  call s:SetRepeatAutocommand('SidewaysArgumentAppendLast')
+endfunction
+
+function! sideways#new_item#Repeat(action, text)
+  let b:sideways_repeat_new_item = a:text
+  exe "normal \<Plug>".a:action
+  unlet b:sideways_repeat_new_item
 endfunction
 
 function! s:InsertBefore(item, delimiter_string, new_line)
   let item             = a:item
   let delimiter_string = a:delimiter_string
   let new_line         = a:new_line
+  let repeat_text      = get(b:, 'sideways_repeat_new_item', '')
 
   if g:sideways_add_item_cursor_restore && has('textprop')
     call s:StorePosition()
@@ -77,13 +88,14 @@ function! s:InsertBefore(item, delimiter_string, new_line)
     call s:SetupRestorePosition()
   endif
 
-  call feedkeys('i'.whitespace, 'n')
+  call feedkeys('i' . whitespace . repeat_text, 'n')
 endfunction
 
 function! s:InsertAfter(item, delimiter_string, new_line)
   let item             = a:item
   let delimiter_string = a:delimiter_string
   let new_line         = a:new_line
+  let repeat_text      = get(b:, 'sideways_repeat_new_item', '')
 
   if g:sideways_add_item_cursor_restore && has('textprop')
     call s:StorePosition()
@@ -95,13 +107,13 @@ function! s:InsertAfter(item, delimiter_string, new_line)
     exe "normal! a".sideways#util#Trim(delimiter_string)."\<cr>\<esc>"
 
     if getline('.') == ''
-      call feedkeys('cc', 'n')
+      call feedkeys('cc' . repeat_text, 'n')
     else
-      call feedkeys('I', 'n')
+      call feedkeys('I' . repeat_text, 'n')
     endif
   else
     exe 'normal! a'.delimiter_string
-    call feedkeys('a', 'n')
+    call feedkeys('a' . repeat_text, 'n')
   endif
 
   if g:sideways_add_item_cursor_restore && has('textprop')
@@ -186,4 +198,24 @@ function! s:ClearSavedPosition()
   augroup END
 
   call prop_remove({'type': 'sideways_saved_position', 'all': 1})
+endfunction
+
+function! s:SetRepeatAutocommand(action)
+  if !g:sideways_add_item_repeat
+    return
+  endif
+
+  if !(has('patch-8.1.1113') || has('nvim-0.4.0'))
+    " then ++once is not available
+    return
+  endif
+
+  exe 'autocmd InsertLeavePre <buffer> ++once call s:SetRepeatInvocation("'.a:action.'")'
+endfunction
+
+function! s:SetRepeatInvocation(action)
+  let last_insert = @.
+  let repeat_invocation = ":call sideways#new_item#Repeat(\"" . a:action . "\", \"". escape(last_insert, '"\') . "\")\<cr>"
+
+  silent! call repeat#set(repeat_invocation)
 endfunction
