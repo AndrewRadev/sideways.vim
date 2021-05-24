@@ -1,3 +1,8 @@
+if &ft == 'eruby' || &ft == 'haml'
+  " ERB and Haml evaluate the ruby filetype
+  finish
+endif
+
 if !exists('b:sideways_skip_syntax') |
   let b:sideways_skip_syntax = [
         \ '^rubyString$',
@@ -8,11 +13,6 @@ if !exists('b:sideways_skip_syntax') |
 endif
 
 if exists('b:sideways_definitions')
-  finish
-endif
-
-if &ft == 'haml'
-  " Haml evaluates the ruby filetype
   finish
 endif
 
