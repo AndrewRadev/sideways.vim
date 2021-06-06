@@ -176,6 +176,12 @@ LaTeX equations
     \[ e^{i \pi} + 1 = 0 \]
     \[e^x = \sum_{n = 0}^{\infty} \frac{x^n}{n!}\]
 <
+Typescript enum values
+>
+    interface Status {
+      code: 200 | 404 | 500;
+    }
+<
 
 See |sideways-customization| for instructions on how to add more definitions
 or override existing ones.

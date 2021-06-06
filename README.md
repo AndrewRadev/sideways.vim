@@ -144,6 +144,14 @@ let xs = [1;2;3]
 \[e^x = \sum_{n = 0}^{\infty} \frac{x^n}{n!}\]
 ```
 
+**Typescript enum values:**
+``` typescript
+interface Status {
+  code: 200 | 404 | 500;
+}
+```
+
+
 The plugin is customizable -- take a look at `:help sideways-customization`
 for instructions on how to implement support for other kinds of lists.
 
