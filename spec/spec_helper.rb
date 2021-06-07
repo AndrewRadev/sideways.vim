@@ -5,12 +5,18 @@ require_relative './support/vim'
 Vimrunner::RSpec.configure do |config|
   config.reuse_server = true
 
-  plugin_path = File.expand_path('.')
+  plugin_path = Pathname.new(File.expand_path('.'))
 
   config.start_vim do
     vim = Vimrunner.start_gvim
-    plugin_path = File.expand_path('../..', __FILE__)
     vim.add_plugin(plugin_path, 'plugin/sideways.vim')
+
+    # Up-to-date filetype support:
+    vim.prepend_runtimepath(plugin_path.join('spec/support/typescript-vim'))
+
+    # bootstrap filetypes
+    vim.command 'autocmd BufNewFile,BufRead *.ts set filetype=typescript'
+    vim.command 'autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact'
 
     # Ensure we don't rely on selection=inclusive
     vim.command('set selection=exclusive')
