@@ -15,6 +15,9 @@ Vimrunner::RSpec.configure do |config|
     vim.command 'autocmd BufNewFile,BufRead *.ts set filetype=typescript'
     vim.command 'autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact'
 
+    # Up-to-date filetype support:
+    vim.prepend_runtimepath(plugin_path.join('spec/support/rust.vim'))
+
     # Ensure we don't rely on selection=inclusive
     vim.command('set selection=exclusive')
 
