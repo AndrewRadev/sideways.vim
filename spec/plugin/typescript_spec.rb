@@ -32,4 +32,30 @@ describe "Typescript" do
       EOF
     end
   end
+
+  describe "objects" do
+    let(:filename) { 'test.ts' }
+
+    before :each do
+      set_file_contents <<-EOF
+        const object = { one: "two", three: "four" };
+      EOF
+
+      vim.search('one: \zs"two"')
+    end
+
+    specify "to the left" do
+      vim.left
+      assert_file_contents <<-EOF
+        const object = { three: "four", one: "two" };
+      EOF
+    end
+
+    specify "to the right" do
+      vim.right
+      assert_file_contents <<-EOF
+        const object = { three: "four", one: "two" };
+      EOF
+    end
+  end
 end
