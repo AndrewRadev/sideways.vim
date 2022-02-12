@@ -11,6 +11,10 @@ Vimrunner::RSpec.configure do |config|
     vim = Vimrunner.start_gvim
     vim.add_plugin(plugin_path, 'plugin/sideways.vim')
 
+    # bootstrap filetypes
+    vim.command 'autocmd BufNewFile,BufRead *.ts set filetype=typescript'
+    vim.command 'autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact'
+
     # Ensure we don't rely on selection=inclusive
     vim.command('set selection=exclusive')
 
