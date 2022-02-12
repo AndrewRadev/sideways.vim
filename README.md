@@ -1,4 +1,5 @@
-[![Build Status](https://secure.travis-ci.org/AndrewRadev/sideways.vim.svg?branch=main)](http://travis-ci.org/AndrewRadev/sideways.vim)
+[![GitHub version](https://badge.fury.io/gh/andrewradev%2Fsideways.vim.svg)](https://badge.fury.io/gh/andrewradev%2Fsideways.vim)
+[![Build Status](https://circleci.com/gh/AndrewRadev/sideways.vim/tree/main.svg?style=shield)](https://circleci.com/gh/AndrewRadev/sideways.vim?branch=main)
 
 ## Usage
 
