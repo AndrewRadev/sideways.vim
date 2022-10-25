@@ -31,35 +31,6 @@ if !exists('g:sideways_definitions')
         \ ]
 endif
 
-autocmd FileType haskell let b:sideways_definitions = [
-      \   {
-      \     'start':     '\k\+\s*::\s*',
-      \     'end':       '\s*\%(--\|$\)',
-      \     'delimiter': '\s*->\s*',
-      \     'brackets':  ['([{"', ')]}"'],
-      \   },
-      \   {
-      \     'start':     '\',
-      \     'end':       '->',
-      \     'delimiter': ' \+',
-      \     'brackets':  ['', ''],
-      \   },
-      \   {
-      \     'start':       '^\s*\k\{1,} \ze\s*[^=,*/%<>+-]',
-      \     'end':         '\s*\%(=\|--\)',
-      \     'brackets':    ['([{"', ')]}"'],
-      \     'single_line': 1,
-      \     'delimited_by_whitespace': 1,
-      \   },
-      \ ]
-
-" \   {
-" \     'start':       '\%(^\s*\|[=(]\s*\)\k\{1,} \ze\s*[^=,*/%<>+-]',
-" \     'end':         '\s*\%(=\|--\)',
-" \     'delimiter':   ' \+',
-" \     'brackets':    ['([{"', ')]}"'],
-" \   },
-
 if !exists('g:sideways_search_timeout')
   let g:sideways_search_timeout = 0
 endif
