@@ -127,4 +127,54 @@ describe "textobj mapping" do
       EOF
     end
   end
+
+  describe "prefix delimiters" do
+    let(:filename) { 'test.rb' }
+
+    after :each do
+      vim.command('set selection&')
+    end
+
+    it "works in selection=inclusive mode" do
+      vim.command('set selection=inclusive')
+
+      set_file_contents <<-EOF
+        ( ab
+        , cd
+        , ef
+        )
+      EOF
+
+      vim.search('cd')
+      vim.feedkeys 'daa'
+      vim.write
+
+      assert_file_contents <<-EOF
+        ( ab
+        , ef
+        )
+      EOF
+    end
+
+    it "works in selection=exclusive mode" do
+      vim.command('set selection=exclusive')
+
+      set_file_contents <<-EOF
+        ( ab
+        , cd
+        , ef
+        )
+      EOF
+
+      vim.search('cd')
+      vim.feedkeys 'daa'
+      vim.write
+
+      assert_file_contents <<-EOF
+        ( ab
+        , ef
+        )
+      EOF
+    end
+  end
 end

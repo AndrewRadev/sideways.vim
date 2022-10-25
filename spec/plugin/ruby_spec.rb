@@ -121,6 +121,24 @@ describe "ruby" do
         function_call(three, %q{(one) two})
       EOF
     end
+
+    specify "with lambdas as arguments" do
+      set_file_contents <<-EOF
+        has_many :items, -> { distinct }, through: :join_table
+      EOF
+
+      vim.search('items')
+
+      vim.right
+      assert_file_contents <<-EOF
+        has_many -> { distinct }, :items, through: :join_table
+      EOF
+
+      vim.left
+      assert_file_contents <<-EOF
+        has_many :items, -> { distinct }, through: :join_table
+      EOF
+    end
   end
 
   describe "lists" do

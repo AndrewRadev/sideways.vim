@@ -262,6 +262,31 @@ describe "rust" do
     end
   end
 
+  describe "trait bounds" do
+    before :each do
+      set_file_contents <<-EOF
+        fn foo<A, B: Copy + Clone + 'a, C>() { }
+      EOF
+
+      vim.set 'filetype', 'rust'
+      vim.search('Copy')
+    end
+
+    specify "to the left" do
+      vim.left
+      assert_file_contents <<-EOF
+        fn foo<A, B: 'a + Clone + Copy, C>() { }
+      EOF
+    end
+
+    specify "to the right" do
+      vim.right
+      assert_file_contents <<-EOF
+        fn foo<A, B: Clone + Copy + 'a, C>() { }
+      EOF
+    end
+  end
+
   describe "correct cursor position in nested template args" do
     before :each do
       set_file_contents <<-EOF
@@ -360,8 +385,6 @@ describe "rust" do
     end
 
     specify "to the right" do
-      pending "No rust syntax on TravisCI's Vim 7.4" if ENV['CI']
-
       vim.right
       assert_file_contents <<-EOF
         let v = vec![',', 'a', 'c'];

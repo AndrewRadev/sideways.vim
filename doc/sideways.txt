@@ -5,6 +5,7 @@ CONTENTS                                           *sideways* *sideways-contents
 
     Installation............................: |sideways-installation|
     Usage...................................: |sideways-usage|
+    Customization...........................: |sideways-customization|
     Settings................................: |sideways-settings|
     Issues..................................: |sideways-issues|
 
@@ -12,21 +13,28 @@ CONTENTS                                           *sideways* *sideways-contents
 ==============================================================================
 INSTALLATION                                            *sideways-installation*
 
-There are several ways to install the plugin. The recommended one is by using
-Tim Pope's pathogen (http://www.vim.org/scripts/script.php?script_id=2332). In
-that case, you can clone the plugin's git repository like so:
->
-    git clone git://github.com/AndrewRadev/sideways.vim.git ~/.vim/bundle/sideways
-<
-If your vim configuration is under git version control, you could also set up
-the repository as a submodule, which would allow you to update more easily.
-The command is (provided you're in ~/.vim):
->
-    git submodule add git://github.com/AndrewRadev/sideways.vim.git bundle/sideways
-<
+The easiest way to install the plugin is with a plugin manager:
 
-Another way is to simply copy all the essential directories inside the ~/.vim
-directory: plugin, autoload, doc.
+- vim-plug: https://github.com/junegunn/vim-plug
+- Vundle:   https://github.com/VundleVim/Vundle.vim
+
+If you use one, just follow the instructions in its documentation.
+
+You can install the plugin yourself using Vim's |packages| functionality by
+cloning the project (or adding it as a submodule) under
+`~/.vim/pack/<any-name>/start/`. For example:
+>
+    git clone https://github.com/AndrewRadev/sideways.vim ~/.vim/pack/_/start/sideways
+<
+This should automatically load the plugin for you on Vim start. Alternatively,
+you can add it to `~/.vim/pack/<any-name>/opt/` instead and load it in your
+.vimrc manually with:
+>
+    packadd sideways
+<
+If you'd rather not use git, you can download the files from the "releases"
+tab and unzip them in the relevant directory:
+https://github.com/AndrewRadev/sideways.vim/releases.
 
 ==============================================================================
 USAGE                                                           *sideways-usage*
@@ -107,11 +115,15 @@ HTML attributes:
 >
     <input name="one" id="two" class="three" />
 <
+Contents of HTML `class` and `style` values:
+>
+    <div class="one two three" style="width: 100px; height: 50px;"></div>
+<
 Handlebars components:
 >
     {{parent/some-component one=two three="four" five=(action 'six')}}
 <
-Cucumber tables:
+Markdown and cucumber tables:
 >
     Examples:
       | input_1 | input_2 | button | output |
@@ -122,6 +134,10 @@ Cucumber tables:
 Rust template arguments:
 >
     let dict = Hash<String, Vec<String>>::new();
+<
+Rust trait bounds (separated with "+"):
+>
+    fn foo<T: Copy + Clone>() { }
 <
 Rust return type (a special case since there's always just one, useful as a text object):
 >
@@ -148,9 +164,27 @@ OCaml lists and arrays
     let xs = [1; 2; 3]
     let xs = [|1; 2; 3|]
 <
+LaTeX align/tabular
+>
+    \begin{tabular}{ll}
+      a & b \\
+      c & d
+    \end{tabular}
+<
+LaTeX equations
+>
+    \[ e^{i \pi} + 1 = 0 \]
+    \[e^x = \sum_{n = 0}^{\infty} \frac{x^n}{n!}\]
+<
+Typescript enum values
+>
+    interface Status {
+      code: 200 | 404 | 500;
+    }
+<
 
-The plugin is customizable, though at this point you'd need to look at the
-source to do this.
+See |sideways-customization| for instructions on how to add more definitions
+or override existing ones.
 
                                                             *SidewaysJumpLeft*
                                                             *SidewaysJumpRight*
@@ -182,9 +216,165 @@ Also, a useful plugin to use alongside sideways is `fieldtrip`
 (https://github.com/tek/vim-fieldtrip). This defines a submode
 (https://github.com/kana/vim-submode) for sideways.vim.
 
+Adding items: ~
+
+The plugin defines mappings to add new items to the list as well. There's four
+of them that mirror the |i|, |a|, |I|, and |A| built-in keybindings:
+>
+    <Plug>SidewaysArgumentInsertBefore
+    <Plug>SidewaysArgumentAppendAfter
+    <Plug>SidewaysArgumentInsertFirst
+    <Plug>SidewaysArgumentAppendLast
+<
+However, they're not mapped by default and you need to pick ones that are
+convenient for you. As an example:
+>
+    nmap <leader>si <Plug>SidewaysArgumentInsertBefore
+    nmap <leader>sa <Plug>SidewaysArgumentAppendAfter
+    nmap <leader>sI <Plug>SidewaysArgumentInsertFirst
+    nmap <leader>sA <Plug>SidewaysArgumentAppendLast
+<
+The mnemonic in this case would be `leader-"sideways"-action`. Given the
+following simple example in ruby:
+>
+    function_call(one, two, three)
+<
+With the cursor on "two", you can insert a new argument before the current
+item by using `<Plug>SidewaysArgumentInsertBefore`:
+>
+    function_call(one, NEW, two, three)
+<
+Add an item after the current one by using
+`<Plug>SidewaysArgumentAppendAfter`:
+>
+    function_call(one, two, NEW, three)
+<
+Prepend an item to the start of the list with
+`<Plug>SidewaysArgumentInsertFirst`:
+>
+    function_call(NEW, one, two, three)
+<
+Push an item at the end with `<Plug>SidewaysArgumentAppendLast`:
+>
+    function_call(one, two, three, NEW)
+<
+This should work for all lists that are supported for the plugin, including
+HTML attributes, semicolon-separated CSS declarations, etc. If each existing
+list item is on a separate line (and there's at least two), the plugin assumes
+the new item should be on a new line as well:
+>
+    function_call(
+      one,
+      two,
+      three
+    )
+
+    # Append an item at the end:
+    function_call(
+      one,
+      two,
+      three,
+      NEW
+    )
+<
+Again, these mappings are not created by default -- copy the suggested ones to
+your vimrc, or create your own.
+
+If you set |g:sideways_add_item_cursor_restore| to 1 and your vim has the
+|+textprop| feature, the plugin will jump back to where you triggered the
+mapping when you leave insert mode.
+
+Note, however, that this relies on the |InsertLeave| autocommand, so if you
+exit insert mode via Ctrl+C (which doesn't trigger it), it won't jump until
+the next time you leave insert mode normally. If exiting via Ctrl+C is a part
+of your workflow, it's recommended you keep this setting off.
+
+
+==============================================================================
+CUSTOMIZATION                                           *sideways-customization*
+
+The core of the plugin is a loop that takes a "definition" and tries to parse
+a sequence of items based on it. Here's an example definition, which matches
+items in bracketed lists:
+>
+    let example_definition = {
+          \   'start':     '(\_s*',
+          \   'end':       ')',
+          \   'delimiter': ',\_s*',
+          \   'brackets':  ['([{''"', ')]}''"'],
+          \ }
+<
+The most important parts are the `start`, `end`, and `delimiter` keys. The
+plugin uses them to find the `start` of the list, and then moves forward,
+character by character, until it gets to something matching the `end` pattern.
+Every time it hits a `delimiter`, it marks the coordinates of what it has so
+far as a separate item.
+
+The `brackets` array needs to always be present and have exactly 2 strings.
+The first one is all the opening brackets expected in the list, and the other
+is the matching closing brackets, including string quotes that have the same
+opener and closer. When the plugin hits an opening bracket, it jumps to the
+closing one, which is what ensures that it can handle nested lists. If it hits
+an unmatched closing bracket, it assumes that this list is inside of some
+other one and considers it the end of the list.
+
+You can try the above definition by positioning the cursor on a round-bracket
+list and running:
+>
+    echo sideways#parsing#Parse([example_definition])
+<
+You should get an array of two items -- the first one is going to be the
+definition you just passed in (if you pass a list of multiple definitions, the
+plugin is going to return the "best" one that works). The second items is
+going to be a list of dictionaries, each one having the keys `start_line`,
+`start_col`, `end_line`, `end_col`. That's the raw parsing data the plugin
+uses to do its magic.
+
+There are multiple other flags and properties that can be given to a definition:
+
+- `delimited_by_whitespace`: Indicates the items are delimited by whitespace,
+    like HTML attributes. You still need to have a delimiter, it's just an
+    indicator for the plugin.
+- `single_line`: Indicates that there's no need to keep going after the end of
+    the line. An optimization, but also necessary for some particular kinds of
+    lists.
+- `skip_syntax`: A list of syntax group regexes to ignore when checking for
+    brackets or delimiters. It defaults to `['Comment', 'String']`, which
+    usually works well. Can also be provided on a per-filetype basis with
+    `b:sideways_skip_syntax`.
+
+These are a bit messy and more might be added, because a lot of them are
+workarounds. The plugin works well in the general case, but there's a lot of
+specific cases, and adding a special flag can be an easy way to fix support
+for something special.
+
+You can look at `plugin/sideways.vim` for the global definitions of the
+plugin. All the filetype-specific ones are in
+`ftplugin/<filetype>/sideways.vim`. My advice is to explore the patterns
+before trying to make your own.
+
+If you want to override the built-in definitions, you can define your own
+`g:sideways_definitions` or `b:sideways_definitions` variables and they will
+take priority of the built-ins. If you'd like to extend them, you can use
+`g:sideways_custom_definitions` and `b:sideways_custom_definitions`. Note that
+definitions must have unique `start` and `end` patterns, so if you'd like to
+override a specific one, pick the same start and end for it.
+
 
 ==============================================================================
 SETTINGS                                                     *sideways-settings*
+
+                                                 *g:sideways_custom_definitions*
+                                                 *b:sideways_custom_definitions*
+>
+    let g:sideways_custom_definitions = []
+    let b:sideways_custom_definitions = []
+<
+Default value: Unset
+
+If these variables exist, they will be merged into the built-in plugin
+definitions. See the section |sideways-customization| for more information.
+
 
                                                         *b:sideways_skip_syntax*
 >
@@ -244,6 +434,33 @@ do.
 If you'd like to completely disable this filtering, you can set this variable
 to 0. This should greatly speed it up, but it would cause issues with
 unbalanced brackets in strings or comments.
+
+                                            *g:sideways_add_item_cursor_restore*
+>
+    let g:sideways_add_item_cursor_restore = 1
+<
+Default value: 0
+
+If you set this variable to 1 and your vim has the |+textprop| feature, the
+plugin will jump back to where you triggered the mapping when you leave insert
+mode. By default, it's turned off, since it might be surprising. It could be
+useful if you decide to add a new item while doing something else and would
+like to get back to it after.
+
+Note, however, that this relies on the |InsertLeave| autocommand, so if you
+exit insert mode via Ctrl+C (which doesn't trigger it), it won't jump until
+the next time you leave insert mode normally. If exiting via Ctrl+C is a part
+of your workflow, it's recommended you keep this setting off.
+
+                                                    *g:sideways_add_item_repeat*
+>
+    let g:sideways_add_item_repeat = 0
+<
+Default value: 1
+
+This variable controls whether the plugin will activate vim-repeat for the
+mappings to add a new item. The setup for them is a bit more complicated,
+which is why this flag exists to disable it if it causes problems.
 
 
 ==============================================================================

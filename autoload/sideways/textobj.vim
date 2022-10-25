@@ -1,10 +1,11 @@
 function! sideways#textobj#Argument(mode)
-  let coordinates = sideways#AroundCursor()
+  let [_definition, items] = sideways#Parse()
+  let coordinates = sideways#AroundCursor(items)
   if empty(coordinates)
     return
   endif
 
-  " coordinates have the form [line, start_col, end_col]
+  " coordinates have the form {start_line, start_col, end_line, end_col}
   let [previous, current, next] = coordinates
 
   if a:mode == 'i'
@@ -56,10 +57,16 @@ function! s:MarkCols(start_coords, end_coords)
   let end_byte    = line2byte(a:end_coords[0]) + a:end_coords[1] - 1
 
   if &selection == "exclusive"
-    exe 'normal! '.start_byte.'gov'.(end_byte + 1).'go'
-  else
-    exe 'normal! '.start_byte.'gov'.end_byte.'go'
+    let end_byte += 1
   endif
 
-  return 1
+  try
+    let saved_virtualedit = &virtualedit
+    set virtualedit=onemore
+
+    exe 'normal! '.start_byte.'gov'.end_byte.'go'
+    return 1
+  finally
+    let &virtualedit = saved_virtualedit
+  endtry
 endfunction

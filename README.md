@@ -1,4 +1,5 @@
-[![Build Status](https://secure.travis-ci.org/AndrewRadev/sideways.vim.png?branch=master)](http://travis-ci.org/AndrewRadev/sideways.vim)
+[![GitHub version](https://badge.fury.io/gh/andrewradev%2Fsideways.vim.svg)](https://badge.fury.io/gh/andrewradev%2Fsideways.vim)
+[![Build Status](https://circleci.com/gh/AndrewRadev/sideways.vim/tree/main.svg?style=shield)](https://circleci.com/gh/AndrewRadev/sideways.vim?branch=main)
 
 ## Usage
 
@@ -130,10 +131,34 @@ dict = {one: 1, two: 2, three: 3}
 let xs = [1;2;3]
 ```
 
-The plugin is intended to be customizable, though at this point you'd need to
-look at the source to do this.
+**LaTeX align/tabular:**
+``` tex
+\begin{tabular}{ll}
+  a & b \\
+  c & d
+\end{tabular}
+```
+
+**LaTeX equations:**
+``` tex
+\[ e^{i \pi} + 1 = 0 \]
+\[e^x = \sum_{n = 0}^{\infty} \frac{x^n}{n!}\]
+```
+
+**Typescript enum values:**
+``` typescript
+interface Status {
+  code: 200 | 404 | 500;
+}
+```
+
+
+The plugin is customizable -- take a look at `:help sideways-customization`
+for instructions on how to implement support for other kinds of lists.
 
 ## Bonus functionality
+
+### Text objects
 
 The plugin's machinery makes it easy to implement an "argument" text object.
 There are two mappings provided:
@@ -158,3 +183,77 @@ See `:help text-objects` for more information.
 Also, a useful plugin to use alongside sideways is
 [fieldtrip](https://github.com/tek/vim-fieldtrip). This defines a
 [submode](https://github.com/kana/vim-submode) for sideways.vim.
+
+### Adding items
+
+The plugin defines mappings to add new items to the list as well. There's four of them that mirror the `i`, `a`, `I`, and `A` built-in keybindings:
+
+```
+<Plug>SidewaysArgumentInsertBefore
+<Plug>SidewaysArgumentAppendAfter
+<Plug>SidewaysArgumentInsertFirst
+<Plug>SidewaysArgumentAppendLast
+```
+
+However, they're not mapped by default and you need to pick ones that are convenient for you. As an example:
+
+``` vim
+nmap <leader>si <Plug>SidewaysArgumentInsertBefore
+nmap <leader>sa <Plug>SidewaysArgumentAppendAfter
+nmap <leader>sI <Plug>SidewaysArgumentInsertFirst
+nmap <leader>sA <Plug>SidewaysArgumentAppendLast
+```
+
+The mnemonic in this case would be `leader-"sideways"-action`. Given the following simple example in ruby:
+
+``` ruby
+function_call(one, two, three)
+```
+
+With the cursor on "two", you can insert a new argument before the current item by using `<Plug>SidewaysArgumentInsertBefore`:
+
+``` ruby
+function_call(one, NEW, two, three)
+```
+
+Add an item after the current one by using `<Plug>SidewaysArgumentAppendAfter`:
+
+``` ruby
+function_call(one, two, NEW, three)
+```
+
+Prepend an item to the start of the list with `<Plug>SidewaysArgumentInsertFirst`:
+
+``` ruby
+function_call(NEW, one, two, three)
+```
+
+Push an item at the end with `<Plug>SidewaysArgumentAppendLast`:
+
+``` ruby
+function_call(one, two, three, NEW)
+```
+
+This should work for all lists that are supported for the plugin, including HTML attributes, semicolon-separated CSS declarations, etc. If each existing list item is on a separate line (and there's at least two), the plugin assumes the new item should be on a new line as well:
+
+``` ruby
+function_call(
+  one,
+  two,
+  three
+)
+
+# Append an item at the end:
+function_call(
+  one,
+  two,
+  three,
+  NEW
+)
+```
+
+Again, these mappings are not created by default -- copy the suggested ones to your vimrc, or create your own.
+
+If you set `g:sideways_add_item_cursor_restore` to 1 and your vim has the `+textprop` feature, the plugin will jump back to where you triggered the mapping when you leave insert mode.
+
+Note, however, that this relies on the `InsertLeave` autocommand, so if you exit insert mode via `Ctrl+C` (which doesn't trigger it), it won't jump until the next time you leave insert mode normally. If exiting via `Ctrl+C` is a part of your workflow, it's recommended you keep this setting off.

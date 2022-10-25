@@ -86,7 +86,6 @@ function! s:ParseItems(definition, start_line, start_col)
   let cursor_line = line('.')
   let items       = []
 
-  let start_pattern           = definition.start
   let end_pattern             = definition.end
   let delimited_by_whitespace = get(definition, 'delimited_by_whitespace', 0)
   let single_line             = get(definition, 'single_line', 0)
@@ -110,7 +109,7 @@ function! s:ParseItems(definition, start_line, start_col)
     let [opening_bracket_match, offset] = s:BracketMatch(remainder_of_line, opening_brackets)
     let [closing_bracket_match, _]      = s:BracketMatch(remainder_of_line, closing_brackets)
 
-    if remainder_of_line =~ '^'.delimiter_pattern && !eval(skip_expression)
+    if remainder_of_line =~ '^'.delimiter_pattern && !s:SkipEval(skip_expression)
       " then store the current item, and find the next one
       call s:PushItem(items, current_item, col('.') - 1)
       let match = matchstr(remainder_of_line, '^'.delimiter_pattern)
@@ -135,7 +134,7 @@ function! s:ParseItems(definition, start_line, start_col)
         call search('\\\@<!\V'.closing_bracket, 'W')
       else
         " different closing, use searchpair
-        if eval(skip_expression)
+        if s:SkipEval(skip_expression)
           " then we're currently in something that's sort of a string, don't
           " consider the skip expression.
           "
@@ -256,8 +255,15 @@ function! s:LocateValidDefinitions(definitions)
       continue
     else
       call sideways#util#SearchSkip(start_pattern, 'Wce', skip_expression, line('.'))
-      let match_start_line = line('.')
-      let match_start_col  = col('.') + 1
+
+      if col('.') == col('$') - 1
+        " we're at the end of the line, col('.') + 1 overflows:
+        let match_start_line = line('.') + 1
+        let match_start_col  = 0
+      else
+        let match_start_line = line('.')
+        let match_start_col  = col('.') + 1
+      endif
 
       if cursor_line < match_start_line || (cursor_line == match_start_line && cursor_col < match_start_col)
         call sideways#util#PopCursor()
@@ -348,9 +354,20 @@ function! s:SkipSyntaxExpression(definition)
     return ''
   endif
 
-  let skip_pattern  = '\%('.join(syntax_groups, '\|').'\)'
+  if empty(syntax_groups)
+    return ""
+  else
+    let skip_pattern  = '\%('.join(syntax_groups, '\|').'\)'
+    return "synIDattr(synID(line('.'),col('.'),1),'name') =~# '".skip_pattern."'"
+  endif
+endfunction
 
-  return "synIDattr(synID(line('.'),col('.'),1),'name') =~# '".skip_pattern."'"
+function! s:SkipEval(expression)
+  if empty(a:expression)
+    return 0
+  else
+    return eval(a:expression)
+  endif
 endfunction
 
 " Simple debugging

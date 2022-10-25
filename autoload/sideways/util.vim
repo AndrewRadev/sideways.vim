@@ -71,17 +71,26 @@ endfunction
 " Note that the motion needs to include a visual mode key, like "V", "v" or
 " "gv"
 function! sideways#util#ReplaceMotion(motion, text)
-  let original_selection = &selection
+  " reset clipboard to avoid problems with 'unnamed' and 'autoselect'
+  let saved_clipboard = &clipboard
+  set clipboard=
+  let saved_selection = &selection
   let &selection = "inclusive"
 
-  let original_reg      = getreg('z')
-  let original_reg_type = getregtype('z')
+  let saved_register_text = getreg('"', 1)
+  let saved_register_type = getregtype('"')
+  let saved_opening_visual = getpos("'<")
+  let saved_closing_visual = getpos("'>")
 
-  let @z = a:text
-  exec 'normal! '.a:motion.'"zp'
+  call setreg('"', a:text, 'v')
+  exec 'silent noautocmd normal! '.a:motion.'p'
 
-  call setreg('z', original_reg, original_reg_type)
-  let &selection = original_selection
+  call setreg('"', saved_register_text, saved_register_type)
+  call setpos("'<", saved_opening_visual)
+  call setpos("'>", saved_closing_visual)
+
+  let &clipboard = saved_clipboard
+  let &selection = saved_selection
 endfunction
 
 " function! sideways#util#ReplaceCols(line, start, end, text) {{{2
@@ -125,17 +134,27 @@ endfunction
 function! sideways#util#GetMotion(motion)
   call sideways#util#PushCursor()
 
-  let original_selection = &selection
+  let saved_selection = &selection
   let &selection = "inclusive"
 
-  let original_reg      = getreg('z')
-  let original_reg_type = getregtype('z')
+  let saved_register_text = getreg('z', 1)
+  let saved_register_type = getregtype('z')
+  let saved_opening_visual = getpos("'<")
+  let saved_closing_visual = getpos("'>")
 
-  exec 'normal! '.a:motion.'"zy'
+  let @z = ''
+  exec 'silent noautocmd normal! '.a:motion.'"zy'
   let text = @z
 
-  call setreg('z', original_reg, original_reg_type)
-  let &selection = original_selection
+  if text == ''
+    " nothing got selected, so we might still be in visual mode
+    exe "normal! \<esc>"
+  endif
+
+  call setreg('z', saved_register_text, saved_register_type)
+  call setpos("'<", saved_opening_visual)
+  call setpos("'>", saved_closing_visual)
+  let &selection = saved_selection
 
   call sideways#util#PopCursor()
 
@@ -219,4 +238,44 @@ function! sideways#util#SearchSkip(pattern, flags, skip, ...)
   endwhile
 
   return match
+endfunction
+
+" Miscellaneous {{{1
+"
+
+" function! sideways#util#Uniq(items) {{{2
+"
+" Wraps the built-in uniq() if it's available, otherwise reimplements it.
+function! sideways#util#Uniq(list)
+  if exists('*uniq')
+    return uniq(a:list)
+  else
+    " taken from vim-rails
+    let i = 0
+    let seen = {}
+    while i < len(a:list)
+      let key = string(a:list[i])
+      if has_key(seen, key)
+        call remove(a:list, i)
+      else
+        let seen[key] = 1
+        let i += 1
+      endif
+    endwhile
+    return a:list
+  endif
+endfunction
+
+" function! sideways#util#Trim(string) {{{2
+"
+" Surprisingly, Vim doesn't seem to have a "trim" function. In any case, these
+" should be fairly obvious.
+function! sideways#util#Ltrim(s)
+  return substitute(a:s, '^\_s\+', '', '')
+endfunction
+function! sideways#util#Rtrim(s)
+  return substitute(a:s, '\_s\+$', '', '')
+endfunction
+function! sideways#util#Trim(s)
+  return sideways#util#Rtrim(sideways#util#Ltrim(a:s))
 endfunction
