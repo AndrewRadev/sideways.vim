@@ -45,8 +45,6 @@ describe "Typescript" do
     end
 
     specify "to the left" do
-      pending "No typescript syntax on CI" if ENV['CI']
-
       vim.left
       assert_file_contents <<-EOF
         const object = { three: "four", one: "two" };
@@ -54,8 +52,6 @@ describe "Typescript" do
     end
 
     specify "to the right" do
-      pending "No typescript syntax on CI" if ENV['CI']
-
       vim.right
       assert_file_contents <<-EOF
         const object = { three: "four", one: "two" };
@@ -77,8 +73,6 @@ describe "Typescript" do
     end
 
     specify "to the left" do
-      pending "No typescript syntax on CI" if ENV['CI']
-
       vim.left
       assert_file_contents <<-EOF
         function foo(c: number, b: Type<A, B>, a: number) {
@@ -95,8 +89,6 @@ describe "Typescript" do
     end
 
     specify "to the right" do
-      pending "No typescript syntax on CI" if ENV['CI']
-
       vim.right
       assert_file_contents <<-EOF
         function foo(b: Type<A, B>, a: number, c: number) {
