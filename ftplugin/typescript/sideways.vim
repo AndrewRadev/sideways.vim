@@ -10,4 +10,10 @@ let b:sideways_definitions = [
       \     'delimiter':   '\s*|',
       \     'brackets':    ['''"', '''"'],
       \   },
+      \   {
+      \     'start':     '(\_s*',
+      \     'end':       ')',
+      \     'delimiter': ',\_s*',
+      \     'brackets':  ['([{''"<', ')]}''">'],
+      \   },
       \ ]

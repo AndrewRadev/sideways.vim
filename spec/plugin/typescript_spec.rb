@@ -68,7 +68,7 @@ describe "Typescript" do
 
     before :each do
       set_file_contents <<-EOF
-        function foo(a: number, b: number, c: number) {
+        function foo(a: number, b: Type<A, B>, c: number) {
             console.log(a, b)
         }
       EOF
@@ -81,14 +81,14 @@ describe "Typescript" do
 
       vim.left
       assert_file_contents <<-EOF
-        function foo(c: number, b: number, a: number) {
+        function foo(c: number, b: Type<A, B>, a: number) {
             console.log(a, b)
         }
       EOF
 
       vim.left
       assert_file_contents <<-EOF
-        function foo(c: number, a: number, b: number) {
+        function foo(c: number, a: number, b: Type<A, B>) {
             console.log(a, b)
         }
       EOF
@@ -99,14 +99,14 @@ describe "Typescript" do
 
       vim.right
       assert_file_contents <<-EOF
-        function foo(b: number, a: number, c: number) {
+        function foo(b: Type<A, B>, a: number, c: number) {
             console.log(a, b)
         }
       EOF
 
       vim.right
       assert_file_contents <<-EOF
-        function foo(b: number, c: number, a: number) {
+        function foo(b: Type<A, B>, c: number, a: number) {
             console.log(a, b)
         }
       EOF
