@@ -4,8 +4,8 @@ endif
 
 let b:sideways_definitions = [
       \   {
-      \     'skip_syntax': ['typescriptObjectLabel', 'typescriptObjectLiteral'],
-      \     'start':       '\k\+:\s*',
+      \     'skip_syntax': ['typescriptObjectLabel', 'typescriptObjectLiteral', 'typescriptCall'],
+      \     'start':       '^\s*\k\+:\s*',
       \     'end':         '\s*;',
       \     'delimiter':   '\s*|',
       \     'brackets':    ['''"', '''"'],

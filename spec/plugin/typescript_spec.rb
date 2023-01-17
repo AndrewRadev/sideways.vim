@@ -62,4 +62,54 @@ describe "Typescript" do
       EOF
     end
   end
+
+  describe "function arguments" do
+    let(:filename) { 'test.ts' }
+
+    before :each do
+      set_file_contents <<-EOF
+        function foo(a: number, b: number, c: number) {
+            console.log(a, b)
+        }
+      EOF
+
+      vim.search('a: number')
+    end
+
+    specify "to the left" do
+      pending "No typescript syntax on CI" if ENV['CI']
+
+      vim.left
+      assert_file_contents <<-EOF
+        function foo(c: number, b: number, a: number) {
+            console.log(a, b)
+        }
+      EOF
+
+      vim.left
+      assert_file_contents <<-EOF
+        function foo(c: number, a: number, b: number) {
+            console.log(a, b)
+        }
+      EOF
+    end
+
+    specify "to the right" do
+      pending "No typescript syntax on CI" if ENV['CI']
+
+      vim.right
+      assert_file_contents <<-EOF
+        function foo(b: number, a: number, c: number) {
+            console.log(a, b)
+        }
+      EOF
+
+      vim.right
+      assert_file_contents <<-EOF
+        function foo(b: number, c: number, a: number) {
+            console.log(a, b)
+        }
+      EOF
+    end
+  end
 end
