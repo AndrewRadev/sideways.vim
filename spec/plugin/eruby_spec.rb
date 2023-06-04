@@ -38,4 +38,74 @@ describe "ERB" do
       end
     end
   end
+
+  describe "class attributes" do
+    describe "as class:" do
+      before :each do
+        set_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', class: 'one two three' %>
+        EOF
+
+        vim.search('one')
+      end
+
+      specify "to the left" do
+        vim.left
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', class: 'three two one' %>
+        EOF
+
+        vim.left
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', class: 'three one two' %>
+        EOF
+      end
+
+      specify "to the right" do
+        vim.right
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', class: 'two one three' %>
+        EOF
+
+        vim.right
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', class: 'two three one' %>
+        EOF
+      end
+    end
+
+    describe "as :class =>" do
+      before :each do
+        set_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', :class => 'one two three' %>
+        EOF
+
+        vim.search('one')
+      end
+
+      specify "to the left" do
+        vim.left
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', :class => 'three two one' %>
+        EOF
+
+        vim.left
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', :class => 'three one two' %>
+        EOF
+      end
+
+      specify "to the right" do
+        vim.right
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', :class => 'two one three' %>
+        EOF
+
+        vim.right
+        assert_file_contents <<~EOF
+          <%= link_to 'Something', 'URL', :class => 'two three one' %>
+        EOF
+      end
+    end
+  end
 end
