@@ -152,6 +152,14 @@ interface Status {
 }
 ```
 
+**Python imports and for loops:**
+```python
+from some_package import Foo, Bar
+
+for value, index in enumerate(items):
+    pass
+```
+
 
 The plugin is customizable -- take a look at `:help sideways-customization`
 for instructions on how to implement support for other kinds of lists.
