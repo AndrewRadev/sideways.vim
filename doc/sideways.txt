@@ -182,6 +182,13 @@ Typescript enum values
       code: 200 | 404 | 500;
     }
 <
+Python imports and for loops:
+>
+    from some_package import Foo, Bar
+
+    for value, index in enumerate(items):
+        pass
+<
 
 See |sideways-customization| for instructions on how to add more definitions
 or override existing ones.
