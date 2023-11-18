@@ -217,8 +217,6 @@ describe "adding new items" do
     end
 
     specify "insert before item" do
-      pending "No +textprop on CI" if ENV['CI']
-
       set_file_contents <<~EOF
         function_call(one, two, three)
       EOF
@@ -236,8 +234,6 @@ describe "adding new items" do
     end
 
     specify "append after item" do
-      pending "No +textprop on CI" if ENV['CI']
-
       set_file_contents <<~EOF
         function_call(one, two, three)
       EOF
