@@ -469,6 +469,19 @@ This variable controls whether the plugin will activate vim-repeat for the
 mappings to add a new item. The setup for them is a bit more complicated,
 which is why this flag exists to disable it if it causes problems.
 
+                                                    *g:sideways_loop_jump*
+                                                    *g:sideways_loop_move*
+>
+    let g:sideways_loop_jump = 0
+    let g:sideways_loop_move = 0
+<
+Default value: 1 for both
+
+These two variables control whether moving or jumping will loop around from
+the last item to the first one (going left) and from the first to the last
+(going right). By default, the plugin loops, but if you want to, for instance,
+mash a key to get to the first/last item, it could be useful to avoid it.
+
 
 ==============================================================================
 ISSUES                                                         *sideways-issues*

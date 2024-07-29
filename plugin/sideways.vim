@@ -47,6 +47,14 @@ if !exists('g:sideways_add_item_repeat')
   let g:sideways_add_item_repeat = 1
 endif
 
+if !exists('g:sideways_loop_move')
+  let g:sideways_loop_move = 1
+endif
+
+if !exists('g:sideways_loop_jump')
+  let g:sideways_loop_jump = 1
+endif
+
 command! SidewaysLeft  call sideways#MoveLeft()  | silent! call repeat#set("\<Plug>SidewaysLeft")
 command! SidewaysRight call sideways#MoveRight() | silent! call repeat#set("\<Plug>SidewaysRight")
 

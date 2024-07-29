@@ -1,4 +1,4 @@
-function! sideways#Parse()
+function! sideways#Parse() abort
   let defined = {}
   let definitions = g:sideways_definitions
 
@@ -17,7 +17,9 @@ function! sideways#Parse()
   return sideways#parsing#Parse(definitions)
 endfunction
 
-function! sideways#MoveLeft()
+function! sideways#MoveLeft(...) abort
+  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_move}
+
   let [definition, items] = sideways#Parse()
   if empty(items)
     return 0
@@ -30,6 +32,10 @@ function! sideways#MoveLeft()
   endif
 
   if active_index == 0
+    if !opts.loop
+      return 0
+    endif
+
     let first            = items[active_index]
     let second           = items[last_index]
     let new_active_index = last_index
@@ -47,7 +53,9 @@ function! sideways#MoveLeft()
   return 1
 endfunction
 
-function! sideways#MoveRight()
+function! sideways#MoveRight(...) abort
+  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_move}
+
   let [definition, items] = sideways#Parse()
   if empty(items)
     return 0
@@ -60,6 +68,10 @@ function! sideways#MoveRight()
   endif
 
   if active_index == last_index
+    if !opts.loop
+      return 0
+    endif
+
     let first = items[0]
     let second = items[last_index]
     let new_active_index = 0
@@ -77,7 +89,9 @@ function! sideways#MoveRight()
   return 1
 endfunction
 
-function! sideways#JumpLeft()
+function! sideways#JumpLeft(...) abort
+  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_jump}
+
   let [_, items] = sideways#Parse()
   if empty(items)
     return 0
@@ -90,6 +104,10 @@ function! sideways#JumpLeft()
   endif
 
   if active_index == 0
+    if !opts.loop
+      return 0
+    endif
+
     call s:JumpToItem(items, last_index)
   else
     call s:JumpToItem(items, active_index - 1)
@@ -98,9 +116,10 @@ function! sideways#JumpLeft()
   return 1
 endfunction
 
-function! sideways#JumpRight()
-  let [_, items] = sideways#Parse()
+function! sideways#JumpRight(...) abort
+  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_jump}
 
+  let [_, items] = sideways#Parse()
   if empty(items)
     return 0
   end
@@ -111,9 +130,11 @@ function! sideways#JumpRight()
     return 0
   endif
 
-  let position = getpos('.')
-
   if active_index == last_index
+    if !opts.loop
+      return 0
+    endif
+
     call s:JumpToItem(items, 0)
   else
     call s:JumpToItem(items, active_index + 1)
@@ -122,7 +143,7 @@ function! sideways#JumpRight()
   return 1
 endfunction
 
-function! sideways#AroundCursor(parsed_items)
+function! sideways#AroundCursor(parsed_items) abort
   let items = a:parsed_items
   if empty(items)
     return []
@@ -146,7 +167,7 @@ function! sideways#AroundCursor(parsed_items)
   return [previous, current, next]
 endfunction
 
-function s:JumpToItem(items, index)
+function s:JumpToItem(items, index) abort
   let position = getpos('.')
   let position[1] = a:items[a:index].start_line
   let position[2] = a:items[a:index].start_col
@@ -161,7 +182,7 @@ endfunction
 " a:first is expected to be positioned before a:second. Assuming that, the
 " function first places the second item and then the first one, ensuring that
 " the column number remain consistent until it's done.
-function! s:Swap(first, second)
+function! s:Swap(first, second) abort
   let first_body  = sideways#util#GetItem(a:first)
   let second_body = sideways#util#GetItem(a:second)
 
@@ -178,7 +199,7 @@ endfunction
 " item.
 "
 " Returns the index of the found item, or -1 if it's not found.
-function! s:FindActiveItem(items)
+function! s:FindActiveItem(items) abort
   if len(a:items) == 0
     return -1
   endif
@@ -208,7 +229,7 @@ endfunction
 " This means that patterns defined in a:source will take priority over
 " a:extension.
 "
-function! s:ExtendDefinitions(source, extension)
+function! s:ExtendDefinitions(source, extension) abort
   let defined = {}
   let result = []
 
