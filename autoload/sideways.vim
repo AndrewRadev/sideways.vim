@@ -18,7 +18,7 @@ function! sideways#Parse() abort
 endfunction
 
 function! sideways#MoveLeft(...) abort
-  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_move}
+  let opts = a:0 > 0 ? a:1 : {'loop': g:sideways_loop_move}
 
   let [definition, items] = sideways#Parse()
   if empty(items)
@@ -54,7 +54,7 @@ function! sideways#MoveLeft(...) abort
 endfunction
 
 function! sideways#MoveRight(...) abort
-  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_move}
+  let opts = a:0 > 0 ? a:1 : {'loop': g:sideways_loop_move}
 
   let [definition, items] = sideways#Parse()
   if empty(items)
@@ -90,7 +90,7 @@ function! sideways#MoveRight(...) abort
 endfunction
 
 function! sideways#JumpLeft(...) abort
-  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_jump}
+  let opts = a:0 > 0 ? a:1 : {'loop': g:sideways_loop_jump}
 
   let [_, items] = sideways#Parse()
   if empty(items)
@@ -117,7 +117,7 @@ function! sideways#JumpLeft(...) abort
 endfunction
 
 function! sideways#JumpRight(...) abort
-  let opts = a:0 > 0 ? opts : {'loop': g:sideways_loop_jump}
+  let opts = a:0 > 0 ? a:1 : {'loop': g:sideways_loop_jump}
 
   let [_, items] = sideways#Parse()
   if empty(items)
