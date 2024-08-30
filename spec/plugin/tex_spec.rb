@@ -36,4 +36,42 @@ describe "LaTeX support" do
       \\[ 1 = 0 + e^{i \\pi} \\]
     EOF
   end
+
+  specify "fractions" do
+    set_file_contents <<-EOF
+      \\frac{a + b}{c + d}
+    EOF
+    vim.command('set filetype=tex')
+
+    vim.search('a +')
+    vim.right
+
+    assert_file_contents <<-EOF
+      \\frac{c + d}{a + b}
+    EOF
+
+    vim.right
+    assert_file_contents <<-EOF
+      \\frac{a + b}{c + d}
+    EOF
+  end
+
+  specify "\\commands[first]{second}" do
+    set_file_contents <<-EOF
+      \\xrightleftharpoons[a + b]{c + d}
+    EOF
+    vim.command('set filetype=tex')
+
+    vim.search('a +')
+    vim.right
+
+    assert_file_contents <<-EOF
+      \\xrightleftharpoons[c + d]{a + b}
+    EOF
+
+    vim.right
+    assert_file_contents <<-EOF
+      \\xrightleftharpoons[a + b]{c + d}
+    EOF
+  end
 end

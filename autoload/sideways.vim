@@ -1,6 +1,11 @@
 function! sideways#Parse() abort
   let defined = {}
-  let definitions = g:sideways_definitions
+
+  if get(b:, 'sideways_ignore_global_definitions', 0)
+    let definitions = []
+  else
+    let definitions = g:sideways_definitions
+  endif
 
   if exists('g:sideways_custom_definitions')
     let definitions = s:ExtendDefinitions(g:sideways_custom_definitions, definitions)
