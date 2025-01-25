@@ -189,12 +189,18 @@ Typescript enum values
       code: 200 | 404 | 500;
     }
 <
-Python imports and for loops:
+Python imports and for loops
 >
     from some_package import Foo, Bar
 
     for value, index in enumerate(items):
         pass
+<
+Vim comma-separated settings
+>
+    set spelllang=en,bg,programming
+    set completeopt=menuone,noinsert
+    set diffopt+=algorithm:patience,indent-heuristic,iwhite,linematch:60,vertical
 <
 
 See |sideways-customization| for instructions on how to add more definitions
