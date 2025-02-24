@@ -234,6 +234,8 @@ function! s:LocateValidDefinitions(definitions)
 
     if get(definition, 'single_line', 0)
       let stopline = line('.')
+    elseif get(definition, 'stopline_pattern', '') != ''
+      let stopline = search(definition.stopline_pattern, 'bWn')
     else
       let stopline = 0
     endif
