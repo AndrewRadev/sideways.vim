@@ -19,4 +19,11 @@ let b:sideways_definitions = [
       \     'brackets':         ['([{''"', ')]}''"'],
       \     'stopline_pattern': s:stopline_pattern,
       \   },
+      \   {
+      \     'start':            '\<return ',
+      \     'end':              '$',
+      \     'delimiter':        ',\s*',
+      \     'brackets':         ['([{''"', ')]}''"'],
+      \     'stopline_pattern': s:stopline_pattern,
+      \   },
       \ ]

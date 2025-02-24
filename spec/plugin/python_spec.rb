@@ -155,4 +155,22 @@ describe "python" do
       EOF
     end
   end
+
+  specify "return clauses" do
+    set_file_contents <<-EOF
+      return one, two, three
+    EOF
+
+    vim.search('two')
+
+    vim.left
+    assert_file_contents <<-EOF
+      return two, one, three
+    EOF
+
+    vim.right
+    assert_file_contents <<-EOF
+      return one, two, three
+    EOF
+  end
 end

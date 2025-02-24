@@ -189,12 +189,14 @@ Typescript enum values
       code: 200 | 404 | 500;
     }
 <
-Python imports and for loops
+Python imports, for loops, return clauses
 >
     from some_package import Foo, Bar
 
     for value, index in enumerate(items):
         pass
+
+    return one, two, three
 <
 Vim comma-separated settings
 >
