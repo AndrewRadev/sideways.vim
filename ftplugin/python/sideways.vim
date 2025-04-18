@@ -6,7 +6,7 @@ let s:stopline_pattern = '^\s*\(def\|class\)\s\+\k\+('
 
 let b:sideways_definitions = [
       \   {
-      \     'start':            '^\%(from .*\)\=import ',
+      \     'start':            '^\s*\%(from .*\)\=import ',
       \     'end':              '$',
       \     'delimiter':        ',\s*',
       \     'brackets':         ['', ''],
