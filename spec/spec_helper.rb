@@ -17,6 +17,7 @@ Vimrunner::RSpec.configure do |config|
 
     # Up-to-date filetype support:
     vim.prepend_runtimepath(plugin_path.join('spec/support/rust.vim'))
+    vim.prepend_runtimepath(plugin_path.join('spec/support/vim-elixir'))
 
     # Ensure we don't rely on selection=inclusive
     vim.command('set selection=exclusive')

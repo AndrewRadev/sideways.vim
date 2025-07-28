@@ -204,6 +204,10 @@ Vim comma-separated settings
     set completeopt=menuone,noinsert
     set diffopt+=algorithm:patience,indent-heuristic,iwhite,linematch:60,vertical
 <
+Elixir functions:
+>
+    String.ends_with? "Period.", "."
+<
 
 See |sideways-customization| for instructions on how to add more definitions
 or override existing ones.
