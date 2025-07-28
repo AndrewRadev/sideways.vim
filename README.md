@@ -152,14 +152,29 @@ interface Status {
 }
 ```
 
-**Python imports and for loops:**
+**Python imports, for loops, return clauses:**
 ```python
 from some_package import Foo, Bar
 
 for value, index in enumerate(items):
     pass
+
+return one, two, three
 ```
 
+**Vim comma-separated settings:**
+
+``` vim
+set spelllang=en,bg,programming
+set completeopt=menuone,noinsert
+set diffopt+=algorithm:patience,indent-heuristic,iwhite,linematch:60,vertical
+```
+
+**Elixir methods:**
+
+``` elixir
+String.ends_with? "Period.", "."
+```
 
 The plugin is customizable -- take a look at `:help sideways-customization`
 for instructions on how to implement support for other kinds of lists.
