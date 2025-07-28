@@ -170,7 +170,7 @@ set completeopt=menuone,noinsert
 set diffopt+=algorithm:patience,indent-heuristic,iwhite,linematch:60,vertical
 ```
 
-**Elixir methods:**
+**Elixir functions:**
 
 ``` elixir
 String.ends_with? "Period.", "."
