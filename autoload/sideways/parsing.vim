@@ -191,6 +191,7 @@ function! s:ParseItems(definition, start_line, start_col)
 
     if single_line && line('.') > cursor_line
       " no point in continuing, this is not a valid definition
+      let &whichwrap = original_whichwrap
       return []
     endif
 
